@@ -58,8 +58,6 @@ for row in rows:
 		if (row[2], row[1]) not in problem_already_tried:
 			print(f"User {row[2]} with ELO {users[row[2]]} tried Problem {row[1]} with ELO {problems[row[1]]}	- ELO Difference {abs(users[row[2]] - problems[row[1]])}")
 			problem_already_tried.append((row[2], row[1]))
-		else:
-			print("already")
 	except:
 		pass
 
