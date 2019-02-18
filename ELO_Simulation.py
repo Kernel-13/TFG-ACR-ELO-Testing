@@ -2,7 +2,7 @@ import math
 
 def Expectation(Ra, Rb): 
 	""" Calculates the 'Expectation' value following the original formula """
-	return 1.0 / (1 + math.pow(10, (Rb - Ra) / 400)) 
+	return 1.0 / (1 + math.pow(10, -((Ra - Rb) / 400))) 
 
 
 def k_factor(x, underdog_won):
@@ -18,8 +18,8 @@ def simulate(Users, Problems, u_id, p_id, Submission_State):
 	User_Old_Score = Users[u_id]
 	Problem_Old_Score = Problems[p_id]
 
-	Exp_A = Expectation(User_Old_Score, Problem_Old_Score) 
-	Exp_B = Expectation(Problem_Old_Score, User_Old_Score) 
+	User_Expectation = Expectation(User_Old_Score, Problem_Old_Score) 
+	Problem_Expectation = Expectation(Problem_Old_Score, User_Old_Score) 
 
 	# If Player_1 beats Player_2
 	if Submission_State in ('AC', 'PE'): 
@@ -31,8 +31,8 @@ def simulate(Users, Problems, u_id, p_id, Submission_State):
 		# If Player_1 Wins, but his score is higher than Player_2's score
 		else:	
 			k = k_factor(User_Old_Score - Problem_Old_Score, False)
-		User_New_Score = User_Old_Score + k * (1 - Exp_A)
-		Problem_New_Score = Problem_Old_Score + k * (0 - Exp_B)
+		User_New_Score = User_Old_Score + k * (1 - User_Expectation)
+		Problem_New_Score = Problem_Old_Score + k * (0 - Problem_Expectation)
 
 	# If Player_2 beats Player_1
 	else : 
@@ -44,8 +44,8 @@ def simulate(Users, Problems, u_id, p_id, Submission_State):
 		# If Player_2 Wins, but his score is higher than Player_1's score
 		else:	
 			k = k_factor(Problem_Old_Score - User_Old_Score, False)
-		User_New_Score = User_Old_Score + k * (0 - Exp_A)
-		Problem_New_Score = Problem_Old_Score + k * (1 - Exp_B)
+		User_New_Score = User_Old_Score + k * (0 - User_Expectation)
+		Problem_New_Score = Problem_Old_Score + k * (1 - Problem_Expectation)
 
 	# The following statements prevent the scores from going over 16 or reaching negative values
 	if User_New_Score < 0: User_New_Score = 0
