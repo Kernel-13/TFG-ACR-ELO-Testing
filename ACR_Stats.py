@@ -1,6 +1,8 @@
 import math
 import pymysql
+import matplotlib
 import matplotlib.pyplot as plt
+matplotlib.style.use('ggplot')
 
 # Database connection
 connection = pymysql.connect(host="localhost",user="root",passwd="",database="acr_dat")
@@ -64,13 +66,15 @@ def print_elo_differences():
 	values = []
 	print("\nELO Differences")
 
+	list_num = [v for k,v in elo_diff.items()]
+	fin_sum = sum(list_num)
 	for k,v in elo_diff.items(): 
-		print(f"Range [{k} - {k+1}]   :	{v}")
+		print(f"Range [{k} - {k+1}]   :	{v}		-	Percentage: {(v/fin_sum)*100}%")
 		ranges.append(f"[{k} - {k+1}]")
-		values.append(v)
+		values.append((v/fin_sum)*100)
 
 	plt.bar(ranges, values)
-	plt.ylabel("Nº of Submissions with Status AC or PE")
+	plt.ylabel("% of Submissions with Status AC or PE")
 	plt.xlabel("ELO Ranges")
 	plt.suptitle('ELO Differences between Users and the Problems they solved')
 	plt.show()
@@ -123,3 +127,104 @@ def print_problems_elo():
 	__cursor.execute("""SELECT * from problems_elo order by elo_score asc """)
 	for r in __cursor.fetchall():
 		print("ELO: ", r[1], "	- Problem: ", r[0])
+
+def correlation_user_problem():
+
+	__cursor.execute("""SELECT distinct s.user_id, u.elo_score, avg(p.elo_score) from submission s inner join problems_elo p on s.problem_id = p.problem_id  inner join users_elo u on s.user_id = u.user_id
+	where s.submissionDate >= '2017-09-01 00:00:00' and s.submissionDate < '2018-09-01 00:00:00' AND s.user_id in 
+	(SELECT user_id from submission where submissionDate >= '2017-09-01 00:00:00' and submissionDate < '2018-09-01 00:00:00' group by user_id having count(id) >= 50) 
+	AND (s.status='AC' OR s.status='PE') group by s.user_id""")
+
+	x = []
+	y = []
+	x_pow2 = []
+	y_pow2 = []
+	x_y = []
+	for r in __cursor.fetchall():
+		x.append(r[1])
+		y.append(r[2])
+		x_pow2.append(r[1]*r[1])
+		y_pow2.append(r[2]*r[2])
+		x_y.append(r[1]*r[2])
+
+	average_x = sum(x)/len(x)
+	average_y = sum(y)/len(y)
+	covariance = (sum(x_y)/len(x)) - average_x*average_y
+
+	aux_div_x = sum(x_pow2)/len(x)
+	aux_div_y = sum(y_pow2)/len(y)
+	dt_x = math.sqrt(aux_div_x - (average_x*average_x))
+	dt_y = math.sqrt(aux_div_y - (average_y*average_y))
+
+	r = float(covariance)/(float(dt_y*dt_x))
+
+	print("Media X: ", average_x)
+	print("Media Y: ", average_y)
+	print("covarianza: ", covariance)
+	print("Desviacion Tipica X: ", dt_x)
+	print("Desviacion Tipica Y: ", dt_y)
+	print("Indice de Correlacion: ", r)
+
+	plt.xlabel("Users ELO")
+	plt.ylabel("Average Problem ELO")
+	plt.scatter(x,y)
+	plt.show()
+
+'''
+
+__cursor.execute("""SELECT * from submission s inner join problems_elo p on s.problem_id = p.problem_id  inner join users_elo u on s.user_id = u.user_id
+	where s.submissionDate >= '2017-09-01 00:00:00' and s.submissionDate < '2018-09-01 00:00:00' AND s.user_id in 
+	(SELECT user_id from submission where submissionDate >= '2017-09-01 00:00:00' and submissionDate < '2018-09-01 00:00:00' group by user_id having count(id) >= 50) 
+	AND (s.status='AC' OR s.status='PE') group by s.user_id, s.problem_id, s.status order by s.user_id""")
+
+
+
+__cursor.execute("""SELECT * from submission s inner join problems_elo p on s.problem_id = p.problem_id  inner join users_elo u on s.user_id = u.user_id
+	where s.submissionDate >= '2017-09-01 00:00:00' and s.submissionDate < '2018-09-01 00:00:00' AND s.user_id in 
+	(SELECT user_id from submission where submissionDate >= '2017-09-01 00:00:00' and submissionDate < '2018-09-01 00:00:00' group by user_id having count(id) >= 50) 
+	AND (s.status='AC' OR s.status='PE') group by s.user_id, s.problem_id, s.status""")
+
+
+__cursor.execute("""SELECT * from submission s inner join problems_elo p on s.problem_id = p.problem_id 
+	where s.submissionDate >= '2017-09-01 00:00:00' and s.submissionDate < '2018-09-01 00:00:00' AND s.user_id in (SELECT user_id from users_elo natural join 
+	(SELECT user_id from submission where submissionDate >= '2017-09-01 00:00:00' and submissionDate < '2018-09-01 00:00:00' group by user_id having count(id) >= 50) as active_users) 
+	AND (s.status='AC' OR s.status='PE') group by user_id, s.problem_id, s.status""")
+
+__cursor.execute(""" SELECT distinct s.user_id as u_id FROM submission s 
+	inner join users_elo u on s.user_id = u.user_id
+	inner join problems_elo p on s.problem_id = p.problem_id
+	where s.submissionDate >= '2017-09-01 00:00:00' and s.submissionDate < '2018-09-01 00:00:00'
+	AND (s.status='AC' OR s.status='PE')
+	GROUP BY u_id
+	HAVING count(id) >= 50""")
+
+__cursor.execute("""SELECT DISTINCT user_id
+	 from submission natural join problems_elo natural join users_elo 
+	 where submissionDate >= '2017-09-01 00:00:00' and submissionDate < '2018-09-01 00:00:00' AND user_id in 
+	 (SELECT user_id from submission where submissionDate >= '2017-09-01 00:00:00' and submissionDate < '2018-09-01 00:00:00' group by user_id having count(id) >= 50)
+	  AND (status='AC' OR status='PE') group by user_id""")
+
+###
+
+__cursor.execute(""" SELECT s.user_id as u_id, s.problem_id as s_id, u.elo_score as u_score, p.elo_score as u_score FROM submission s 
+	inner join users_elo u on s.user_id = u.user_id
+	inner join problems_elo p on s.problem_id = p.problem_id
+	where s.submissionDate >= '2017-09-01 00:00:00' and s.submissionDate < '2018-09-01 00:00:00'
+	AND (s.status='AC' OR s.status='PE')
+	GROUP BY u_id, s_id, s.status""")
+
+__cursor.execute(""" SELECT s.user_id as u_id, s.problem_id as s_id, u.elo_score as u_score, p.elo_score as p_score FROM users_elo u
+	INNER JOIN (SELECT user_id from submission where submissionDate >= '2017-09-01 00:00:00' and submissionDate < '2018-09-01 00:00:00'	group by user_id having count(id) >= 50) as s on s.user_id = u.user_id
+	INNER JOIN problems_elo p on s.problem_id = p.problem_id
+	WHERE s.submissionDate >= '2017-09-01 00:00:00' and s.submissionDate < '2018-09-01 00:00:00' 
+	AND (s.status='AC' OR s.status='PE')
+	order by s.user_id,s.problem_id,s.submissionDate """)
+
+__cursor.execute(""" SELECT submission.user_id, submission.problem_id, users_elo.elo_score as u_score, problems_elo.elo_score as p_score FROM users_elo u
+	INNER JOIN submission on submission.user_id = users_elo.user_id
+	INNER JOIN problems_elo on submission.problem_id = problems_elo.problem_id
+	WHERE submission.submissionDate >= '2017-09-01 00:00:00' and submission.submissionDate < '2018-09-01 00:00:00' 
+	AND (submission.status='AC' OR submission.status='PE')""")
+
+
+'''

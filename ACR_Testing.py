@@ -31,14 +31,14 @@ def train_subjects():
 	problem_already_solved = []
 
 	# The Training Half includes all submissions from September 2015 and September 2017
-	__cursor.execute("SELECT * from submission where submissionDate >= '2015-09-01 00:00:00' and submissionDate < '2017-09-01 00:00:00'")
+	__cursor.execute("SELECT * from submission where submissionDate >= '2015-09-01 00:00:00' and submissionDate < '2017-09-01 00:00:00' group by user_id, problem_id, status")
 
 	for row in __cursor.fetchall():
 		if row[2] not in users:	users[row[2]] = 8
 		if row[1] not in problems:	problems[row[1]] = 8
 
 		# We check if the problem has already been solved by one specific user
-		# This is so we can omit those submissions meant to reduce exeution time, memory use, etc
+		# This is so we can omit those submissions meant to reduce exeution time, memory use, fix presentation, etc
 		if (row[2],row[1]) not in problem_already_solved:
 			ELO_Simulation.simulate(users, problems, row[2], row[1], row[5])
 			if row[5] in ('AC', 'PE'): problem_already_solved.append((row[2],row[1]))
@@ -49,7 +49,7 @@ def train_subjects():
 
 def main():
 	train_subjects()
-	ACR_Stats.print_submissions_per_months()
+	ACR_Stats.print_elo_differences()
 	ACR_Stats.print_elo_distribution('users_elo', 'Users')
 	ACR_Stats.print_elo_distribution('problems_elo', 'Problems')
 	ACR_Stats.connection.close()
