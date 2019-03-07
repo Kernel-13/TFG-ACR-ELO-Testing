@@ -48,11 +48,10 @@ def train_subjects():
 	create_and_fill_ELO_table('users_elo', 'user_id', users)
 
 def main():
-	train_subjects()
-	ACR_Stats.print_elo_differences()
-	ACR_Stats.print_elo_distribution('users_elo', 'Users')
-	ACR_Stats.print_elo_distribution('problems_elo', 'Problems')
-	ACR_Stats.connection.close()
+	#train_subjects()
+	#ACR_Stats.print_elo_distribution(__cursor, 'users_elo', 'Users')
+	#ACR_Stats.print_elo_distribution(__cursor, 'problems_elo', 'Problems')
+	#ACR_Stats.print_elo_differences(__cursor, kind='perc')
 	connection.close()
 
 

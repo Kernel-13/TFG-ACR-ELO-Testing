@@ -4,12 +4,7 @@ import matplotlib
 import matplotlib.pyplot as plt
 matplotlib.style.use('ggplot')
 
-# Database connection
-connection = pymysql.connect(host="localhost",user="root",passwd="",database="acr_dat")
-__cursor = connection.cursor()
-
-
-def print_submissions_per_months():
+def print_submissions_per_months(__cursor):
 
 	months = {}
 	[months.update({k:0}) for k in range(1,13)]
@@ -25,13 +20,9 @@ def print_submissions_per_months():
 		print(f"Month {k} :	{v}")
 		values.append(v)
 
-	plt.bar(month, values)
-	plt.ylabel("Nº of Submissions")
-	plt.xlabel("Months")
-	plt.suptitle("Nº of Submissions Per Month")
-	plt.show()
+	show_bar_plot(month,values,x_label="Months", y_label="Nº of Submissions", title="Nº of Submissions Per Month")
 
-def print_elo_differences():
+def print_elo_differences(__cursor, kind='perc'):
 	
 	__cursor.execute("""SELECT * from submission where submissionDate >= '2017-09-01 00:00:00' and submissionDate < '2018-09-01 00:00:00' AND user_id in (SELECT user_id from users_elo natural join 
 	(SELECT user_id from submission where submissionDate >= '2017-09-01 00:00:00' and submissionDate < '2018-09-01 00:00:00' group by user_id having count(id) >= 50) as active_users) 
@@ -64,22 +55,26 @@ def print_elo_differences():
 
 	ranges = []
 	values = []
-	print("\nELO Differences")
 
-	list_num = [v for k,v in elo_diff.items()]
-	fin_sum = sum(list_num)
+	value_sum = sum([v for k,v in elo_diff.items()])
+	perc_sum = 0
+
+	print("\nELO Differences between Users and the Problems they solved")
 	for k,v in elo_diff.items(): 
-		print(f"Range [{k} - {k+1}]   :	{v}		-	Percentage: {(v/fin_sum)*100}%")
-		ranges.append(f"[{k} - {k+1}]")
-		values.append((v/fin_sum)*100)
+		print(f"Range [{k} - {k+1})   :	{v}		-	Percentage: {(v/value_sum)*100}%")
 
-	plt.bar(ranges, values)
-	plt.ylabel("% of Submissions with Status AC or PE")
-	plt.xlabel("ELO Ranges")
-	plt.suptitle('ELO Differences between Users and the Problems they solved')
-	plt.show()
+		if kind == 'sum':
+			perc_sum += (v/value_sum)*100
+			ranges.append(f"[0 - {k+1})")
+			values.append(perc_sum)
+		else:
+			ranges.append(f"[{k} - {k+1})")
+			if kind == 'numb': values.append(v)
+			else: values.append((v/value_sum)*100)
 
-def print_elo_distribution(table, items):
+	show_bar_plot(ranges,values,x_label="ELO Difference (Ranges)", y_label="Submissions with Status AC or PE", title="ELO Differences between Users and the Problems they solved")
+
+def print_elo_distribution(__cursor, table, items):
 	u_elo = {}
 	[u_elo.update({k:0}) for k in range(16)]
 	__cursor.execute(f"SELECT elo_score FROM {table}")
@@ -93,16 +88,12 @@ def print_elo_distribution(table, items):
 
 	for k,v in u_elo.items(): 
 		print(f"Range [{k} - {k+1}]   :	{v}")
-		ranges.append(f"[{k} - {k+1}]")
+		ranges.append(f"[{k} - {k+1})")
 		values.append(v)
 
-	plt.bar(ranges, values)
-	plt.ylabel(f"Nº of {items}")
-	plt.xlabel("ELO Ranges")
-	plt.suptitle(f'ELO Distribution ({items})')
-	plt.show()
+	show_bar_plot(ranges,values,x_label="ELO Ranges", y_label=f"Nº of {items}", title=f"ELO Distribution ({items})")
 
-def print_tries_average():
+def print_tries_average(__cursor):
 	n_submissions = 0
 	u_elo = {}
 	[u_elo.update({k:0}) for k in range(16)]
@@ -118,17 +109,7 @@ def print_tries_average():
 	print("Nº of Submissions: ", n_submissions)
 	print("Average: ", n_submissions/len(rows))
 
-def print_users_elo():
-	__cursor.execute("""SELECT * from users_elo order by elo_score""")
-	for r in __cursor.fetchall():
-		print("ELO: ", r[1], "	- User: ", r[0])
-		
-def print_problems_elo():
-	__cursor.execute("""SELECT * from problems_elo order by elo_score asc """)
-	for r in __cursor.fetchall():
-		print("ELO: ", r[1], "	- Problem: ", r[0])
-
-def correlation_user_problem():
+def correlation_user_problem(__cursor):
 
 	__cursor.execute("""SELECT distinct s.user_id, u.elo_score, avg(p.elo_score) from submission s inner join problems_elo p on s.problem_id = p.problem_id  inner join users_elo u on s.user_id = u.user_id
 	where s.submissionDate >= '2017-09-01 00:00:00' and s.submissionDate < '2018-09-01 00:00:00' AND s.user_id in 
@@ -170,20 +151,59 @@ def correlation_user_problem():
 	plt.scatter(x,y)
 	plt.show()
 
-'''
+def show_bar_plot(x,y,x_label="", y_label="", title=""):
+	x_idx = [i for i, _ in enumerate(x)]
+	_, ax = plt.subplots()
+	bars = ax.bar(x_idx, y, color='b')
+	plt.xlabel(x_label)
+	plt.ylabel(y_label)
+	plt.suptitle(title)
+	plt.xticks(x_idx, x)
 
+	for bar in bars:
+	    height = bar.get_height()
+	    ax.text(bar.get_x() + bar.get_width()/2., 1.05*height,str(round(height, 2)),ha='center', va='bottom')
+
+	plt.show()
+
+def show_spider_chart(chart_data, title=""):
+	categories = []
+	values = []
+	for k,v in chart_data.items():
+		categories.append(k)
+		values.append(v)
+
+	angles = [n / float(len(categories)) * 2 * math.pi for n in range(len(categories))]
+	ax = plt.subplot(111, polar=True)
+	plt.xticks(angles, categories, color='grey', size=8)
+	
+	ax.set_rlabel_position(0)
+	plt.yticks([4,8,12], ["4","8","12"], color="grey", size=7)
+	plt.ylim(0,16)
+
+	for idx, v in enumerate(angles):
+		position = (v,values[idx]+1) if values[idx] <= 14 else (v,values[idx]-1.3)
+		plt.text(v, values[idx], str(values[idx]), color="black", size=12 ,ha='center', va='center', alpha=0.5, position=position)
+
+	# We add the first value again so the plot draws all lines 
+	# Otherwise, the line connecting the first & last value wont get drawn
+	angles.append(angles[0])
+	values.append(values[0])
+
+	ax.plot(angles, values, 'o-', linewidth=1)
+	ax.fill(angles, values, 'b', alpha=0.5)
+	plt.show()
+
+'''
 __cursor.execute("""SELECT * from submission s inner join problems_elo p on s.problem_id = p.problem_id  inner join users_elo u on s.user_id = u.user_id
 	where s.submissionDate >= '2017-09-01 00:00:00' and s.submissionDate < '2018-09-01 00:00:00' AND s.user_id in 
 	(SELECT user_id from submission where submissionDate >= '2017-09-01 00:00:00' and submissionDate < '2018-09-01 00:00:00' group by user_id having count(id) >= 50) 
 	AND (s.status='AC' OR s.status='PE') group by s.user_id, s.problem_id, s.status order by s.user_id""")
 
-
-
 __cursor.execute("""SELECT * from submission s inner join problems_elo p on s.problem_id = p.problem_id  inner join users_elo u on s.user_id = u.user_id
 	where s.submissionDate >= '2017-09-01 00:00:00' and s.submissionDate < '2018-09-01 00:00:00' AND s.user_id in 
 	(SELECT user_id from submission where submissionDate >= '2017-09-01 00:00:00' and submissionDate < '2018-09-01 00:00:00' group by user_id having count(id) >= 50) 
 	AND (s.status='AC' OR s.status='PE') group by s.user_id, s.problem_id, s.status""")
-
 
 __cursor.execute("""SELECT * from submission s inner join problems_elo p on s.problem_id = p.problem_id 
 	where s.submissionDate >= '2017-09-01 00:00:00' and s.submissionDate < '2018-09-01 00:00:00' AND s.user_id in (SELECT user_id from users_elo natural join 
@@ -204,8 +224,6 @@ __cursor.execute("""SELECT DISTINCT user_id
 	 (SELECT user_id from submission where submissionDate >= '2017-09-01 00:00:00' and submissionDate < '2018-09-01 00:00:00' group by user_id having count(id) >= 50)
 	  AND (status='AC' OR status='PE') group by user_id""")
 
-###
-
 __cursor.execute(""" SELECT s.user_id as u_id, s.problem_id as s_id, u.elo_score as u_score, p.elo_score as u_score FROM submission s 
 	inner join users_elo u on s.user_id = u.user_id
 	inner join problems_elo p on s.problem_id = p.problem_id
@@ -225,6 +243,5 @@ __cursor.execute(""" SELECT submission.user_id, submission.problem_id, users_elo
 	INNER JOIN problems_elo on submission.problem_id = problems_elo.problem_id
 	WHERE submission.submissionDate >= '2017-09-01 00:00:00' and submission.submissionDate < '2018-09-01 00:00:00' 
 	AND (submission.status='AC' OR submission.status='PE')""")
-
 
 '''
