@@ -5,3 +5,4 @@ __pycache__/ELO_Simulation.cpython-37.pyc
 testing_2.py
 testing_charts.py
 *.pyc
+testing_datechart.py
