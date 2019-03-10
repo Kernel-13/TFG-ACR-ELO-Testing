@@ -194,6 +194,13 @@ def show_spider_chart(chart_data, title=""):
 	ax.fill(angles, values, 'b', alpha=0.5)
 	plt.show()
 
+def show_line_plot(x,y,filename):
+	fig, ax = plt.subplots()
+	ax.plot(x,y)
+	ax.grid()
+	fig.savefig(filename)
+	#plt.show()
+
 '''
 __cursor.execute("""SELECT * from submission s inner join problems_elo p on s.problem_id = p.problem_id  inner join users_elo u on s.user_id = u.user_id
 	where s.submissionDate >= '2017-09-01 00:00:00' and s.submissionDate < '2018-09-01 00:00:00' AND s.user_id in 

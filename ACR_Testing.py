@@ -2,7 +2,7 @@ import math
 import pymysql
 import datetime
 import time
-import ELO_Simulation
+import ELO
 import ACR_Stats
 import matplotlib.pyplot as plt
 
@@ -31,7 +31,7 @@ def train_subjects():
 	problem_already_solved = []
 
 	# The Training Half includes all submissions from September 2015 and September 2017
-	__cursor.execute("SELECT * from submission where submissionDate >= '2015-09-01 00:00:00' and submissionDate < '2017-09-01 00:00:00' group by user_id, problem_id, status")
+	__cursor.execute("SELECT * from submission where submissionDate >= '2015-09-01 00:00:00' and submissionDate < '2017-09-01 00:00:00'")
 
 	for row in __cursor.fetchall():
 		if row[2] not in users:	users[row[2]] = 8
@@ -40,20 +40,71 @@ def train_subjects():
 		# We check if the problem has already been solved by one specific user
 		# This is so we can omit those submissions meant to reduce exeution time, memory use, fix presentation, etc
 		if (row[2],row[1]) not in problem_already_solved:
-			ELO_Simulation.simulate(users, problems, row[2], row[1], row[5])
+			users[row[2]], problems[row[1]] = ELO.simulate(users[row[2]], problems[row[1]], row[5])
 			if row[5] in ('AC', 'PE'): problem_already_solved.append((row[2],row[1]))
 
 
 	create_and_fill_ELO_table('problems_elo', 'problem_id', problems)
 	create_and_fill_ELO_table('users_elo', 'user_id', users)
 
+def train_subjects_new():
+	""" Selects the submissions that are going to be used for the Training Half
+	Gives every user / problem an initial ELO score of 8 [ELO scores go from 0 to 16]
+	Iterates over a selection of rows (Training Half) and simulates a match, which will increase/decrease the ELO score of both User and Problem involved
+	Then, it will fill 2 new tables with the Users/Problems and their respective ELO score
+	"""
+
+	try:
+		__cursor.execute("ALTER TABLE submission ADD COLUMN user_elo DECIMAL(6,4)")
+		__cursor.execute("ALTER TABLE submission ADD COLUMN problem_elo DECIMAL(6,4)")
+		connection.commit()
+	except:
+		print('ERROR')
+
+
+	users = {}
+	problems = {}
+	problem_already_solved = []
+
+	# The Training Half includes all submissions from September 2015 and September 2017
+	__cursor.execute("SELECT * from submission where submissionDate >= '2015-09-01 00:00:00' and submissionDate < '2017-09-01 00:00:00'")
+
+	for row in __cursor.fetchall():
+		if row[2] not in users:	users[row[2]] = 8
+		if row[1] not in problems:	problems[row[1]] = 8
+
+		# We check if the problem has already been solved by one specific user
+		# This is so we can omit those submissions meant to reduce execution time, memory use, fix the presentation, etc
+		if (row[2],row[1]) not in problem_already_solved:
+			if row[5] in ('AC', 'PE'): problem_already_solved.append((row[2],row[1]))
+			users[row[2]], problems[row[1]] = ELO.simulate(users[row[2]], problems[row[1]], row[5])
+			__cursor.execute(f"UPDATE submission SET problem_elo={users[row[2]]}, user_elo={problems[row[1]]} WHERE id={row[0]}")
+
+	connection.commit()
+
+
 def main():
 	#train_subjects()
+	#train_subjects_new()
 	#ACR_Stats.print_elo_distribution(__cursor, 'users_elo', 'Users')
 	#ACR_Stats.print_elo_distribution(__cursor, 'problems_elo', 'Problems')
 	#ACR_Stats.print_elo_differences(__cursor, kind='perc')
-	connection.close()
 
+	__cursor.execute("SELECT distinct(user_id) from submission where submissionDate >= '2015-09-01 00:00:00' and submissionDate < '2017-09-01 00:00:00' AND user_elo IS NOT NULL ORDER BY submissionDate LIMIT 20")
+	#print(__cursor.execute("SELECT * from submission where submissionDate >= '2015-09-01 00:00:00' and submissionDate < '2017-09-01 00:00:00' AND user_elo IS NOT NULL GROUP BY user_id, problem_id, status, problem_elo, user_elo having count(id) > 10"))
+	users = [r[0] for r in __cursor.fetchall()]
+	for u in users:
+		__cursor.execute(f"SELECT * from submission where submissionDate >= '2015-09-01 00:00:00' and submissionDate < '2017-09-01 00:00:00' AND user_id={u} AND user_elo IS NOT NULL order by id")
+		y = [x[7] for x in __cursor.fetchall()]
+		ACR_Stats.show_line_plot(range(len(y)), y,f"User({str(u)})Evolution.png")
+		print(u)
+
+	#__cursor.execute("SELECT * from submission where submissionDate >= '2015-09-01 00:00:00' and submissionDate < '2017-09-01 00:00:00' AND user_id=89 AND user_elo IS NOT NULL")
+	"""
+	y = [x[7] for x in __cursor.fetchall()]
+	ACR_Stats.show_line_plot(range(len(y)), y)
+	connection.close()
+	"""
 
 if __name__== "__main__":
 	main()
