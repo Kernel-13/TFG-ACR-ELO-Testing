@@ -88,8 +88,11 @@ def users_evolution():
 	for u in [r[0] for r in __cursor.fetchall()]:
 		__cursor.execute(f"SELECT * from submission where submissionDate >= '2015-09-01 00:00:00' and submissionDate < '2017-09-01 00:00:00' AND user_id={u} AND user_elo IS NOT NULL order by id")
 		y = [x[7] for x in __cursor.fetchall()]
+		y.insert(0,8)
 		ACR_Stats.show_line_plot(range(len(y)), y,f"Users' ELO History\\User({str(u)})Evolution.png")
-		print(u)
+		__cursor.execute(f"SELECT avg(user_elo) from submission where submissionDate >= '2015-09-01 00:00:00' and submissionDate < '2017-09-01 00:00:00' AND user_id={u} AND user_elo IS NOT NULL")
+		avg = __cursor.fetchall()
+		print(u, avg[0])
 
 def main():
 	#train_subjects()

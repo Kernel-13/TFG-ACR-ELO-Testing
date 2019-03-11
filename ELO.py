@@ -8,9 +8,9 @@ def Expectation(Ra, Rb):
 
 def k_factor(x, underdog_won):
 	""" Calculates the K-factor """
-	if x < 1: x = 1 
+	if x <= 1: return 4
 	if underdog_won: 	return math.log2(x) + 4
-	else:				return 4 - (math.log(x)/math.log(2))
+	else:				return 4 - (math.log(x,2))
 
 
 def simulate(ELO_user, ELO_problem, Submission_State):
