@@ -94,13 +94,24 @@ def users_evolution():
 		avg = __cursor.fetchall()
 		print(u, avg[0])
 
+def problems_evolution():
+	__cursor.execute("""SELECT problem_id, count(id) from submission where submissionDate >= '2015-09-01 00:00:00' and submissionDate < '2017-09-01 00:00:00' 
+		AND problem_id IS NOT NULL GROUP BY problem_id HAVING count(id) > 5 ORDER BY RAND() LIMIT 15""")
+	for p in [r[0] for r in __cursor.fetchall()]:
+		__cursor.execute(f"SELECT * from submission where submissionDate >= '2015-09-01 00:00:00' and submissionDate < '2017-09-01 00:00:00' AND problem_id={p} AND user_elo IS NOT NULL order by id")
+		y = [x[7] for x in __cursor.fetchall()]
+		y.insert(0,8)
+		ACR_Stats.show_line_plot(range(len(y)), y,f"Problems' ELO History (11-03-19)\\Problem({str(p)})Evolution.png")
+		print(p)
+
 def main():
 	#train_subjects()
 	#train_subjects_and_insert_elos()
 	#ACR_Stats.print_elo_distribution(__cursor, 'users_elo', 'Users')
 	#ACR_Stats.print_elo_distribution(__cursor, 'problems_elo', 'Problems')
 	#ACR_Stats.print_elo_differences(__cursor, kind='perc')
-	users_evolution()
+	#users_evolution()
+	problems_evolution()
 	connection.close()
 
 if __name__== "__main__":
