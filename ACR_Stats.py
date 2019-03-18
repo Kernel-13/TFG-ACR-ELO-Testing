@@ -109,47 +109,37 @@ def print_tries_average(__cursor):
 	print("Nº of Submissions: ", n_submissions)
 	print("Average: ", n_submissions/len(rows))
 
-def correlation_user_problem(__cursor):
+def print_tries_till_solved(__cursor):
+	__cursor.execute("""SELECT * from submission where submissionDate >= '2015-09-01 00:00:00' and submissionDate < '2017-09-01 00:00:00' 
+		AND user_elo IS NOT NULL ORDER BY user_id, problem_id, submissionDate""")
 
-	__cursor.execute("""SELECT distinct s.user_id, u.elo_score, avg(p.elo_score) from submission s inner join problems_elo p on s.problem_id = p.problem_id  inner join users_elo u on s.user_id = u.user_id
-	where s.submissionDate >= '2017-09-01 00:00:00' and s.submissionDate < '2018-09-01 00:00:00' AND s.user_id in 
-	(SELECT user_id from submission where submissionDate >= '2017-09-01 00:00:00' and submissionDate < '2018-09-01 00:00:00' group by user_id having count(id) >= 50) 
-	AND (s.status='AC' OR s.status='PE') group by s.user_id""")
+	num_subm = {}
+	for i in range(1,21): num_subm[str(i)] = 0
+	num_subm['20+'] = 0
+
+	problem_already_solved = []
+	previous_tuple = (-1,-1)
+	tries = 0
+
+	for row in __cursor.fetchall():
+		if (row[2],row[1]) not in problem_already_solved:
+			tries += 1
+			if (row[2],row[1]) != previous_tuple: 
+				previous_tuple = (row[2],row[1])
+				tries = 1
+			if row[5] in ('AC', 'PE'):
+				problem_already_solved.append((row[2],row[1]))
+				if tries < 21:  num_subm[str(tries)] += 1
+				else: num_subm['20+'] += 1
+				tries = 0
 
 	x = []
 	y = []
-	x_pow2 = []
-	y_pow2 = []
-	x_y = []
-	for r in __cursor.fetchall():
-		x.append(r[1])
-		y.append(r[2])
-		x_pow2.append(r[1]*r[1])
-		y_pow2.append(r[2]*r[2])
-		x_y.append(r[1]*r[2])
+	for k,v in num_subm.items():
+		x.append(k)
+		y.append(v)
 
-	average_x = sum(x)/len(x)
-	average_y = sum(y)/len(y)
-	covariance = (sum(x_y)/len(x)) - average_x*average_y
-
-	aux_div_x = sum(x_pow2)/len(x)
-	aux_div_y = sum(y_pow2)/len(y)
-	dt_x = math.sqrt(aux_div_x - (average_x*average_x))
-	dt_y = math.sqrt(aux_div_y - (average_y*average_y))
-
-	r = float(covariance)/(float(dt_y*dt_x))
-
-	print("Media X: ", average_x)
-	print("Media Y: ", average_y)
-	print("covarianza: ", covariance)
-	print("Desviacion Tipica X: ", dt_x)
-	print("Desviacion Tipica Y: ", dt_y)
-	print("Indice de Correlacion: ", r)
-
-	plt.xlabel("Users ELO")
-	plt.ylabel("Average Problem ELO")
-	plt.scatter(x,y)
-	plt.show()
+	show_bar_plot(x,y, x_label="Nº of Tries (Submissions) until the problem is solved", y_label="Nº of Distinct User/Problem Confrontations", title="")
 
 def show_bar_plot(x,y,x_label="", y_label="", title=""):
 	x_idx = [i for i, _ in enumerate(x)]

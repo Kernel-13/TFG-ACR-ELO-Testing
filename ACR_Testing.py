@@ -110,8 +110,9 @@ def main():
 	#ACR_Stats.print_elo_distribution(__cursor, 'users_elo', 'Users')
 	#ACR_Stats.print_elo_distribution(__cursor, 'problems_elo', 'Problems')
 	#ACR_Stats.print_elo_differences(__cursor, kind='perc')
+	#ACR_Stats.print_tries_till_solved(__cursor)
 	#users_evolution()
-	problems_evolution()
+	#problems_evolution()
 	connection.close()
 
 if __name__== "__main__":
