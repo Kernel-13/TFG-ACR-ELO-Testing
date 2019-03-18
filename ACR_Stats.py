@@ -185,14 +185,19 @@ def show_spider_chart(chart_data, title=""):
 	plt.show()
 
 def show_line_plot(x,y,filename):
+	
+
 	fig, ax = plt.subplots()
 	ax.plot(x,y,'ro-')
 	ax.grid()
+	axes = plt.gca()
+	axes.set_ylim([0,16])
 	for idx, v in enumerate(x):
 		position = (v,float(y[idx])+0.5) if y[idx] < 16 else (v,100)
 		plt.text(v, y[idx], str(y[idx]), color="black", size=12 ,ha='center', va='center', alpha=0.5, position=position)
 	fig.set_size_inches(12, 10)
 	fig.savefig(filename)
+	plt.close(fig)
 	#plt.show()
 
 '''

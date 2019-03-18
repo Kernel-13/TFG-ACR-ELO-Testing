@@ -13,7 +13,18 @@ def k_factor(x, underdog_won):
 	else:				return 4 - (math.log(x,2))
 
 
-def simulate(ELO_user, ELO_problem, Submission_State):
+def new_k_factor(x, underdog_won, tries, status):
+	""" Calculates the K-factor """
+	k = 0
+	if tries == 10 and status not in ('AC', 'PE'): return k
+	if x <= 1: k = 4
+	else:
+		if underdog_won: 	k = math.log2(x) + 4
+		else:				k = 4 - (math.log(x,2))
+	return k*(tries/10)
+
+
+def simulate(ELO_user, ELO_problem, Submission_State, tries):
 	""" Calculates the new ratings for both player & problem """
 
 	User_Old_Score = ELO_user
@@ -27,11 +38,11 @@ def simulate(ELO_user, ELO_problem, Submission_State):
 
 		# If Player_1 Wins, and his score is lower than Player_2's score
 		if User_Old_Score < Problem_Old_Score: 
-			k = k_factor(Problem_Old_Score - User_Old_Score, True)
+			k = new_k_factor(Problem_Old_Score - User_Old_Score, True, tries, Submission_State)
 
 		# If Player_1 Wins, but his score is higher than Player_2's score
 		else:	
-			k = k_factor(User_Old_Score - Problem_Old_Score, False)
+			k = new_k_factor(User_Old_Score - Problem_Old_Score, False, tries, Submission_State)
 		User_New_Score = User_Old_Score + k * (1 - User_Expectation)
 		Problem_New_Score = Problem_Old_Score + k * (0 - Problem_Expectation)
 
@@ -40,11 +51,11 @@ def simulate(ELO_user, ELO_problem, Submission_State):
 
 		# If Player_2 Wins, and his score is lower than Player_1's score
 		if Problem_Old_Score < User_Old_Score: 
-			k = k_factor(User_Old_Score - Problem_Old_Score, True)
+			k = new_k_factor(User_Old_Score - Problem_Old_Score, True, tries, Submission_State)
 
 		# If Player_2 Wins, but his score is higher than Player_1's score
 		else:	
-			k = k_factor(Problem_Old_Score - User_Old_Score, False)
+			k = new_k_factor(Problem_Old_Score - User_Old_Score, False, tries, Submission_State)
 		User_New_Score = User_Old_Score + k * (0 - User_Expectation)
 		Problem_New_Score = Problem_Old_Score + k * (1 - Problem_Expectation)
 
