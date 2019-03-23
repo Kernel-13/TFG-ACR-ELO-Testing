@@ -10,19 +10,70 @@ import matplotlib.pyplot as plt
 # Users checked: 1148, 1184, 1316, 1504, 1842, 1882, 1990, 2000, 2046, 206, 2107, 2127, 2134, 2245, 2269, 2372, 2504, 2568, 2659, 2724, 2726, 2727, 2856, 2863, 2880, 2951, 2976, 2979, 3058, 3062, 3098, 3147, 3175, 3197, 3223, 3286, 3580, 3591, 3690, 3699, 3711, 3788, 3843, 3886, 3983, 4047, 4055, 4221, 4225, 4246, 4312, 4324, 4352, 4442, 4444, 4458, 4488, 4501, 4582, 4788, 4790, 4793, 483, 4969, 5024, 5035, 5129, 5138, 5363, 5403, 542, 5501, 5521, 5550, 5561, 5708, 5718, 5731, 5766, 5841, 6125, 6210, 6230, 6243, 6286, 6335, 6348, 6356, 6457
 # Problems checked: 10, 109, 117, 134, 150, 17, 178, 181, 19, 2, 224, 23, 233, 250, 258, 275, 282, 307, 316, 325, 331, 340, 39, 443, 465, 470, 506, 520, 533, 544, 561, 570, 575, 606, 613, 621, 629, 680, 699, 747, 748, 751, 806, 814, 834, 859, 861, 866, 923, 925, 955, 97
 
+# Category Codes
+categories = {
+	25: 'elo_adhoc',
+	26: 'elo_recorr',
+	27: 'elo_search',
+	28: 'elo_bin_srch',
+	29: 'elo_sorting',
+	30: 'elo_vrz',
+	31: 'elo_dnmc',
+	32: 'elo_dyv',
+	33: 'elo_bk_trk',
+	34: 'elo_space',
+	43: 'elo_graph',
+	44: 'elo_geo' 
+}
+
 # Database connection
 connection = pymysql.connect(host="localhost",user="root",passwd="",database="acr_dat")
 __cursor = connection.cursor()
 
-def create_and_fill_ELO_table(table, row_name, dicc):
-	""" Creates 2 new Tables (users_elo & problems_elo) and inserts data from the given dictionary"""
-	__cursor.execute(f"SHOW TABLES LIKE '{table}'")
-	if __cursor.fetchone():	print(f'Table "{table}" already exists.')
+def create_and_alter_needed_tables():
+	__cursor.execute(f"SHOW TABLES LIKE 'User_Scores'")
+	if __cursor.fetchone():	print(f'Table User_Scores already exists.')
 	else: 
-		__cursor.execute(f"""CREATE TABLE IF NOT EXISTS {table}({row_name} INT PRIMARY KEY, elo_score DECIMAL(6,4))""")
-		for k,v in dicc.items():	
-			__cursor.execute(f"INSERT INTO {table}({row_name},elo_score) values({k},{v})")
-			connection.commit()
+		__cursor.execute(f"""CREATE TABLE IF NOT EXISTS User_Scores(
+			user_id INT PRIMARY KEY, 
+			elo_global FLOAT(18,16) NOT NULL DEFAULT 8.0,
+			elo_adhoc FLOAT(18,16) NOT NULL DEFAULT 8.0,
+			elo_recorr FLOAT(18,16) NOT NULL DEFAULT 8.0,
+			elo_search FLOAT(18,16) NOT NULL DEFAULT 8.0,
+			elo_bin_srch FLOAT(18,16) NOT NULL DEFAULT 8.0,
+			elo_sorting FLOAT(18,16) NOT NULL DEFAULT 8.0,
+			elo_vrz FLOAT(18,16) NOT NULL DEFAULT 8.0,
+			elo_dnmc FLOAT(18,16) NOT NULL DEFAULT 8.0,
+			elo_dyv FLOAT(18,16) NOT NULL DEFAULT 8.0,
+			elo_bk_trk FLOAT(18,16) NOT NULL DEFAULT 8.0,
+			elo_space FLOAT(18,16) NOT NULL DEFAULT 8.0,
+			elo_graph FLOAT(18,16) NOT NULL DEFAULT 8.0,
+			elo_geo FLOAT(18,16) NOT NULL DEFAULT 8.0)""")
+		# ADD CONSTRAINT 'fk_user_problem' FOREIGN KEY (user_id) REFERENCES user_table (user_table_id) ON DELETE CASCADE)
+
+		__cursor.execute("SELECT user_id FROM submission GROUP BY user_id")
+		for usr in __cursor.fetchall():
+			__cursor.execute(f"INSERT INTO User_Scores(user_id) VALUES({usr[0]})")
+
+	__cursor.execute(f"SHOW TABLES LIKE 'Problem_Scores'")
+	if __cursor.fetchone():	print(f'Table Problem_Scores already exists.')
+	else: 
+		__cursor.execute(f"""CREATE TABLE IF NOT EXISTS Problem_Scores(
+			problem_id INT PRIMARY KEY, 
+			elo_global FLOAT(18,16) NOT NULL DEFAULT 8.0,
+			FOREIGN KEY (problem_id) REFERENCES problem (internalId) ON DELETE CASCADE)""")
+
+		__cursor.execute("SELECT internalId FROM problem GROUP BY internalId")
+		for prb in __cursor.fetchall():
+			__cursor.execute(f"INSERT INTO Problem_Scores(problem_id) VALUES({prb[0]})")
+
+	try:
+		__cursor.execute("ALTER TABLE submission ADD COLUMN user_elo FLOAT(18,16)")
+		__cursor.execute("ALTER TABLE submission ADD COLUMN problem_elo FLOAT(18,16)")
+	except:
+		pass
+
+	connection.commit()
 
 def train_subjects():
 	""" Selects the submissions that are going to be used for the Training Half
@@ -59,8 +110,8 @@ def train_subjects_and_insert_elos():
 	"""
 
 	try:
-		__cursor.execute("ALTER TABLE submission ADD COLUMN user_elo DECIMAL(6,4)")
-		__cursor.execute("ALTER TABLE submission ADD COLUMN problem_elo DECIMAL(6,4)")
+		__cursor.execute("ALTER TABLE submission ADD COLUMN user_elo FLOAT(18,16)")
+		__cursor.execute("ALTER TABLE submission ADD COLUMN problem_elo FLOAT(18,16)")
 		connection.commit()
 	except:
 		print('ERROR')
@@ -97,6 +148,92 @@ def train_subjects_and_insert_elos():
 
 	connection.commit()
 
+def train_all():
+	cnt = 1
+	problem_already_solved = []
+
+	# We select all submissions (both halves)
+	__cursor.execute("SELECT * from submission where submissionDate >= '2015-09-01 00:00:00' and submissionDate < '2018-09-01 00:00:00' ORDER BY id")
+
+	rows = __cursor.fetchall()
+	for row in rows:
+		print(cnt, len(rows))
+		cnt += 1
+
+		subm_id = row[0]
+		p_id = row[1]
+		u_id = row[2]
+		status = row[5]
+
+		# Both User & Problem ELOs are retrieved from User_scores / Problem_Scores
+		__cursor.execute(f"SELECT elo_global FROM User_Scores WHERE user_id={u_id}")
+		old_user_elo = __cursor.fetchone()[0]
+
+		__cursor.execute(f"SELECT elo_global FROM Problem_Scores WHERE problem_id={p_id}")
+		old_problem_elo = __cursor.fetchone()[0]
+
+		# We check if the problem has already been solved by one specific user
+		# This is so we can omit those submissions meant to reduce execution time, memory use, fix the presentation, etc
+		if (u_id,p_id) not in problem_already_solved:
+			if status in ('AC', 'PE'): 
+				problem_already_solved.append((u_id,p_id))
+
+			__cursor.execute(f"""SELECT * from submission where user_id={u_id} AND problem_id={p_id} AND id<{subm_id} AND user_elo IS NOT NULL ORDER BY id DESC LIMIT 9""")
+
+			tries = 1
+			for r in __cursor.fetchall(): 
+				if r[5] in ('AC', 'PE'): 
+					break
+				else: 
+					tries += 1
+
+			# Calculates the New Global ELO
+			new_user_elo, new_problem_elo = ELO.simulate(old_user_elo, old_problem_elo, status, tries)
+
+			# Calculates Categories' ELOs
+			# pick elo from user_score
+			# simulate fight with user_score.elo_category vs problem.elo for each category
+			__cursor.execute(f"SELECT categoryId FROM problemcategories WHERE problemId={p_id}")
+			for cat in __cursor.fetchall():
+				
+				try:
+					category = categories[cat[0]]
+
+					# The retrieve the old category ELO and use it to simulate the fight
+					__cursor.execute(f"SELECT {category} FROM User_Scores WHERE user_id = {u_id}")
+					Old_Category_ELO = __cursor.fetchone()[0]
+					New_Category_ELO, _ = ELO.simulate(Old_Category_ELO, old_problem_elo, status, tries)
+					
+					# The Category ELO is updated
+					__cursor.execute(f"UPDATE User_Scores SET {category}={New_Category_ELO} WHERE user_id={u_id}")
+				except:
+					pass
+
+				"""
+				# Make it a global dict
+				if cat[0] == 25: 	category = 'elo_adhoc'
+				elif cat[0] == 26: 	category = 'elo_recorr'
+				elif cat[0] == 27:  category = 'elo_search'
+				elif cat[0] == 28:  category = 'elo_bin_srch'
+				elif cat[0] == 29:  category = 'elo_sorting'
+				elif cat[0] == 30:  category = 'elo_vrz'
+				elif cat[0] == 31:  category = 'elo_dnmc'
+				elif cat[0] == 32:  category = 'elo_dyv'
+				elif cat[0] == 33:  category = 'elo_bk_trk'
+				elif cat[0] == 34:  category = 'elo_space'
+				elif cat[0] == 43:  category = 'elo_graph'
+				elif cat[0] == 44:  category = 'elo_geo'
+				else:
+					break
+				"""
+
+			# Global ELOs get updated
+			__cursor.execute(f"UPDATE submission SET problem_elo={new_problem_elo}, user_elo={new_user_elo} WHERE id={subm_id}")
+			__cursor.execute(f"UPDATE User_Scores SET elo_global={new_user_elo} WHERE user_id={u_id}")
+			__cursor.execute(f"UPDATE Problem_Scores SET elo_global={new_problem_elo} WHERE problem_id={p_id}")
+
+	connection.commit()
+
 def users_evolution():
 	if not os.path.exists("Users' ELO History"):
 		os.makedirs("Users' ELO History")
@@ -122,13 +259,17 @@ def problems_evolution():
 		print(p)
 
 def main():
+	#create_and_alter_needed_tables()
+	#train_all()
+
 	#train_subjects()
 	#train_subjects_and_insert_elos()
 	
 	#ACR_Stats.print_elo_distribution(__cursor, 'Users')
 	#ACR_Stats.print_elo_distribution(__cursor, 'Problems')
-	ACR_Stats.print_elo_differences(__cursor, kind='perc')
-	ACR_Stats.print_tries_till_solved(__cursor)
+	
+	#ACR_Stats.print_elo_differences(__cursor, kind='perc')
+	#ACR_Stats.print_tries_till_solved(__cursor)
 
 	#users_evolution()
 	#problems_evolution()
