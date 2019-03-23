@@ -149,7 +149,7 @@ def train_subjects_and_insert_elos():
 	connection.commit()
 
 def train_all():
-	cnt = 1
+	#cnt = 1
 	problem_already_solved = []
 
 	# We select all submissions (both halves)
@@ -157,8 +157,8 @@ def train_all():
 
 	rows = __cursor.fetchall()
 	for row in rows:
-		print(cnt, len(rows))
-		cnt += 1
+		#print(cnt, len(rows))
+		#cnt += 1
 
 		subm_id = row[0]
 		p_id = row[1]
@@ -190,42 +190,21 @@ def train_all():
 			# Calculates the New Global ELO
 			new_user_elo, new_problem_elo = ELO.simulate(old_user_elo, old_problem_elo, status, tries)
 
-			# Calculates Categories' ELOs
-			# pick elo from user_score
-			# simulate fight with user_score.elo_category vs problem.elo for each category
+			# Checks which categories include the problem 
 			__cursor.execute(f"SELECT categoryId FROM problemcategories WHERE problemId={p_id}")
 			for cat in __cursor.fetchall():
 				
 				try:
 					category = categories[cat[0]]
 
-					# The retrieve the old category ELO and use it to simulate the fight
+					# We retrieve the old category ELO and use it to simulate a new fight
 					__cursor.execute(f"SELECT {category} FROM User_Scores WHERE user_id = {u_id}")
 					Old_Category_ELO = __cursor.fetchone()[0]
 					New_Category_ELO, _ = ELO.simulate(Old_Category_ELO, old_problem_elo, status, tries)
 					
-					# The Category ELO is updated
 					__cursor.execute(f"UPDATE User_Scores SET {category}={New_Category_ELO} WHERE user_id={u_id}")
 				except:
 					pass
-
-				"""
-				# Make it a global dict
-				if cat[0] == 25: 	category = 'elo_adhoc'
-				elif cat[0] == 26: 	category = 'elo_recorr'
-				elif cat[0] == 27:  category = 'elo_search'
-				elif cat[0] == 28:  category = 'elo_bin_srch'
-				elif cat[0] == 29:  category = 'elo_sorting'
-				elif cat[0] == 30:  category = 'elo_vrz'
-				elif cat[0] == 31:  category = 'elo_dnmc'
-				elif cat[0] == 32:  category = 'elo_dyv'
-				elif cat[0] == 33:  category = 'elo_bk_trk'
-				elif cat[0] == 34:  category = 'elo_space'
-				elif cat[0] == 43:  category = 'elo_graph'
-				elif cat[0] == 44:  category = 'elo_geo'
-				else:
-					break
-				"""
 
 			# Global ELOs get updated
 			__cursor.execute(f"UPDATE submission SET problem_elo={new_problem_elo}, user_elo={new_user_elo} WHERE id={subm_id}")
@@ -269,7 +248,7 @@ def main():
 	#ACR_Stats.print_elo_distribution(__cursor, 'Problems')
 	
 	#ACR_Stats.print_elo_differences(__cursor, kind='perc')
-	#ACR_Stats.print_tries_till_solved(__cursor)
+	#ACR_Stats.print_tries_till_solved(__cursor, '2015-09-01 00:00:00', '2016-09-01 00:00:00')
 
 	#users_evolution()
 	#problems_evolution()

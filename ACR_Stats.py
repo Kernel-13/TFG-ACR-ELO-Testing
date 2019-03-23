@@ -106,11 +106,12 @@ def print_elo_distribution(__cursor, items):
 
 	show_bar_plot(ranges,values,x_label="ELO Ranges", y_label=f"Nº of {items}", title=f"ELO Distribution ({items})")
 
+"""
 def print_tries_average(__cursor):
 	n_submissions = 0
 	u_elo = {}
 	[u_elo.update({k:0}) for k in range(16)]
-	__cursor.execute("""SELECT distinct(user_id), count(id), elo_score from submission natural join users_elo group by user_id""")
+	__cursor.execute("SELECT distinct(user_id), count(id), elo_score from submission natural join users_elo group by user_id")
 
 	rows = __cursor.fetchall()
 	for r in rows:
@@ -121,10 +122,14 @@ def print_tries_average(__cursor):
 	print("Nº of Users: ", len(rows))
 	print("Nº of Submissions: ", n_submissions)
 	print("Average: ", n_submissions/len(rows))
+"""
 
-def print_tries_till_solved(__cursor):
-	__cursor.execute("""SELECT * from submission where submissionDate >= '2015-09-01 00:00:00' and submissionDate < '2017-09-01 00:00:00' 
-		AND user_elo IS NOT NULL ORDER BY user_id, problem_id, submissionDate""")
+def print_tries_till_solved(__cursor, start_date, end_date):
+	__cursor.execute(f"""SELECT * from submission 
+		WHERE submissionDate >= '{start_date}' 
+		AND submissionDate < '{end_date}' 
+		AND user_elo IS NOT NULL 
+		ORDER BY user_id, problem_id, submissionDate""")
 
 	num_subm = {}
 	for i in range(1,21): num_subm[str(i)] = 0
