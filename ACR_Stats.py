@@ -74,19 +74,32 @@ def print_elo_differences(__cursor, kind='perc'):
 
 	show_bar_plot(ranges,values,x_label="ELO Difference (Ranges)", y_label="Submissions with Status AC or PE", title="ELO Differences between Users and the Problems they solved")
 
-def print_elo_distribution(__cursor, table, items):
-	u_elo = {}
-	[u_elo.update({k:0}) for k in range(16)]
-	__cursor.execute(f"SELECT elo_score FROM {table}")
-	for r in __cursor.fetchall():
-		if r[0] != 16: u_elo[math.floor(r[0])] += 1 
-		else: u_elo[15] += 1
+def print_elo_distribution(__cursor, items):
+	elo_scores = {}
+	[elo_scores.update({k:0}) for k in range(16)]
+
+	field = 'user_id' if items=='Users' else 'problem_id'
+
+	#__cursor.execute(f"SELECT * FROM submission WHERE submissionDate >= '2015-09-01 00:00:00' AND submissionDate < '2017-09-01 00:00:00' AND problem_elo IS NOT NULL AND user_elo IS NOT NULL AND id IN (SELECT MAX(id) FROM submission WHERE submissionDate >= '2015-09-01 00:00:00' AND submissionDate < '2017-09-01 00:00:00' GROUP BY {field})")
+
+	__cursor.execute(f"""SELECT {field} FROM submission WHERE submissionDate >= '2015-09-01 00:00:00' AND submissionDate < '2017-09-01 00:00:00' GROUP BY {field}""")
+	rows = __cursor.fetchall()
+
+	for row in rows:
+		__cursor.execute(f"""SELECT * FROM submission WHERE submissionDate >= '2015-09-01 00:00:00' AND submissionDate < '2017-09-01 00:00:00' 
+			AND {field}={row[0]} AND problem_elo IS NOT NULL AND user_elo IS NOT NULL ORDER BY id DESC LIMIT 1""")
+		r = __cursor.fetchall()
+
+		ELO = r[0][7] if items=='Users' else r[0][8]
+		
+		if ELO != 16: elo_scores[math.floor(ELO)] += 1 
+		else: elo_scores[15] += 1
 
 	ranges = []
 	values = []
 	print(f"\nELO Distribution ({items})")
 
-	for k,v in u_elo.items(): 
+	for k,v in elo_scores.items(): 
 		print(f"Range [{k} - {k+1}]   :	{v}")
 		ranges.append(f"[{k} - {k+1})")
 		values.append(v)
@@ -185,8 +198,6 @@ def show_spider_chart(chart_data, title=""):
 	plt.show()
 
 def show_line_plot(x,y,filename):
-	
-
 	fig, ax = plt.subplots()
 	ax.plot(x,y,'ro-')
 	ax.grid()
