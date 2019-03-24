@@ -31,7 +31,7 @@ connection = pymysql.connect(host="localhost",user="root",passwd="",database="ac
 __cursor = connection.cursor()
 
 def create_and_alter_needed_tables():
-	__cursor.execute("DROP TABLE IF EXISTS 'User_Scores'")
+	__cursor.execute("DROP TABLE IF EXISTS User_Scores")
 	__cursor.execute(f"""CREATE TABLE IF NOT EXISTS User_Scores(
 		user_id INT PRIMARY KEY, 
 		elo_global FLOAT(18,16) NOT NULL DEFAULT 8.0,
@@ -54,7 +54,7 @@ def create_and_alter_needed_tables():
 		__cursor.execute(f"INSERT INTO User_Scores(user_id) VALUES({usr[0]})")
 
 
-	__cursor.execute("DROP TABLE IF EXISTS 'Problem_Scores'")
+	__cursor.execute("DROP TABLE IF EXISTS Problem_Scores")
 	__cursor.execute(f"""CREATE TABLE IF NOT EXISTS Problem_Scores(
 		problem_id INT PRIMARY KEY, 
 		elo_global FLOAT(18,16) NOT NULL DEFAULT 8.0,
@@ -152,8 +152,8 @@ def train_subjects_and_insert_elos():
 
 	connection.commit()
 
-def train_all():
-	#cnt = 1
+def train_all_no_tries():
+	cnt = 1
 	problem_already_solved = []
 
 	# We select all submissions (both halves)
@@ -161,8 +161,64 @@ def train_all():
 
 	rows = __cursor.fetchall()
 	for row in rows:
-		#print(cnt, len(rows))
-		#cnt += 1
+		print(cnt, len(rows))
+		cnt += 1
+
+		subm_id = row[0]
+		p_id = row[1]
+		u_id = row[2]
+		status = row[5]
+
+		# Both User & Problem ELOs are retrieved from User_scores / Problem_Scores
+		__cursor.execute(f"SELECT elo_global FROM User_Scores WHERE user_id={u_id}")
+		old_user_elo = __cursor.fetchone()[0]
+
+		__cursor.execute(f"SELECT elo_global FROM Problem_Scores WHERE problem_id={p_id}")
+		old_problem_elo = __cursor.fetchone()[0]
+
+		# We check if the problem has already been solved by one specific user
+		# This is so we can omit those submissions meant to reduce execution time, memory use, fix the presentation, etc
+		if (u_id,p_id) not in problem_already_solved:
+			if status in ('AC', 'PE'): 
+				problem_already_solved.append((u_id,p_id))
+
+			# Calculates the New Global ELO
+			new_user_elo, new_problem_elo = ELO.simulate_no_tries(old_user_elo, old_problem_elo, status)
+
+			# Checks which categories include the problem 
+			__cursor.execute(f"SELECT categoryId FROM problemcategories WHERE problemId={p_id}")
+			for cat in __cursor.fetchall():
+				
+				try:
+					category = categories[cat[0]]
+
+					# We retrieve the old category ELO and use it to simulate a new fight
+					__cursor.execute(f"SELECT {category} FROM User_Scores WHERE user_id = {u_id}")
+					Old_Category_ELO = __cursor.fetchone()[0]
+					New_Category_ELO, _ = ELO.simulate_no_tries(Old_Category_ELO, old_problem_elo, status)
+					
+					__cursor.execute(f"UPDATE User_Scores SET {category}={New_Category_ELO} WHERE user_id={u_id}")
+				except:
+					pass
+
+			# Global ELOs get updated
+			__cursor.execute(f"UPDATE submission SET problem_elo={new_problem_elo}, user_elo={new_user_elo} WHERE id={subm_id}")
+			__cursor.execute(f"UPDATE User_Scores SET elo_global={new_user_elo} WHERE user_id={u_id}")
+			__cursor.execute(f"UPDATE Problem_Scores SET elo_global={new_problem_elo} WHERE problem_id={p_id}")
+
+	connection.commit()
+
+def train_all_with_tries():
+	cnt = 1
+	problem_already_solved = []
+
+	# We select all submissions (both halves)
+	__cursor.execute("SELECT * FROM submission WHERE submissionDate >= '2015-09-01 00:00:00' AND submissionDate < '2018-09-01 00:00:00' ORDER BY id")
+
+	rows = __cursor.fetchall()
+	for row in rows:
+		print(cnt, ' of ', len(rows), ' processed')
+		cnt += 1
 
 		subm_id = row[0]
 		p_id = row[1]
@@ -198,7 +254,7 @@ def train_all():
 					tries += 1
 
 			# Calculates the New Global ELO
-			new_user_elo, new_problem_elo = ELO.simulate(old_user_elo, old_problem_elo, status, tries)
+			new_user_elo, new_problem_elo = ELO.simulate_with_tries(old_user_elo, old_problem_elo, status, tries)
 
 			# Checks which categories include the problem 
 			__cursor.execute(f"SELECT categoryId FROM problemcategories WHERE problemId={p_id}")
@@ -210,7 +266,7 @@ def train_all():
 					# We retrieve the old category ELO and use it to simulate a new fight
 					__cursor.execute(f"SELECT {category} FROM User_Scores WHERE user_id = {u_id}")
 					Old_Category_ELO = __cursor.fetchone()[0]
-					New_Category_ELO, _ = ELO.simulate(Old_Category_ELO, old_problem_elo, status, tries)
+					New_Category_ELO, _ = ELO.simulate_with_tries(Old_Category_ELO, old_problem_elo, status, tries)
 					
 					__cursor.execute(f"UPDATE User_Scores SET {category}={New_Category_ELO} WHERE user_id={u_id}")
 				except:
@@ -352,7 +408,9 @@ def user_categories():
 
 def main():
 	#create_and_alter_needed_tables()
-	#train_all()
+
+	#train_all_with_tries()
+	#train_all_no_tries()
 
 	#ACR_Stats.print_elo_distribution(__cursor, 'Users', '2017-09-01 00:00:00', '2018-09-01 00:00:00')
 	#ACR_Stats.print_elo_distribution(__cursor, 'Problems', '2017-09-01 00:00:00', '2018-09-01 00:00:00')

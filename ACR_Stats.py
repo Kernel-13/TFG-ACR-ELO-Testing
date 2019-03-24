@@ -206,9 +206,15 @@ def show_line_plot(x,y,filename):
 	ax.grid()
 	axes = plt.gca()
 	axes.set_ylim([0,16])
+
+	position = (x[len(x)-1],float(y[len(y)-1])+0.5) if y[len(y)-1] < 16 else (x[len(x)-1],100)
+	plt.text(x[len(x)-1], y[len(y)-1], str(round(y[len(y)-1],2)), color="black", size=12 ,ha='center', va='center', alpha=0.5, position=position)
+
+	"""
 	for idx, v in enumerate(x):
 		position = (v,float(y[idx])+0.5) if y[idx] < 16 else (v,100)
-		plt.text(v, y[idx], str(y[idx]), color="black", size=12 ,ha='center', va='center', alpha=0.5, position=position)
+		plt.text(v, y[idx], str(round(y[idx],2)), color="black", size=12 ,ha='center', va='center', alpha=0.5, position=position)
+	"""
 	fig.set_size_inches(12, 10)
 	fig.savefig(filename)
 	plt.close()
@@ -234,7 +240,6 @@ def show_scatter(x,y,label, x_label="", y_label="", title=""):
 
 	#fig.set_size_inches(180, 150)
 	#fig.savefig(f"whatever_big_{label}.png")
-
 
 def show_ELO_gain(x,y1,y2,x_label="", y_label="", title=""):
 	# Code from https://matplotlib.org/gallery/subplots_axes_and_figures/two_scales.html

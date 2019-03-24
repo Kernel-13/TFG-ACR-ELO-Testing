@@ -19,6 +19,7 @@ def k_factor_new_formula(x, underdog_won):
 
 def k_factor_new_formula_with_tries(x, underdog_won, tries, status):
 	""" Calculates the K-factor """
+	if tries >= 10 and status not in ('AC', 'PE'): return 0 
 	if underdog_won: 	return ((x+16)/16)*(tries/10)
 	else:				return (1 - x/16)*(tries/10)
 
