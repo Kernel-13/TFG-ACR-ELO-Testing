@@ -31,47 +31,45 @@ connection = pymysql.connect(host="localhost",user="root",passwd="",database="ac
 __cursor = connection.cursor()
 
 def create_and_alter_needed_tables():
-	__cursor.execute(f"SHOW TABLES LIKE 'User_Scores'")
-	if __cursor.fetchone():	print(f'Table User_Scores already exists.')
-	else: 
-		__cursor.execute(f"""CREATE TABLE IF NOT EXISTS User_Scores(
-			user_id INT PRIMARY KEY, 
-			elo_global FLOAT(18,16) NOT NULL DEFAULT 8.0,
-			elo_adhoc FLOAT(18,16) NOT NULL DEFAULT 8.0,
-			elo_recorr FLOAT(18,16) NOT NULL DEFAULT 8.0,
-			elo_search FLOAT(18,16) NOT NULL DEFAULT 8.0,
-			elo_bin_srch FLOAT(18,16) NOT NULL DEFAULT 8.0,
-			elo_sorting FLOAT(18,16) NOT NULL DEFAULT 8.0,
-			elo_vrz FLOAT(18,16) NOT NULL DEFAULT 8.0,
-			elo_dnmc FLOAT(18,16) NOT NULL DEFAULT 8.0,
-			elo_dyv FLOAT(18,16) NOT NULL DEFAULT 8.0,
-			elo_bk_trk FLOAT(18,16) NOT NULL DEFAULT 8.0,
-			elo_space FLOAT(18,16) NOT NULL DEFAULT 8.0,
-			elo_graph FLOAT(18,16) NOT NULL DEFAULT 8.0,
-			elo_geo FLOAT(18,16) NOT NULL DEFAULT 8.0)""")
-		# ADD CONSTRAINT 'fk_user_problem' FOREIGN KEY (user_id) REFERENCES user_table (user_table_id) ON DELETE CASCADE)
+	__cursor.execute("DROP TABLE IF EXISTS 'User_Scores'")
+	__cursor.execute(f"""CREATE TABLE IF NOT EXISTS User_Scores(
+		user_id INT PRIMARY KEY, 
+		elo_global FLOAT(18,16) NOT NULL DEFAULT 8.0,
+		elo_adhoc FLOAT(18,16) NOT NULL DEFAULT 8.0,
+		elo_recorr FLOAT(18,16) NOT NULL DEFAULT 8.0,
+		elo_search FLOAT(18,16) NOT NULL DEFAULT 8.0,
+		elo_bin_srch FLOAT(18,16) NOT NULL DEFAULT 8.0,
+		elo_sorting FLOAT(18,16) NOT NULL DEFAULT 8.0,
+		elo_vrz FLOAT(18,16) NOT NULL DEFAULT 8.0,
+		elo_dnmc FLOAT(18,16) NOT NULL DEFAULT 8.0,
+		elo_dyv FLOAT(18,16) NOT NULL DEFAULT 8.0,
+		elo_bk_trk FLOAT(18,16) NOT NULL DEFAULT 8.0,
+		elo_space FLOAT(18,16) NOT NULL DEFAULT 8.0,
+		elo_graph FLOAT(18,16) NOT NULL DEFAULT 8.0,
+		elo_geo FLOAT(18,16) NOT NULL DEFAULT 8.0)""")
+	# ADD CONSTRAINT 'fk_user_problem' FOREIGN KEY (user_id) REFERENCES user_table (user_table_id) ON DELETE CASCADE)
 
-		__cursor.execute("SELECT user_id FROM submission GROUP BY user_id")
-		for usr in __cursor.fetchall():
-			__cursor.execute(f"INSERT INTO User_Scores(user_id) VALUES({usr[0]})")
+	__cursor.execute("SELECT user_id FROM submission GROUP BY user_id")
+	for usr in __cursor.fetchall():
+		__cursor.execute(f"INSERT INTO User_Scores(user_id) VALUES({usr[0]})")
 
-	__cursor.execute(f"SHOW TABLES LIKE 'Problem_Scores'")
-	if __cursor.fetchone():	print(f'Table Problem_Scores already exists.')
-	else: 
-		__cursor.execute(f"""CREATE TABLE IF NOT EXISTS Problem_Scores(
-			problem_id INT PRIMARY KEY, 
-			elo_global FLOAT(18,16) NOT NULL DEFAULT 8.0,
-			FOREIGN KEY (problem_id) REFERENCES problem (internalId) ON DELETE CASCADE)""")
 
-		__cursor.execute("SELECT internalId FROM problem GROUP BY internalId")
-		for prb in __cursor.fetchall():
-			__cursor.execute(f"INSERT INTO Problem_Scores(problem_id) VALUES({prb[0]})")
+	__cursor.execute("DROP TABLE IF EXISTS 'Problem_Scores'")
+	__cursor.execute(f"""CREATE TABLE IF NOT EXISTS Problem_Scores(
+		problem_id INT PRIMARY KEY, 
+		elo_global FLOAT(18,16) NOT NULL DEFAULT 8.0,
+		FOREIGN KEY (problem_id) REFERENCES problem (internalId) ON DELETE CASCADE)""")
+
+	__cursor.execute("SELECT internalId FROM problem GROUP BY internalId")
+	for prb in __cursor.fetchall():
+		__cursor.execute(f"INSERT INTO Problem_Scores(problem_id) VALUES({prb[0]})")
 
 	try:
 		__cursor.execute("ALTER TABLE submission ADD COLUMN user_elo FLOAT(18,16)")
 		__cursor.execute("ALTER TABLE submission ADD COLUMN problem_elo FLOAT(18,16)")
 	except:
-		pass
+		__cursor.execute("UPDATE submission SET user_elo=NULL")
+		__cursor.execute("UPDATE submission SET problem_elo=NULL")
 
 	connection.commit()
 
@@ -188,7 +186,7 @@ def train_all():
 				WHERE user_id={u_id} 
 				AND problem_id={p_id} 
 				AND id<{subm_id} 
-				AND user_elo IS NOT NULL 
+				AND user_elo IS NOT NULL
 				ORDER BY id DESC 
 				LIMIT 9""")
 
@@ -224,6 +222,55 @@ def train_all():
 			__cursor.execute(f"UPDATE Problem_Scores SET elo_global={new_problem_elo} WHERE problem_id={p_id}")
 
 	connection.commit()
+
+def train_all_elo_gain_plot():
+	cnt = 1
+	elo_differences = []
+	user_gain = []
+	problem_gain = []
+	problem_already_solved = []
+
+	# We select all submissions (both halves)
+	__cursor.execute("""SELECT * FROM submission 
+		WHERE submissionDate >= '2015-09-01 00:00:00' 
+		AND submissionDate < '2018-09-01 00:00:00' 
+		AND user_elo IS NOT NULL
+		AND problem_elo IS NOT NULL
+		ORDER BY id""")
+
+	rows = __cursor.fetchall()
+	for row in rows:
+
+		if cnt == 10000:
+			break
+
+		print(cnt, len(rows))
+		cnt += 1
+
+		subm_id = row[0]
+		p_id = row[1]
+		u_id = row[2]
+		status = row[5]
+		old_user_elo = row[7]
+		old_problem_elo = row[8]
+
+		# We check if the problem has already been solved by one specific user
+		# This is so we can omit those submissions meant to reduce execution time, memory use, fix the presentation, etc
+		if (u_id,p_id) not in problem_already_solved:
+			if status in ('AC', 'PE'): 
+				problem_already_solved.append((u_id,p_id))
+
+			# Calculates the New Global ELO
+			x,y1,y2 = ELO.simulate_no_tries(old_user_elo, old_problem_elo, status)
+
+			#if y1 != 0 and y2 != 0:
+			elo_differences.append(x)
+			user_gain.append(y1)
+			problem_gain.append(y2)
+
+	ACR_Stats.show_ELO_gain(elo_differences, user_gain, problem_gain,x_label = "USER ELO - PROBLEM ELO", y_label="OLD ELO - NEW ELO", title="ELO Gain For Different ELO Differences")
+	#ACR_Stats.show_scatter(elo_differences, user_gain, "User Gain",x_label = "USER ELO - PROBLEM ELO", y_label="OLD ELO - NEW ELO", title="ELO Gain For Different ELO Differences")
+	#ACR_Stats.show_scatter(elo_differences, problem_gain, "Problem Gain",x_label = "USER ELO - PROBLEM ELO", y_label="OLD ELO - NEW ELO", title="ELO Gain For Different ELO Differences")
 
 def users_evolution():
 	if not os.path.exists("Users' ELO History"):

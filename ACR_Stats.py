@@ -214,6 +214,59 @@ def show_line_plot(x,y,filename):
 	plt.close()
 	#plt.show()
 
+def show_scatter(x,y,label, x_label="", y_label="", title=""):
+	fig, ax1 = plt.subplots()
+
+	ax1.set_xlabel(x_label)
+	ax1.set_ylabel(y_label)
+
+	color = 'tab:red'
+	ax1.scatter(x, y, color=color, label=label)
+
+	axes = plt.gca()
+	axes.set_xlim([-16,16])
+	axes.set_ylim([-5,5])
+
+	fig.set_size_inches(18, 15)
+	ax1.legend(loc="best")
+	fig.savefig(f"whatever_{label}.png")
+	plt.close()
+
+	#fig.set_size_inches(180, 150)
+	#fig.savefig(f"whatever_big_{label}.png")
+
+
+def show_ELO_gain(x,y1,y2,x_label="", y_label="", title=""):
+	# Code from https://matplotlib.org/gallery/subplots_axes_and_figures/two_scales.html
+	fig, ax1 = plt.subplots()
+
+	ax1.set_xlabel(x_label)
+	ax1.set_ylabel(y_label)
+
+	color = 'tab:red'
+	ax1.scatter(x, y1, color=color, label="User Gain")
+
+	ax2 = ax1.twinx()  # instantiate a second axes that shares the same x-axis
+	color = 'tab:blue'
+	ax2.scatter(x, y2, color=color, label="Problem Gain")
+
+	axes = plt.gca()
+	axes.set_xlim([-16,16])
+	axes.set_ylim([-5,5])
+
+	ax1.set_ylim([-5,5])
+	ax2.set_ylim([-5,5])
+
+	fig.set_size_inches(18, 15)
+	ax1.legend(loc="upper left")
+	ax2.legend(loc="upper right")
+	fig.savefig("whatever.png")
+
+	fig.set_size_inches(36, 30)
+	fig.savefig("whatever_big.png")
+	plt.close()
+	#plt.show()
+
 '''
 __cursor.execute("""SELECT * from submission s inner join problems_elo p on s.problem_id = p.problem_id  inner join users_elo u on s.user_id = u.user_id
 	where s.submissionDate >= '2017-09-01 00:00:00' and s.submissionDate < '2018-09-01 00:00:00' AND s.user_id in 
