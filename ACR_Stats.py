@@ -22,36 +22,25 @@ def print_submissions_per_months(__cursor):
 
 	show_bar_plot(month,values,x_label="Months", y_label="Nº of Submissions", title="Nº of Submissions Per Month")
 
-def print_elo_differences(__cursor, kind='perc'):
+def print_elo_differences(__cursor):
 	
-	__cursor.execute("""SELECT * from submission where submissionDate >= '2017-09-01 00:00:00' and submissionDate < '2018-09-01 00:00:00' AND user_id in (SELECT user_id from users_elo natural join 
-	(SELECT user_id from submission where submissionDate >= '2017-09-01 00:00:00' and submissionDate < '2018-09-01 00:00:00' group by user_id having count(id) >= 50) as active_users) 
-	AND (status='AC' OR status='PE') order by user_id,problem_id,submissionDate""")
-
-	rows = __cursor.fetchall()
-	problem_already_solved = []
-	elo_diff = []
-
-	users = {}
-	__cursor.execute("SELECT * FROM users_elo")
-	[users.update({k:v}) for k,v in __cursor.fetchall()]
-
-	problems = {}
-	__cursor.execute("SELECT * FROM problems_elo")
-	[problems.update({k:v}) for k,v in __cursor.fetchall()]
-
 	elo_diff = {}
 	[elo_diff.update({k:0}) for k in range(16)]
 
-	for row in rows:
-		try:
-			if (row[2], row[1]) not in problem_already_solved:
-				#print(f"User {row[2]} with ELO {users[row[2]]} tried Problem {row[1]} with ELO {problems[row[1]]}	- ELO Difference {abs(users[row[2]] - problems[row[1]])}_	- Status: {row[5]}")
-				problem_already_solved.append((row[2], row[1]))
-				if math.floor(abs(users[row[2]] - problems[row[1]])) == 16: elo_diff[15] += 1
-				else: elo_diff[math.floor(abs(users[row[2]] - problems[row[1]]))] += 1
-		except:
-			pass
+	__cursor.execute("""SELECT user_elo-problem_elo FROM submission 
+		WHERE submissionDate >= '2017-09-01 00:00:00' 
+		AND submissionDate < '2018-09-01 00:00:00' 
+		AND user_elo IS NOT NULL 
+		AND problem_elo IS NOT NULL
+		AND (status='AC' OR status='PE')
+		GROUP BY user_id, problem_id, status
+		ORDER BY user_id,problem_id,submissionDate""")
+
+	for row in __cursor.fetchall():
+		if math.floor(abs(row[0])) == 16: 
+			elo_diff[15] += 1
+		else: 
+			elo_diff[math.floor(abs(row[0]))] += 1
 
 	ranges = []
 	values = []
@@ -61,46 +50,49 @@ def print_elo_differences(__cursor, kind='perc'):
 
 	print("\nELO Differences between Users and the Problems they solved")
 	for k,v in elo_diff.items(): 
-		print(f"Range [{k} - {k+1})   :	{v}		-	Percentage: {(v/value_sum)*100}%")
-
-		if kind == 'sum':
-			perc_sum += (v/value_sum)*100
-			ranges.append(f"[0 - {k+1})")
-			values.append(perc_sum)
-		else:
-			ranges.append(f"[{k} - {k+1})")
-			if kind == 'numb': values.append(v)
-			else: values.append((v/value_sum)*100)
+		#print(f"Range [{k} - {k+1})   :	{v}		-	Percentage: {(v/value_sum)*100}%")
+		ranges.append(f"[{k} - {k+1})")
+		values.append(v)
 
 	show_bar_plot(ranges,values,x_label="ELO Difference (Ranges)", y_label="Submissions with Status AC or PE", title="ELO Differences between Users and the Problems they solved")
 
-def print_elo_distribution(__cursor, items):
+def print_elo_distribution(__cursor, items, start_date, end_date):
 	elo_scores = {}
 	[elo_scores.update({k:0}) for k in range(16)]
 
 	field = 'user_id' if items=='Users' else 'problem_id'
 
-	#__cursor.execute(f"SELECT * FROM submission WHERE submissionDate >= '2015-09-01 00:00:00' AND submissionDate < '2017-09-01 00:00:00' AND problem_elo IS NOT NULL AND user_elo IS NOT NULL AND id IN (SELECT MAX(id) FROM submission WHERE submissionDate >= '2015-09-01 00:00:00' AND submissionDate < '2017-09-01 00:00:00' GROUP BY {field})")
-
-	__cursor.execute(f"""SELECT {field} FROM submission WHERE submissionDate >= '2015-09-01 00:00:00' AND submissionDate < '2017-09-01 00:00:00' GROUP BY {field}""")
+	__cursor.execute(f"""SELECT {field} FROM submission WHERE submissionDate >= '{start_date}' AND submissionDate < '{end_date}' GROUP BY {field}""")
 	rows = __cursor.fetchall()
 
 	for row in rows:
-		__cursor.execute(f"""SELECT * FROM submission WHERE submissionDate >= '2015-09-01 00:00:00' AND submissionDate < '2017-09-01 00:00:00' 
-			AND {field}={row[0]} AND problem_elo IS NOT NULL AND user_elo IS NOT NULL ORDER BY id DESC LIMIT 1""")
-		r = __cursor.fetchall()
 
-		ELO = r[0][7] if items=='Users' else r[0][8]
-		
-		if ELO != 16: elo_scores[math.floor(ELO)] += 1 
-		else: elo_scores[15] += 1
+		__cursor.execute(f"""SELECT * FROM submission 
+			WHERE submissionDate >= '{start_date}'
+			AND submissionDate < '{end_date}'
+			AND {field}={row[0]} 
+			AND problem_elo IS NOT NULL 
+			AND user_elo IS NOT NULL 
+			ORDER BY id DESC 
+			LIMIT 1""")
+
+		r = __cursor.fetchall()
+		try:
+			ELO = r[0][7] if items=='Users' else r[0][8]
+			if ELO != 16: 
+				elo_scores[math.floor(ELO)] += 1 
+			else: 
+				elo_scores[15] += 1
+		except:
+			# User #1952:  second-to-last submission on 2016-12-19 / last submission on 2018-05-16
+			pass
 
 	ranges = []
 	values = []
 	print(f"\nELO Distribution ({items})")
 
 	for k,v in elo_scores.items(): 
-		print(f"Range [{k} - {k+1}]   :	{v}")
+		#print(f"Range [{k} - {k+1}]   :	{v}")
 		ranges.append(f"[{k} - {k+1})")
 		values.append(v)
 
@@ -173,6 +165,7 @@ def show_bar_plot(x,y,x_label="", y_label="", title=""):
 	    ax.text(bar.get_x() + bar.get_width()/2., 1.05*height,str(round(height, 2)),ha='center', va='bottom')
 
 	plt.show()
+	plt.close()
 
 def show_spider_chart(chart_data, filename, title=""):
 	categories = []

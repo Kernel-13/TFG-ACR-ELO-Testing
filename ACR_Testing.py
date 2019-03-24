@@ -86,7 +86,7 @@ def train_subjects():
 	problem_already_solved = []
 
 	# The Training Half includes all submissions from September 2015 and September 2017
-	__cursor.execute("SELECT * from submission where submissionDate >= '2015-09-01 00:00:00' and submissionDate < '2017-09-01 00:00:00'")
+	__cursor.execute("SELECT * FROM submission where submissionDate >= '2015-09-01 00:00:00' and submissionDate < '2017-09-01 00:00:00'")
 
 	for row in __cursor.fetchall():
 		if row[2] not in users:	users[row[2]] = 8
@@ -122,7 +122,7 @@ def train_subjects_and_insert_elos():
 	problem_already_solved = []
 
 	# The Training Half includes all submissions from September 2015 and September 2017
-	__cursor.execute("SELECT * from submission where submissionDate >= '2015-09-01 00:00:00' and submissionDate < '2017-09-01 00:00:00'")
+	__cursor.execute("SELECT * FROM submission where submissionDate >= '2015-09-01 00:00:00' and submissionDate < '2017-09-01 00:00:00'")
 
 	rows = __cursor.fetchall()
 	for row in rows:
@@ -134,9 +134,15 @@ def train_subjects_and_insert_elos():
 		if (row[2],row[1]) not in problem_already_solved:
 			if row[5] in ('AC', 'PE'): problem_already_solved.append((row[2],row[1]))
 
-			__cursor.execute(f"""SELECT * from submission where submissionDate >= '2015-09-01 00:00:00' and submissionDate < '2017-09-01 00:00:00' 
-							AND user_id={row[2]} AND problem_id={row[1]} AND id<{row[0]}
-							AND user_elo IS NOT NULL ORDER BY id DESC LIMIT 9""")
+			__cursor.execute(f"""SELECT * FROM submission 
+							WHERE submissionDate >= '2015-09-01 00:00:00' 
+							AND submissionDate < '2017-09-01 00:00:00' 
+							AND user_id={row[2]} 
+							AND problem_id={row[1]} 
+							AND id<{row[0]}
+							AND user_elo IS NOT NULL 
+							ORDER BY id DESC 
+							LIMIT 9""")
 
 			tries = 1
 			for r in __cursor.fetchall(): 
@@ -153,7 +159,7 @@ def train_all():
 	problem_already_solved = []
 
 	# We select all submissions (both halves)
-	__cursor.execute("SELECT * from submission where submissionDate >= '2015-09-01 00:00:00' and submissionDate < '2018-09-01 00:00:00' ORDER BY id")
+	__cursor.execute("SELECT * FROM submission WHERE submissionDate >= '2015-09-01 00:00:00' AND submissionDate < '2018-09-01 00:00:00' ORDER BY id")
 
 	rows = __cursor.fetchall()
 	for row in rows:
@@ -178,7 +184,13 @@ def train_all():
 			if status in ('AC', 'PE'): 
 				problem_already_solved.append((u_id,p_id))
 
-			__cursor.execute(f"""SELECT * from submission where user_id={u_id} AND problem_id={p_id} AND id<{subm_id} AND user_elo IS NOT NULL ORDER BY id DESC LIMIT 9""")
+			__cursor.execute(f"""SELECT * FROM submission 
+				WHERE user_id={u_id} 
+				AND problem_id={p_id} 
+				AND id<{subm_id} 
+				AND user_elo IS NOT NULL 
+				ORDER BY id DESC 
+				LIMIT 9""")
 
 			tries = 1
 			for r in __cursor.fetchall(): 
@@ -216,26 +228,56 @@ def train_all():
 def users_evolution():
 	if not os.path.exists("Users' ELO History"):
 		os.makedirs("Users' ELO History")
-	__cursor.execute("""SELECT user_id, count(id) from submission where submissionDate >= '2015-09-01 00:00:00' and submissionDate < '2017-09-01 00:00:00' 
-		AND user_elo IS NOT NULL AND user_id in (1148, 1184, 1316, 1504, 1842, 1882, 1990, 2000, 2046, 206, 2107, 2127, 2134, 2245, 2269, 2372, 2504, 2568, 2659, 2724, 2726, 2727, 2856, 2863, 2880, 2951, 2976, 2979, 3058, 3062, 3098, 3147, 3175, 3197, 3223, 3286, 3580, 3591, 3690, 3699, 3711, 3788, 3843, 3886, 3983, 4047, 4055, 4221, 4225, 4246, 4312, 4324, 4352, 4442, 4444, 4458, 4488, 4501, 4582, 4788, 4790, 4793, 483, 4969, 5024, 5035, 5129, 5138, 5363, 5403, 542, 5501, 5521, 5550, 5561, 5708, 5718, 5731, 5766, 5841, 6125, 6210, 6230, 6243, 6286, 6335, 6348, 6356, 6457) GROUP BY user_id ORDER BY user_id""")
+
+	__cursor.execute("""SELECT user_id, count(id) FROM submission 
+		WHERE submissionDate >= '2015-09-01 00:00:00' 
+		AND submissionDate < '2017-09-01 00:00:00' 
+		AND user_elo IS NOT NULL 
+		AND user_id in (1148, 1184, 1316, 1504, 1842, 1882, 1990, 2000, 2046, 206, 2107, 2127, 2134, 2245, 2269, 2372, 2504, 2568, 2659, 2724, 2726, 2727, 2856, 2863, 2880, 2951, 2976, 2979, 3058, 3062, 3098, 3147, 3175, 3197, 3223, 3286, 3580, 3591, 3690, 3699, 3711, 3788, 3843, 3886, 3983, 4047, 4055, 4221, 4225, 4246, 4312, 4324, 4352, 4442, 4444, 4458, 4488, 4501, 4582, 4788, 4790, 4793, 483, 4969, 5024, 5035, 5129, 5138, 5363, 5403, 542, 5501, 5521, 5550, 5561, 5708, 5718, 5731, 5766, 5841, 6125, 6210, 6230, 6243, 6286, 6335, 6348, 6356, 6457) 
+		GROUP BY user_id 
+		ORDER BY user_id""")
+	
 	for u in [r[0] for r in __cursor.fetchall()]:
-		__cursor.execute(f"SELECT * from submission where submissionDate >= '2015-09-01 00:00:00' and submissionDate < '2017-09-01 00:00:00' AND user_id={u} AND user_elo IS NOT NULL order by id")
+
+		__cursor.execute(f"""SELECT * FROM submission 
+		WHERE submissionDate >= '2015-09-01 00:00:00' 
+		AND submissionDate < '2017-09-01 00:00:00' 
+		AND user_id={u} 
+		AND user_elo IS NOT NULL 
+		ORDER BY id""")
+		
 		y = [x[7] for x in __cursor.fetchall()]
 		y.insert(0,8)
+
 		ACR_Stats.show_line_plot(range(len(y)), y,f"Users' ELO History\\User({str(u)})Evolution.png")
-		print(u)
+		#print(u)
 
 def problems_evolution():
 	if not os.path.exists("Problems' ELO History"):
 		os.makedirs("Problems' ELO History")
-	__cursor.execute("""SELECT problem_id, count(id) from submission where submissionDate >= '2015-09-01 00:00:00' and submissionDate < '2017-09-01 00:00:00' 
-		AND problem_elo IS NOT NULL AND problem_id in (10, 109, 117, 134, 150, 17, 178, 181, 19, 2, 224, 23, 233, 250, 258, 275, 282, 307, 316, 325, 331, 340, 39, 443, 465, 470, 506, 520, 533, 544, 561, 570, 575, 606, 613, 621, 629, 680, 699, 747, 748, 751, 806, 814, 834, 859, 861, 866, 923, 925, 955, 97) GROUP BY problem_id ORDER BY problem_id""")
+
+	__cursor.execute("""SELECT problem_id, count(id) FROM submission 
+		WHERE submissionDate >= '2015-09-01 00:00:00' 
+		AND submissionDate < '2017-09-01 00:00:00' 
+		AND problem_elo IS NOT NULL 
+		AND problem_id in (10, 109, 117, 134, 150, 17, 178, 181, 19, 2, 224, 23, 233, 250, 258, 275, 282, 307, 316, 325, 331, 340, 39, 443, 465, 470, 506, 520, 533, 544, 561, 570, 575, 606, 613, 621, 629, 680, 699, 747, 748, 751, 806, 814, 834, 859, 861, 866, 923, 925, 955, 97) 
+		GROUP BY problem_id 
+		ORDER BY problem_id""")
+
 	for p in [r[0] for r in __cursor.fetchall()]:
-		__cursor.execute(f"SELECT * from submission where submissionDate >= '2015-09-01 00:00:00' and submissionDate < '2017-09-01 00:00:00' AND problem_id={p} AND problem_elo IS NOT NULL order by id")
+
+		__cursor.execute(f"""SELECT * FROM submission 
+			WHERE submissionDate >= '2015-09-01 00:00:00' 
+			AND submissionDate < '2017-09-01 00:00:00' 
+			AND problem_id={p} 
+			AND problem_elo IS NOT NULL 
+			ORDER BY id""")
+
 		y = [x[8] for x in __cursor.fetchall()]
 		y.insert(0,8)
+
 		ACR_Stats.show_line_plot(range(len(y)), y,f"Problems' ELO History\\Problem({str(p)})Evolution.png")
-		print(p)
+		#print(p)
 
 def user_categories():
 	if not os.path.exists("Categories' ELO"):
@@ -259,24 +301,22 @@ def user_categories():
 			'Geometría': row[13]
 		}
 		ACR_Stats.show_spider_chart(chart_data=categories_data,filename=f"Categories' ELO\\User {str(row[0])} Categories.png")
-		print('User: ', row[0])
+		#print('User: ', row[0])
 
 def main():
 	#create_and_alter_needed_tables()
 	#train_all()
 
-	#train_subjects()
-	#train_subjects_and_insert_elos()
+	#ACR_Stats.print_elo_distribution(__cursor, 'Users', '2017-09-01 00:00:00', '2018-09-01 00:00:00')
+	#ACR_Stats.print_elo_distribution(__cursor, 'Problems', '2017-09-01 00:00:00', '2018-09-01 00:00:00')
 	
-	#ACR_Stats.print_elo_distribution(__cursor, 'Users')
-	#ACR_Stats.print_elo_distribution(__cursor, 'Problems')
-	
-	#ACR_Stats.print_elo_differences(__cursor, kind='perc')
+	#ACR_Stats.print_elo_differences(__cursor)
 	#ACR_Stats.print_tries_till_solved(__cursor, '2015-09-01 00:00:00', '2016-09-01 00:00:00')
 
 	#users_evolution()
 	#problems_evolution()
 	#user_categories()
+
 	connection.close()
 
 if __name__== "__main__":
