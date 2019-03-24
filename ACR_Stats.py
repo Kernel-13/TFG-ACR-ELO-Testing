@@ -174,7 +174,7 @@ def show_bar_plot(x,y,x_label="", y_label="", title=""):
 
 	plt.show()
 
-def show_spider_chart(chart_data, title=""):
+def show_spider_chart(chart_data, filename, title=""):
 	categories = []
 	values = []
 	for k,v in chart_data.items():
@@ -183,15 +183,15 @@ def show_spider_chart(chart_data, title=""):
 
 	angles = [n / float(len(categories)) * 2 * math.pi for n in range(len(categories))]
 	ax = plt.subplot(111, polar=True)
-	plt.xticks(angles, categories, color='grey', size=8)
+	plt.xticks(angles, categories, color='grey', size=12)
 	
 	ax.set_rlabel_position(0)
 	plt.yticks([4,8,12], ["4","8","12"], color="grey", size=7)
 	plt.ylim(0,16)
 
 	for idx, v in enumerate(angles):
-		position = (v,values[idx]+1) if values[idx] <= 14 else (v,values[idx]-1.3)
-		plt.text(v, values[idx], str(values[idx]), color="black", size=12 ,ha='center', va='center', alpha=0.5, position=position)
+		position = (v,values[idx]+1.5) if values[idx] <= 10 else (v,values[idx]-1.8)
+		plt.text(v, values[idx], str(round(values[idx],3)), fontweight='bold', color="black", size=11 ,ha='center', va='center', alpha=0.5, position=position)
 
 	# We add the first value again so the plot draws all lines 
 	# Otherwise, the line connecting the first & last value wont get drawn
@@ -199,8 +199,13 @@ def show_spider_chart(chart_data, title=""):
 	values.append(values[0])
 
 	ax.plot(angles, values, 'o-', linewidth=1)
-	ax.fill(angles, values, 'b', alpha=0.5)
-	plt.show()
+	ax.fill(angles, values, 'r', alpha=0.5)
+
+	fig = plt.gcf()
+	fig.set_size_inches(9,9)
+	plt.savefig(filename)
+	plt.close()
+	#plt.show()
 
 def show_line_plot(x,y,filename):
 	fig, ax = plt.subplots()
@@ -213,7 +218,7 @@ def show_line_plot(x,y,filename):
 		plt.text(v, y[idx], str(y[idx]), color="black", size=12 ,ha='center', va='center', alpha=0.5, position=position)
 	fig.set_size_inches(12, 10)
 	fig.savefig(filename)
-	plt.close(fig)
+	plt.close()
 	#plt.show()
 
 '''

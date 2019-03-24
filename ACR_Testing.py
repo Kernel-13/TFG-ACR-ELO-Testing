@@ -237,6 +237,30 @@ def problems_evolution():
 		ACR_Stats.show_line_plot(range(len(y)), y,f"Problems' ELO History\\Problem({str(p)})Evolution.png")
 		print(p)
 
+def user_categories():
+	if not os.path.exists("Categories' ELO"):
+		os.makedirs("Categories' ELO")
+
+	__cursor.execute("""SELECT * FROM User_Scores WHERE user_id in (1148, 1184, 1316, 1504, 1842, 1882, 1990, 2000, 2046, 206, 2107, 2127, 2134, 2245, 2269, 2372, 2504, 2568, 2659, 2724, 2726, 2727, 2856, 2863, 2880, 2951, 2976, 2979, 3058, 3062, 3098, 3147, 3175, 3197, 3223, 3286, 3580, 3591, 3690, 3699, 3711, 3788, 3843, 3886, 3983, 4047, 4055, 4221, 4225, 4246, 4312, 4324, 4352, 4442, 4444, 4458, 4488, 4501, 4582, 4788, 4790, 4793, 483, 4969, 5024, 5035, 5129, 5138, 5363, 5403, 542, 5501, 5521, 5550, 5561, 5708, 5718, 5731, 5766, 5841, 6125, 6210, 6230, 6243, 6286, 6335, 6348, 6356, 6457)""")
+
+	for row in __cursor.fetchall():
+		categories_data = {
+			'Ad-hoc': row[2],
+			'Recorridos': row[3],
+			'Búsqueda': row[4],
+			'Búsqueda\n Binaria': row[5],
+			'Ordenación': row[6],
+			'Algoritmos\n voraces': row[7],
+			'Programación\n dinámica': row[8],
+			'Divide y\n vencerás': row[9],
+			'Búsqueda exhaustiva,\n vuelta atrás': row[10],
+			'Búsqueda en el espacio\n de soluciones': row[11],
+			'Grafos': row[12],
+			'Geometría': row[13]
+		}
+		ACR_Stats.show_spider_chart(chart_data=categories_data,filename=f"Categories' ELO\\User {str(row[0])} Categories.png")
+		print('User: ', row[0])
+
 def main():
 	#create_and_alter_needed_tables()
 	#train_all()
@@ -252,7 +276,7 @@ def main():
 
 	#users_evolution()
 	#problems_evolution()
-
+	#user_categories()
 	connection.close()
 
 if __name__== "__main__":
