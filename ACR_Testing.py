@@ -324,7 +324,7 @@ def train_all_elo_gain_plot():
 			user_gain.append(y1)
 			problem_gain.append(y2)
 
-	ACR_Stats.show_ELO_gain(elo_differences, user_gain, problem_gain,x_label = "USER ELO - PROBLEM ELO", y_label="OLD ELO - NEW ELO", title="ELO Gain For Different ELO Differences")
+	ACR_Stats.show_ELO_gain(elo_differences, user_gain, problem_gain,x_label = "USER ELO - PROBLEM ELO", y_label="OLD ELO - NEW ELO", title="ELO Gain For Different ELO Differences", filename="ELO Gain (New K-Factor Formula x 0.25).png")
 	#ACR_Stats.show_scatter(elo_differences, user_gain, "User Gain",x_label = "USER ELO - PROBLEM ELO", y_label="OLD ELO - NEW ELO", title="ELO Gain For Different ELO Differences")
 	#ACR_Stats.show_scatter(elo_differences, problem_gain, "Problem Gain",x_label = "USER ELO - PROBLEM ELO", y_label="OLD ELO - NEW ELO", title="ELO Gain For Different ELO Differences")
 
