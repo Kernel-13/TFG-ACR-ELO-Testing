@@ -241,7 +241,7 @@ def show_scatter(x,y,label, x_label="", y_label="", title=""):
 	#fig.set_size_inches(180, 150)
 	#fig.savefig(f"whatever_big_{label}.png")
 
-def show_ELO_gain(x,y1,y2,x_label="", y_label="", title=""):
+def show_ELO_gain(x,y1,y2,x_label="", y_label="", title="", filename="Gain"):
 	# Code from https://matplotlib.org/gallery/subplots_axes_and_figures/two_scales.html
 	fig, ax1 = plt.subplots()
 
@@ -257,18 +257,17 @@ def show_ELO_gain(x,y1,y2,x_label="", y_label="", title=""):
 
 	axes = plt.gca()
 	axes.set_xlim([-16,16])
-	axes.set_ylim([-5,5])
-
-	ax1.set_ylim([-5,5])
-	ax2.set_ylim([-5,5])
+	ax1.set_ylim([-1,1])
+	ax2.set_ylim([-1,1])
 
 	fig.set_size_inches(18, 15)
 	ax1.legend(loc="upper left")
 	ax2.legend(loc="upper right")
-	fig.savefig("whatever.png")
+	fig.savefig(filename)
 
-	fig.set_size_inches(36, 30)
-	fig.savefig("whatever_big.png")
+
+	#fig.set_size_inches(36, 30)
+	#fig.savefig("Bigger " + filename)
 	plt.close()
 	#plt.show()
 
