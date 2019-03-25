@@ -27,7 +27,7 @@ categories = {
 }
 
 # Database connection
-connection = pymysql.connect(host="localhost",user="root",passwd="",database="acr_dat")
+connection = pymysql.connect(host="127.0.0.1",user="root",passwd="",database="tfg")
 __cursor = connection.cursor()
 
 def create_and_alter_needed_tables():
@@ -407,19 +407,19 @@ def user_categories():
 		#print('User: ', row[0])
 
 def main():
-	#create_and_alter_needed_tables()
+	create_and_alter_needed_tables()
 
-	#train_all_with_tries()
+	train_all_with_tries()
 	#train_all_no_tries()
 
-	#ACR_Stats.print_elo_distribution(__cursor, 'Users', '2017-09-01 00:00:00', '2018-09-01 00:00:00')
-	#ACR_Stats.print_elo_distribution(__cursor, 'Problems', '2017-09-01 00:00:00', '2018-09-01 00:00:00')
+	ACR_Stats.print_elo_distribution(__cursor, 'Users', '2017-09-01 00:00:00', '2018-09-01 00:00:00')
+	ACR_Stats.print_elo_distribution(__cursor, 'Problems', '2017-09-01 00:00:00', '2018-09-01 00:00:00')
 	
 	#ACR_Stats.print_elo_differences(__cursor)
 	#ACR_Stats.print_tries_till_solved(__cursor, '2015-09-01 00:00:00', '2016-09-01 00:00:00')
 
-	#users_evolution()
-	#problems_evolution()
+	users_evolution()
+	problems_evolution()
 	#user_categories()
 
 	connection.close()
