@@ -56,6 +56,30 @@ def print_elo_differences(__cursor):
 
 	show_bar_plot(ranges,values,x_label="ELO Difference (Ranges)", y_label="Submissions with Status AC or PE", title="ELO Differences between Users and the Problems they solved")
 
+def print_actual_elo_distribution(__cursor, items):
+	elo_scores = {}
+	[elo_scores.update({k:0}) for k in range(16)]
+
+	field = 'user_scores' if items=='Users' else 'problem_scores'
+
+	__cursor.execute(f"""SELECT elo_global FROM {field} WHERE elo_global != 8.0""")
+	rows = __cursor.fetchall()
+
+	for row in rows:
+		if row[0] != 16: 
+			elo_scores[math.floor(row[0])] += 1 
+		else: 
+			elo_scores[15] += 1
+
+	ranges = []
+	values = []
+
+	for k,v in elo_scores.items(): 
+		ranges.append(f"[{k} - {k+1})")
+		values.append(v)
+
+	show_bar_plot(ranges,values,x_label="ELO Ranges", y_label=f"Nº of {items}", title=f"ELO Distribution ({items})")
+
 def print_elo_distribution(__cursor, items, start_date, end_date):
 	elo_scores = {}
 	[elo_scores.update({k:0}) for k in range(16)]

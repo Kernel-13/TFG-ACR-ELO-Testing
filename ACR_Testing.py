@@ -154,9 +154,8 @@ def train_subjects_and_insert_elos():
 
 def train_all_no_tries():
 	cnt = 1
-	problem_already_solved = []
+	current_fights = {}
 
-	# We select all submissions (both halves)
 	__cursor.execute("SELECT * FROM submission WHERE submissionDate >= '2015-09-01 00:00:00' AND submissionDate < '2018-09-01 00:00:00' ORDER BY id")
 
 	rows = __cursor.fetchall()
@@ -169,30 +168,30 @@ def train_all_no_tries():
 		u_id = row[2]
 		status = row[5]
 
-		# Both User & Problem ELOs are retrieved from User_scores / Problem_Scores
-		__cursor.execute(f"SELECT elo_global FROM User_Scores WHERE user_id={u_id}")
-		old_user_elo = __cursor.fetchone()[0]
+		if u_id not in current_fights:
+			current_fights[u_id] = p_id
 
-		__cursor.execute(f"SELECT elo_global FROM Problem_Scores WHERE problem_id={p_id}")
-		old_problem_elo = __cursor.fetchone()[0]
+		if current_fights[u_id] != p_id or status in ('AC', 'PE'):
 
-		# We check if the problem has already been solved by one specific user
-		# This is so we can omit those submissions meant to reduce execution time, memory use, fix the presentation, etc
-		if (u_id,p_id) not in problem_already_solved:
-			if status in ('AC', 'PE'): 
-				problem_already_solved.append((u_id,p_id))
+			if status in ('AC', 'PE'):
+				del current_fights[u_id]
+			else:
+				current_fights[u_id] = p_id
 
-			# Calculates the New Global ELO
+			__cursor.execute(f"SELECT elo_global FROM User_Scores WHERE user_id={u_id}")
+			old_user_elo = __cursor.fetchone()[0]
+
+			__cursor.execute(f"SELECT elo_global FROM Problem_Scores WHERE problem_id={p_id}")
+			old_problem_elo = __cursor.fetchone()[0]
+
 			new_user_elo, new_problem_elo = ELO.simulate_no_tries(old_user_elo, old_problem_elo, status)
 
-			# Checks which categories include the problem 
 			__cursor.execute(f"SELECT categoryId FROM problemcategories WHERE problemId={p_id}")
 			for cat in __cursor.fetchall():
 				
 				try:
 					category = categories[cat[0]]
 
-					# We retrieve the old category ELO and use it to simulate a new fight
 					__cursor.execute(f"SELECT {category} FROM User_Scores WHERE user_id = {u_id}")
 					Old_Category_ELO = __cursor.fetchone()[0]
 					New_Category_ELO, _ = ELO.simulate_no_tries(Old_Category_ELO, old_problem_elo, status)
@@ -201,10 +200,11 @@ def train_all_no_tries():
 				except:
 					pass
 
-			# Global ELOs get updated
 			__cursor.execute(f"UPDATE submission SET problem_elo={new_problem_elo}, user_elo={new_user_elo} WHERE id={subm_id}")
 			__cursor.execute(f"UPDATE User_Scores SET elo_global={new_user_elo} WHERE user_id={u_id}")
 			__cursor.execute(f"UPDATE Problem_Scores SET elo_global={new_problem_elo} WHERE problem_id={p_id}")
+
+
 	connection.commit()
 
 	#__cursor.execute(f"DELETE FROM submission WHERE user_elo IS NULL AND problem_elo IS NULL")
@@ -336,7 +336,7 @@ def users_evolution():
 
 	__cursor.execute("""SELECT user_id, count(id) FROM submission 
 		WHERE submissionDate >= '2015-09-01 00:00:00' 
-		AND submissionDate < '2017-09-01 00:00:00' 
+		AND submissionDate < '2018-09-01 00:00:00' 
 		AND user_elo IS NOT NULL 
 		AND user_id in (1148, 1184, 1316, 1504, 1842, 1882, 1990, 2000, 2046, 206, 2107, 2127, 2134, 2245, 2269, 2372, 2504, 2568, 2659, 2724, 2726, 2727, 2856, 2863, 2880, 2951, 2976, 2979, 3058, 3062, 3098, 3147, 3175, 3197, 3223, 3286, 3580, 3591, 3690, 3699, 3711, 3788, 3843, 3886, 3983, 4047, 4055, 4221, 4225, 4246, 4312, 4324, 4352, 4442, 4444, 4458, 4488, 4501, 4582, 4788, 4790, 4793, 483, 4969, 5024, 5035, 5129, 5138, 5363, 5403, 542, 5501, 5521, 5550, 5561, 5708, 5718, 5731, 5766, 5841, 6125, 6210, 6230, 6243, 6286, 6335, 6348, 6356, 6457) 
 		GROUP BY user_id 
@@ -346,7 +346,7 @@ def users_evolution():
 
 		__cursor.execute(f"""SELECT * FROM submission 
 		WHERE submissionDate >= '2015-09-01 00:00:00' 
-		AND submissionDate < '2017-09-01 00:00:00' 
+		AND submissionDate < '2018-09-01 00:00:00' 
 		AND user_id={u} 
 		AND user_elo IS NOT NULL 
 		ORDER BY id""")
@@ -363,7 +363,7 @@ def problems_evolution():
 
 	__cursor.execute("""SELECT problem_id, count(id) FROM submission 
 		WHERE submissionDate >= '2015-09-01 00:00:00' 
-		AND submissionDate < '2017-09-01 00:00:00' 
+		AND submissionDate < '2018-09-01 00:00:00' 
 		AND problem_elo IS NOT NULL 
 		AND problem_id in (10, 109, 117, 134, 150, 17, 178, 181, 19, 2, 224, 23, 233, 250, 258, 275, 282, 307, 316, 325, 331, 340, 39, 443, 465, 470, 506, 520, 533, 544, 561, 570, 575, 606, 613, 621, 629, 680, 699, 747, 748, 751, 806, 814, 834, 859, 861, 866, 923, 925, 955, 97) 
 		GROUP BY problem_id 
@@ -373,7 +373,7 @@ def problems_evolution():
 
 		__cursor.execute(f"""SELECT * FROM submission 
 			WHERE submissionDate >= '2015-09-01 00:00:00' 
-			AND submissionDate < '2017-09-01 00:00:00' 
+			AND submissionDate < '2018-09-01 00:00:00' 
 			AND problem_id={p} 
 			AND problem_elo IS NOT NULL 
 			ORDER BY id""")
@@ -414,10 +414,10 @@ def main():
 	#train_all_with_tries()
 	#train_all_no_tries()
 
-	#ACR_Stats.print_elo_distribution(__cursor, 'Users', '2017-09-01 00:00:00', '2018-09-01 00:00:00')
-	#ACR_Stats.print_elo_distribution(__cursor, 'Problems', '2017-09-01 00:00:00', '2018-09-01 00:00:00')
+	#ACR_Stats.print_actual_elo_distribution(__cursor, 'Users')
+	#ACR_Stats.print_actual_elo_distribution(__cursor, 'Problems')
 	
-	#ACR_Stats.print_elo_differences(__cursor)
+	ACR_Stats.print_elo_differences(__cursor)
 	#ACR_Stats.print_tries_average(__cursor, '2015-09-01 00:00:00', '2016-09-01 00:00:00')
 
 	#users_evolution()
