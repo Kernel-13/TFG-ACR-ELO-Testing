@@ -73,33 +73,6 @@ def create_and_alter_needed_tables():
 
 	connection.commit()
 
-def train_subjects():
-	""" Selects the submissions that are going to be used for the Training Half
-	Gives every user / problem an initial ELO score of 8 [ELO scores go from 0 to 16]
-	Iterates over a selection of rows (Training Half) and simulates a match, which will increase/decrease the ELO score of both User and Problem involved
-	Then, it will fill 2 new tables with the Users/Problems and their respective ELO score
-	"""
-	users = {}
-	problems = {}
-	problem_already_solved = []
-
-	# The Training Half includes all submissions from September 2015 and September 2017
-	__cursor.execute("SELECT * FROM submission where submissionDate >= '2015-09-01 00:00:00' and submissionDate < '2017-09-01 00:00:00'")
-
-	for row in __cursor.fetchall():
-		if row[2] not in users:	users[row[2]] = 8
-		if row[1] not in problems:	problems[row[1]] = 8
-
-		# We check if the problem has already been solved by one specific user
-		# This is so we can omit those submissions meant to reduce exeution time, memory use, fix presentation, etc
-		if (row[2],row[1]) not in problem_already_solved:
-			users[row[2]], problems[row[1]] = ELO.simulate(users[row[2]], problems[row[1]], row[5])
-			if row[5] in ('AC', 'PE'): problem_already_solved.append((row[2],row[1]))
-
-
-	create_and_fill_ELO_table('problems_elo', 'problem_id', problems)
-	create_and_fill_ELO_table('users_elo', 'user_id', users)
-
 def train_subjects_and_insert_elos():
 	""" Selects the submissions that are going to be used for the Training Half
 	Gives every user / problem an initial ELO score of 8 [ELO scores go from 0 to 16]
@@ -280,55 +253,6 @@ def train_all_with_tries():
 			__cursor.execute(f"UPDATE Problem_Scores SET elo_global={new_problem_elo} WHERE problem_id={p_id}")
 
 	connection.commit()
-
-def train_all_elo_gain_plot():
-	cnt = 1
-	elo_differences = []
-	user_gain = []
-	problem_gain = []
-	problem_already_solved = []
-
-	# We select all submissions (both halves)
-	__cursor.execute("""SELECT * FROM submission 
-		WHERE submissionDate >= '2015-09-01 00:00:00' 
-		AND submissionDate < '2018-09-01 00:00:00' 
-		AND user_elo IS NOT NULL
-		AND problem_elo IS NOT NULL
-		ORDER BY id""")
-
-	rows = __cursor.fetchall()
-	for row in rows:
-
-		if cnt == 10000:
-			break
-
-		print(cnt, len(rows))
-		cnt += 1
-
-		subm_id = row[0]
-		p_id = row[1]
-		u_id = row[2]
-		status = row[5]
-		old_user_elo = row[7]
-		old_problem_elo = row[8]
-
-		# We check if the problem has already been solved by one specific user
-		# This is so we can omit those submissions meant to reduce execution time, memory use, fix the presentation, etc
-		if (u_id,p_id) not in problem_already_solved:
-			if status in ('AC', 'PE'): 
-				problem_already_solved.append((u_id,p_id))
-
-			# Calculates the New Global ELO
-			x,y1,y2 = ELO.simulate_no_tries(old_user_elo, old_problem_elo, status)
-
-			#if y1 != 0 and y2 != 0:
-			elo_differences.append(x)
-			user_gain.append(y1)
-			problem_gain.append(y2)
-
-	ACR_Stats.show_ELO_gain(elo_differences, user_gain, problem_gain,x_label = "USER ELO - PROBLEM ELO", y_label="OLD ELO - NEW ELO", title="ELO Gain For Different ELO Differences")
-	#ACR_Stats.show_scatter(elo_differences, user_gain, "User Gain",x_label = "USER ELO - PROBLEM ELO", y_label="OLD ELO - NEW ELO", title="ELO Gain For Different ELO Differences")
-	#ACR_Stats.show_scatter(elo_differences, problem_gain, "Problem Gain",x_label = "USER ELO - PROBLEM ELO", y_label="OLD ELO - NEW ELO", title="ELO Gain For Different ELO Differences")
 
 def users_evolution():
 	if not os.path.exists("Users' ELO History"):
