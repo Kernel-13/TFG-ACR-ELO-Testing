@@ -184,7 +184,8 @@ def show_spider_chart(chart_data, filename, title=""):
 
 	for idx, v in enumerate(angles):
 		position = (v,values[idx]+1.5) if values[idx] <= 10 else (v,values[idx]-1.8)
-		plt.text(v, values[idx], str(round(values[idx],3)), fontweight='bold', color="black", size=11 ,ha='center', va='center', alpha=0.5, position=position)
+		str_value = str(round(values[idx],3)) if values[idx] != 8.0 else "Not\nAttempted"
+		plt.text(v, values[idx], str_value, fontweight='bold', color="black", size=11 ,ha='center', va='center', alpha=0.5, position=position)
 
 	# We add the first value again so the plot draws all lines 
 	# Otherwise, the line connecting the first & last value wont get drawn
