@@ -336,7 +336,7 @@ def users_evolution():
 
 	__cursor.execute("""SELECT user_id, count(id) FROM submission 
 		WHERE submissionDate >= '2015-09-01 00:00:00' 
-		AND submissionDate < '2017-09-01 00:00:00' 
+		AND submissionDate < '2018-09-01 00:00:00' 
 		AND user_elo IS NOT NULL 
 		AND user_id in (1148, 1184, 1316, 1504, 1842, 1882, 1990, 2000, 2046, 206, 2107, 2127, 2134, 2245, 2269, 2372, 2504, 2568, 2659, 2724, 2726, 2727, 2856, 2863, 2880, 2951, 2976, 2979, 3058, 3062, 3098, 3147, 3175, 3197, 3223, 3286, 3580, 3591, 3690, 3699, 3711, 3788, 3843, 3886, 3983, 4047, 4055, 4221, 4225, 4246, 4312, 4324, 4352, 4442, 4444, 4458, 4488, 4501, 4582, 4788, 4790, 4793, 483, 4969, 5024, 5035, 5129, 5138, 5363, 5403, 542, 5501, 5521, 5550, 5561, 5708, 5718, 5731, 5766, 5841, 6125, 6210, 6230, 6243, 6286, 6335, 6348, 6356, 6457) 
 		GROUP BY user_id 
@@ -346,7 +346,7 @@ def users_evolution():
 
 		__cursor.execute(f"""SELECT * FROM submission 
 		WHERE submissionDate >= '2015-09-01 00:00:00' 
-		AND submissionDate < '2017-09-01 00:00:00' 
+		AND submissionDate < '2018-09-01 00:00:00' 
 		AND user_id={u} 
 		AND user_elo IS NOT NULL 
 		ORDER BY id""")
@@ -363,7 +363,7 @@ def problems_evolution():
 
 	__cursor.execute("""SELECT problem_id, count(id) FROM submission 
 		WHERE submissionDate >= '2015-09-01 00:00:00' 
-		AND submissionDate < '2017-09-01 00:00:00' 
+		AND submissionDate < '2018-09-01 00:00:00' 
 		AND problem_elo IS NOT NULL 
 		AND problem_id in (10, 109, 117, 134, 150, 17, 178, 181, 19, 2, 224, 23, 233, 250, 258, 275, 282, 307, 316, 325, 331, 340, 39, 443, 465, 470, 506, 520, 533, 544, 561, 570, 575, 606, 613, 621, 629, 680, 699, 747, 748, 751, 806, 814, 834, 859, 861, 866, 923, 925, 955, 97) 
 		GROUP BY problem_id 
@@ -373,7 +373,7 @@ def problems_evolution():
 
 		__cursor.execute(f"""SELECT * FROM submission 
 			WHERE submissionDate >= '2015-09-01 00:00:00' 
-			AND submissionDate < '2017-09-01 00:00:00' 
+			AND submissionDate < '2018-09-01 00:00:00' 
 			AND problem_id={p} 
 			AND problem_elo IS NOT NULL 
 			ORDER BY id""")
@@ -414,8 +414,8 @@ def main():
 	#train_all_with_tries()
 	#train_all_no_tries()
 
-	#ACR_Stats.print_elo_distribution(__cursor, 'Users', '2017-09-01 00:00:00', '2018-09-01 00:00:00')
-	#ACR_Stats.print_elo_distribution(__cursor, 'Problems', '2017-09-01 00:00:00', '2018-09-01 00:00:00')
+	#ACR_Stats.print_actual_elo_distribution(__cursor, 'Users')
+	#ACR_Stats.print_actual_elo_distribution(__cursor, 'Problems')
 	
 	#ACR_Stats.print_elo_differences(__cursor)
 	#ACR_Stats.print_tries_average(__cursor, '2015-09-01 00:00:00', '2016-09-01 00:00:00')
