@@ -212,14 +212,13 @@ def train_all_no_tries():
 
 def train_all_with_tries():
 	cnt = 1
-	problem_already_solved = []
+	current_fights = {}
 
-	# We select all submissions (both halves)
 	__cursor.execute("SELECT * FROM submission WHERE submissionDate >= '2015-09-01 00:00:00' AND submissionDate < '2018-09-01 00:00:00' ORDER BY id")
 
 	rows = __cursor.fetchall()
 	for row in rows:
-		print(cnt, ' of ', len(rows), ' processed')
+		print(cnt, len(rows))
 		cnt += 1
 
 		subm_id = row[0]
@@ -227,45 +226,41 @@ def train_all_with_tries():
 		u_id = row[2]
 		status = row[5]
 
-		# Both User & Problem ELOs are retrieved from User_scores / Problem_Scores
-		__cursor.execute(f"SELECT elo_global FROM User_Scores WHERE user_id={u_id}")
-		old_user_elo = __cursor.fetchone()[0]
+		if u_id not in current_fights:
+			current_fights[u_id] = p_id
 
-		__cursor.execute(f"SELECT elo_global FROM Problem_Scores WHERE problem_id={p_id}")
-		old_problem_elo = __cursor.fetchone()[0]
+		if current_fights[u_id] != p_id or status in ('AC', 'PE'):
 
-		# We check if the problem has already been solved by one specific user
-		# This is so we can omit those submissions meant to reduce execution time, memory use, fix the presentation, etc
-		if (u_id,p_id) not in problem_already_solved:
-			if status in ('AC', 'PE'): 
-				problem_already_solved.append((u_id,p_id))
+			if status in ('AC', 'PE'):
+				del current_fights[u_id]
+			else:
+				current_fights[u_id] = p_id
+
+			__cursor.execute(f"SELECT elo_global FROM User_Scores WHERE user_id={u_id}")
+			old_user_elo = __cursor.fetchone()[0]
+
+			__cursor.execute(f"SELECT elo_global FROM Problem_Scores WHERE problem_id={p_id}")
+			old_problem_elo = __cursor.fetchone()[0]
 
 			__cursor.execute(f"""SELECT * FROM submission 
 				WHERE user_id={u_id} 
 				AND problem_id={p_id} 
 				AND id<{subm_id} 
-				AND user_elo IS NOT NULL
 				ORDER BY id DESC 
 				LIMIT 9""")
 
 			tries = 1
 			for r in __cursor.fetchall(): 
-				if r[5] in ('AC', 'PE'): 
-					break
-				else: 
-					tries += 1
+				tries += 1
 
-			# Calculates the New Global ELO
 			new_user_elo, new_problem_elo = ELO.simulate_with_tries(old_user_elo, old_problem_elo, status, tries)
 
-			# Checks which categories include the problem 
 			__cursor.execute(f"SELECT categoryId FROM problemcategories WHERE problemId={p_id}")
 			for cat in __cursor.fetchall():
 				
 				try:
 					category = categories[cat[0]]
 
-					# We retrieve the old category ELO and use it to simulate a new fight
 					__cursor.execute(f"SELECT {category} FROM User_Scores WHERE user_id = {u_id}")
 					Old_Category_ELO = __cursor.fetchone()[0]
 					New_Category_ELO, _ = ELO.simulate_with_tries(Old_Category_ELO, old_problem_elo, status, tries)
@@ -274,7 +269,6 @@ def train_all_with_tries():
 				except:
 					pass
 
-			# Global ELOs get updated
 			__cursor.execute(f"UPDATE submission SET problem_elo={new_problem_elo}, user_elo={new_user_elo} WHERE id={subm_id}")
 			__cursor.execute(f"UPDATE User_Scores SET elo_global={new_user_elo} WHERE user_id={u_id}")
 			__cursor.execute(f"UPDATE Problem_Scores SET elo_global={new_problem_elo} WHERE problem_id={p_id}")

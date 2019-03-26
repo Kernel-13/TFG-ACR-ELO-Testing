@@ -52,7 +52,7 @@ def print_elo_differences(__cursor):
 	for k,v in elo_diff.items(): 
 		#print(f"Range [{k} - {k+1})   :	{v}		-	Percentage: {(v/value_sum)*100}%")
 		ranges.append(f"[{k} - {k+1})")
-		values.append(v)
+		values.append((v/value_sum)*100)
 
 	show_bar_plot(ranges,values,x_label="ELO Difference (Ranges)", y_label="Submissions with Status AC or PE", title="ELO Differences between Users and the Problems they solved")
 
@@ -60,25 +60,25 @@ def print_actual_elo_distribution(__cursor, items):
 	elo_scores = {}
 	[elo_scores.update({k:0}) for k in range(16)]
 
- 	field = 'user_scores' if items=='Users' else 'problem_scores'
+	field = 'user_scores' if items=='Users' else 'problem_scores'
 
- 	__cursor.execute(f"""SELECT elo_global FROM {field} WHERE elo_global != 8.0""")
+	__cursor.execute(f"""SELECT elo_global FROM {field} WHERE elo_global != 8.0""")
 	rows = __cursor.fetchall()
 
- 	for row in rows:
+	for row in rows:
 		if row[0] != 16: 
 			elo_scores[math.floor(row[0])] += 1 
 		else: 
 			elo_scores[15] += 1
 
- 	ranges = []
+	ranges = []
 	values = []
 
- 	for k,v in elo_scores.items(): 
+	for k,v in elo_scores.items(): 
 		ranges.append(f"[{k} - {k+1})")
 		values.append(v)
 
- 	show_bar_plot(ranges,values,x_label="ELO Ranges", y_label=f"Nº of {items}", title=f"ELO Distribution ({items})")
+	show_bar_plot(ranges,values,x_label="ELO Ranges", y_label=f"Nº of {items}", title=f"ELO Distribution ({items})")
 
 def print_elo_distribution(__cursor, items, start_date, end_date):
 	elo_scores = {}
@@ -200,7 +200,7 @@ def show_bar_plot(x,y,x_label="", y_label="", title=""):
 
 	for bar in bars:
 	    height = bar.get_height()
-	    ax.text(bar.get_x() + bar.get_width()/2., 1.05*height,str(round(height, 2)),ha='center', va='bottom')
+	    ax.text(bar.get_x() + bar.get_width()/2., 1.05*height,str(round(height, 2))+'%',ha='center', va='bottom')
 
 	plt.show()
 	plt.close()
