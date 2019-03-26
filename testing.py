@@ -1,6 +1,4 @@
-
 import pymysql
-import sys
 import ELO
 import ACR_Stats
 

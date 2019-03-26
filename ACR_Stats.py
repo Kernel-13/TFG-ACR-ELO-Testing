@@ -98,24 +98,6 @@ def print_elo_distribution(__cursor, items, start_date, end_date):
 
 	show_bar_plot(ranges,values,x_label="ELO Ranges", y_label=f"Nº of {items}", title=f"ELO Distribution ({items})")
 
-"""
-def print_tries_average(__cursor):
-	n_submissions = 0
-	u_elo = {}
-	[u_elo.update({k:0}) for k in range(16)]
-	__cursor.execute("SELECT distinct(user_id), count(id), elo_score from submission natural join users_elo group by user_id")
-
-	rows = __cursor.fetchall()
-	for r in rows:
-		if r[2] != 16: u_elo[math.floor(r[2])] += 1 
-		else: u_elo[15] += 1
-		n_submissions += r[1]
-
-	print("Nº of Users: ", len(rows))
-	print("Nº of Submissions: ", n_submissions)
-	print("Average: ", n_submissions/len(rows))
-"""
-
 def print_tries_till_solved(__cursor, start_date, end_date):
 	__cursor.execute(f"""SELECT * from submission 
 		WHERE submissionDate >= '{start_date}' 
@@ -150,6 +132,38 @@ def print_tries_till_solved(__cursor, start_date, end_date):
 		y.append(v)
 
 	show_bar_plot(x,y, x_label="Nº of Tries (Submissions) until the problem is solved", y_label="Nº of Distinct User/Problem Confrontations", title="")
+
+def print_tries_average(__cursor,start_date, end_date):
+	__cursor.execute(f"""SELECT user_id, SUM(CASE WHEN status='AC' THEN 1 ELSE 0 END), SUM(CASE WHEN status!='AC' THEN 1 ELSE 0 END) from submission 
+		WHERE submissionDate >= '2015-09-01 00:00:00' 
+		AND submissionDate < '2016-09-01 00:00:00' 
+		GROUP BY user_id""")
+
+	num_subm = {}
+	for i in range(21): num_subm[str(i)] = 0
+	num_subm['20+'] = 0
+	num_subm['NS'] = 0
+
+	for row in __cursor.fetchall():
+		if row[1] != 0:
+			average = math.floor(row[2] / row[1])
+			if average < 21:  num_subm[str(average)] += 1
+			else: num_subm['20+'] += 1
+		else:
+			num_subm['NS'] += 1
+	x = []
+	y1 = []
+	y2 = []
+	for k,v in num_subm.items():
+		x.append(k)
+		y1.append(v)
+
+	perc_sum = 0
+	for i in y1:
+		perc_sum += i
+		y2.append((perc_sum/sum(y1))*100)
+
+	ACR_Stats.show_bar_and_cumulative(x,y1,y2, x_label="Nº of AC / NON_AC Submissions", y_label="Nº of Users", title="")
 
 def show_bar_plot(x,y,x_label="", y_label="", title=""):
 	x_idx = [i for i, _ in enumerate(x)]
@@ -271,6 +285,41 @@ def show_ELO_gain(x,y1,y2,x_label="", y_label="", title="", filename="Gain"):
 	#fig.savefig("Bigger " + filename)
 	plt.close()
 	#plt.show()
+
+def show_bar_and_cumulative(x,y1,y2,x_label="", y_label="", title="", filename="show_bar_and_cumulative.png"):
+	# Code from https://matplotlib.org/gallery/subplots_axes_and_figures/two_scales.html
+	fig, ax1 = plt.subplots()
+
+	ax1.set_xlabel(x_label)
+	ax1.set_ylabel(y_label)
+
+	color = 'tab:blue'
+	bars = ax1.bar(x, y1, color=color, label="Nº of Users")
+
+	for bar in bars:
+	    height = bar.get_height()
+	    ax1.text(bar.get_x() + bar.get_width()/2., 1.05*height,str(round(height, 2)),ha='center', va='bottom')
+
+	ax2 = ax1.twinx()  # instantiate a second axes that shares the same x-axis
+	color = 'tab:red'
+	plts = ax2.plot(x, y2, color=color, label="Cumulative Percentage")
+
+	for idx, v in enumerate(x):
+		ax2.text(v, y2[idx], str(round(y2[idx],1))+'%', color="black", size=8 ,ha='center', va='center', alpha=0.8, position=(v,float(y2[idx])+3.5))
+
+	ax2.set_ylim([0,100])
+
+	#fig.set_size_inches(15, 10)
+	#ax1.legend(loc="upper left")
+	#ax2.legend(loc="upper right")
+	#fig.savefig(filename)
+
+
+	#fig.set_size_inches(36, 30)
+	#fig.savefig("Bigger " + filename)
+	plt.show()
+	plt.close()
+
 
 '''
 __cursor.execute("""SELECT * from submission s inner join problems_elo p on s.problem_id = p.problem_id  inner join users_elo u on s.user_id = u.user_id

@@ -8,12 +8,6 @@ def Expectation(Ra, Rb):
 	""" Calculates the 'Expectation' value following the original formula """
 	return 1.0 / (1 + math.pow(10, -((Ra - Rb) / 8))) 
 
-def k_factor(x, underdog_won):
-	""" Calculates the K-factor """
-	if x <= 1: return 4
-	if underdog_won: 	return math.log2(x) + 4
-	else:				return 4 - (math.log(x,2))
-
 def k_factor_new_formula(elo_diff, underdog_won):
 	""" Calculates the K-factor """
 	if underdog_won: 	return (elo_diff + 16) / 32

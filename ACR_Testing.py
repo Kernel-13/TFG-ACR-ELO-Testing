@@ -205,8 +205,10 @@ def train_all_no_tries():
 			__cursor.execute(f"UPDATE submission SET problem_elo={new_problem_elo}, user_elo={new_user_elo} WHERE id={subm_id}")
 			__cursor.execute(f"UPDATE User_Scores SET elo_global={new_user_elo} WHERE user_id={u_id}")
 			__cursor.execute(f"UPDATE Problem_Scores SET elo_global={new_problem_elo} WHERE problem_id={p_id}")
-
 	connection.commit()
+
+	#__cursor.execute(f"DELETE FROM submission WHERE user_elo IS NULL AND problem_elo IS NULL")
+	#connection.commit()
 
 def train_all_with_tries():
 	cnt = 1
@@ -416,7 +418,7 @@ def main():
 	#ACR_Stats.print_elo_distribution(__cursor, 'Problems', '2017-09-01 00:00:00', '2018-09-01 00:00:00')
 	
 	#ACR_Stats.print_elo_differences(__cursor)
-	#ACR_Stats.print_tries_till_solved(__cursor, '2015-09-01 00:00:00', '2016-09-01 00:00:00')
+	#ACR_Stats.print_tries_average(__cursor, '2015-09-01 00:00:00', '2016-09-01 00:00:00')
 
 	#users_evolution()
 	#problems_evolution()
