@@ -15,7 +15,7 @@ def k_factor_new_formula(elo_diff, underdog_won):
 
 def k_factor_new_formula_with_tries(elo_diff, underdog_won, tries, status):
 	""" Calculates the K-factor """
-	if tries >= __MAX_TRIES and status not in ('AC', 'PE'): return 0 
+	if tries >= __MAX_TRIES: tries = __MAX_TRIES
 	if underdog_won: 	return ((elo_diff + 16) / 32) * (tries / __MAX_TRIES)
 	else:				return (0.5 - elo_diff / 32) * (tries / __MAX_TRIES)
 
