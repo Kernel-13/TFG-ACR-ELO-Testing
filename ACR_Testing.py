@@ -184,7 +184,6 @@ def train_all_no_tries():
 	#connection.commit()
 
 def train_all_with_tries():
-	cnt = 1
 	current_fights = {}
 	problem_already_maxed = []
 
@@ -192,9 +191,7 @@ def train_all_with_tries():
 
 	rows = __cursor.fetchall()
 	for row in rows:
-		print(cnt, len(rows))
-		cnt += 1
-
+		#print(0)
 		subm_id = row[0]
 		p_id = row[1]
 		u_id = row[2]
@@ -338,10 +335,10 @@ def main():
 	#train_all_with_tries()
 	#train_all_no_tries()
 
-	#ACR_Stats.print_actual_elo_distribution(__cursor, 'Users')
-	#ACR_Stats.print_actual_elo_distribution(__cursor, 'Problems')
+	ACR_Stats.print_actual_elo_distribution(__cursor, 'Users')
+	ACR_Stats.print_actual_elo_distribution(__cursor, 'Problems')
 	
-	#ACR_Stats.print_elo_differences(__cursor)
+	ACR_Stats.print_elo_differences(__cursor)
 	#ACR_Stats.print_tries_average(__cursor, '2015-09-01 00:00:00', '2018-09-01 00:00:00')
 
 	users_evolution()
