@@ -330,9 +330,9 @@ def user_categories():
 		#print('User: ', row[0])
 
 def main():
-	#create_and_alter_needed_tables()
+	create_and_alter_needed_tables()
 
-	#train_all_with_tries()
+	train_all_with_tries()
 	#train_all_no_tries()
 
 	ACR_Stats.print_actual_elo_distribution(__cursor, 'Users')
