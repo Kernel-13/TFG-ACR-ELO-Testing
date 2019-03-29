@@ -71,6 +71,15 @@ def create_and_alter_needed_tables():
 		__cursor.execute("UPDATE submission SET user_elo=NULL")
 		__cursor.execute("UPDATE submission SET problem_elo=NULL")
 
+	__cursor.execute("SELECT * FROM submission WHERE status = 'AC' OR status = 'PE' GROUP BY user_id, problem_id, status ORDER BY user_id")
+	rows = __cursor.fetchall()
+
+	for r in rows:
+		try:
+			__cursor.execute(f"DELETE FROM submission WHERE user_id={r[2]} AND problem_id={r[1]} AND id > {r[0]}")
+		except:
+			pass
+
 	connection.commit()
 
 def train_subjects_and_insert_elos():
@@ -190,8 +199,9 @@ def train_all_with_tries():
 	__cursor.execute("SELECT * FROM submission WHERE submissionDate >= '2015-09-01 00:00:00' AND submissionDate < '2018-09-01 00:00:00' ORDER BY id")
 
 	rows = __cursor.fetchall()
+	rows_size = len(rows)
 	for row in rows:
-		#print(0)
+		print(rows_size)
 		subm_id = row[0]
 		p_id = row[1]
 		u_id = row[2]
