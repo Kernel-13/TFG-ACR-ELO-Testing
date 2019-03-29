@@ -71,6 +71,18 @@ def create_and_alter_needed_tables():
 		__cursor.execute("UPDATE submission SET user_elo=NULL")
 		__cursor.execute("UPDATE submission SET problem_elo=NULL")
 
+	__cursor.execute("SELECT * FROM submission WHERE (status = 'AC' OR status = 'PE') GROUP BY user_id, problem_id, status ORDER BY user_id")
+	rows = __cursor.fetchall()
+
+	cnt = 1
+	for r in rows:
+		print(cnt, len(rows))
+		cnt += 1
+		try:
+			__cursor.execute(f"DELETE FROM submission WHERE user_id={r[2]} AND problem_id={r[1]} AND id > {r[0]}")
+		except:
+			pass
+
 	connection.commit()
 
 def train_subjects_and_insert_elos():
