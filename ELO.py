@@ -22,8 +22,8 @@ def k_factor_new_formula_with_tries(elo_diff, underdog_won, tries, status):
 def k_factor_new_formula_with_tries_bigger_gain(elo_diff, underdog_won, tries, status):
 	""" Calculates the K-factor """
 	if tries >= __MAX_TRIES: tries = __MAX_TRIES
-	if underdog_won: 	return ((elo_diff + __MAX_TRIES) / __MAX_TRIES) * 0.75 * (tries / __MAX_TRIES)
-	else:				return (1 - elo_diff / __MAX_TRIES) * 0.75 * (tries / __MAX_TRIES)
+	if underdog_won: 	return ((elo_diff + __MAX_ELO) / __MAX_ELO) * 0.75 * (tries / __MAX_TRIES)
+	else:				return (1 - elo_diff / __MAX_ELO) * 0.75 * (tries / __MAX_TRIES)
 
 def simulate_no_tries(ELO_user, ELO_problem, Submission_State):
 
