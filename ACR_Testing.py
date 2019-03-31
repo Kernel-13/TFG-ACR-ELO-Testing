@@ -339,6 +339,31 @@ def user_categories():
 		ACR_Stats.show_spider_chart(chart_data=categories_data,filename=f"Categories' ELO\\User {str(row[0])} Categories.png")
 		#print('User: ', row[0])
 
+def recommender_presicion():
+	""" First we need to simulate ELO fights with the submissions from 2015 to 2017 to calculate ELO values for each problem/user
+	After that, we need to choose a group of problems that we want to recommend these users
+	With each user and group of recommended problems, we must check if he really tries those problems or not
+	If he tries/solves a problem from the group, then its a true positive (should he also solve it?)
+	If he doesn't, then its a false positive
+	If he tries a problem outside the group of recommended problems, then its a false negative
+	If he doesn't try/solve problems that are outside the group of recommended problems, then its a true negative """
+
+	# submissions from the second half
+	__cursor.execute("""SELECT user_id, problem_id, status FROM submission 
+		WHERE submissionDate >= '2017-09-01 00:00:00' 
+		AND submissionDate < '2018-09-01 00:00:00'
+		GROUP BY user_id, problem_id, status
+		ORDER BY user_id, problem_id """)
+
+	# for r in rows. pick users and problems ids
+	# 
+
+	__cursor.execute("""SELECT user_id, problem_id, status FROM submission 
+		WHERE submissionDate >= '2017-09-01 00:00:00' 
+		AND submissionDate < '2018-09-01 00:00:00'
+		GROUP BY user_id, problem_id, status
+		ORDER BY user_id, problem_id """)
+
 def main():
 	#create_and_alter_needed_tables()
 
