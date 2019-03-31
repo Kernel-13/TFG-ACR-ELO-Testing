@@ -345,15 +345,15 @@ def main():
 	#train_all_with_tries()
 	#train_all_no_tries()
 
-	#ACR_Stats.print_actual_elo_distribution(__cursor, 'Users')
-	#ACR_Stats.print_actual_elo_distribution(__cursor, 'Problems')
+	ACR_Stats.print_actual_elo_distribution(__cursor, 'Users')
+	ACR_Stats.print_actual_elo_distribution(__cursor, 'Problems')
 	
-	#ACR_Stats.print_elo_differences(__cursor)
+	ACR_Stats.print_elo_differences(__cursor)
 	#ACR_Stats.print_tries_average(__cursor, '2015-09-01 00:00:00', '2018-09-01 00:00:00')
 
-	#users_evolution()
-	#problems_evolution()
-	#user_categories()
+	users_evolution()
+	problems_evolution()
+	user_categories()
 
 	connection.close()
 
