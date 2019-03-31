@@ -3,10 +3,12 @@ import math
 __MAX_TRIES = 10
 __MAX_ELO = 16
 __MIN_ELO = 0
+__MAX_DIFF = 8
 
-def Expectation(Ra, Rb): 
-	""" Calculates the 'Expectation' value following the original formula """
-	return 1.0 / (1 + math.pow(10, -((Ra - Rb) / 8))) 
+def Expectation(P1, P2): 
+	""" Calculates the 'Expectation' value following the formula provided by FIDE [https://www.fide.com/fide/handbook.html?id=172&view=article] although in this case, is more of a probability than an expectation"""
+	""" if P1 has __MAX_DIFF more ELO points than P2, they are 10 times better (and should win 10/11, ~90.1% of the time). [https://blog.mackie.io/the-elo-algorithm] """
+	return 1.0 / (1 + math.pow(10, -((P1 - P2) / __MAX_DIFF)))
 
 def k_factor_new_formula(elo_diff, underdog_won):
 	""" Calculates the K-factor """
@@ -110,3 +112,4 @@ def simulate_with_tries(ELO_user, ELO_problem, Submission_State, tries):
 		Problem_New_Score = Problem_Old_Score
 	
 	return User_New_Score, Problem_New_Score
+	
