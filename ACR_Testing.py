@@ -192,16 +192,17 @@ def train_all_no_tries():
 	#__cursor.execute(f"DELETE FROM submission WHERE user_elo IS NULL AND problem_elo IS NULL")
 	#connection.commit()
 
-def train_all_with_tries():
+def train_all_with_tries(start_date, end_date):
 	current_fights = {}
 	problem_already_maxed = []
 
-	__cursor.execute("SELECT * FROM submission WHERE submissionDate >= '2015-09-01 00:00:00' AND submissionDate < '2018-09-01 00:00:00' ORDER BY id")
+	__cursor.execute("""SELECT * FROM submission 
+		WHERE submissionDate >= %s 
+		AND submissionDate < %s 
+		ORDER BY id""", (start_date, end_date,))
 
 	rows = __cursor.fetchall()
-	rows_size = len(rows)
 	for row in rows:
-		print(rows_size)
 		subm_id = row[0]
 		p_id = row[1]
 		u_id = row[2]
@@ -404,9 +405,9 @@ def recommender_accuracy():
 	print("F-Score: ", fScore)
 
 def main():
-	#create_and_alter_needed_tables()
+	create_and_alter_needed_tables()
 
-	#train_all_with_tries()
+	train_all_with_tries("2015-09-01 00:00:00", "2017-09-01 00:00:00")
 	#train_all_no_tries()
 
 	#ACR_Stats.print_actual_elo_distribution(__cursor, 'Users')
