@@ -1,12 +1,8 @@
-
-__pycache__/ACR_Stats.cpython-37.pyc
-__pycache__/ACR_Stats.cpython-37.pyc
-__pycache__/ELO_Simulation.cpython-37.pyc
+*.pyc
+__pycache__
 testing_2.py
 testing_charts.py
-*.pyc
 testing_datechart.py
-*.pyc
 iter_fold.py
 type3v3.txt
 rw_siz.txt

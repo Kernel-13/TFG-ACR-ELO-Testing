@@ -339,7 +339,7 @@ def user_categories():
 		ACR_Stats.show_spider_chart(chart_data=categories_data,filename=f"Categories' ELO\\User {str(row[0])} Categories.png")
 		#print('User: ', row[0])
 
-def recommender_presicion():
+def recommender_precision_one():
 	""" First we need to simulate ELO fights with the submissions from 2015 to 2017 to calculate ELO values for each problem/user
 	After that, we need to choose a group of problems that we want to recommend these users
 	With each user and group of recommended problems, we must check if he really tries those problems or not
@@ -348,21 +348,37 @@ def recommender_presicion():
 	If he tries a problem outside the group of recommended problems, then its a false negative
 	If he doesn't try/solve problems that are outside the group of recommended problems, then its a true negative """
 
-	# submissions from the second half
-	__cursor.execute("""SELECT user_id, problem_id, status FROM submission 
+	# Users from the SECOND half with more than 25 submissions
+	# that have more than 25 submissions in the FIRST half
+	__cursor.execute("""SELECT user_id FROM submissions
 		WHERE submissionDate >= '2017-09-01 00:00:00' 
 		AND submissionDate < '2018-09-01 00:00:00'
-		GROUP BY user_id, problem_id, status
-		ORDER BY user_id, problem_id """)
+		AND user_id IN 
+			(SELECT user_id FROM submissions
+			WHERE submissionDate >= '2015-09-01 00:00:00' 
+			AND submissionDate < '2017-09-01 00:00:00'
+			GROUP BY user_id
+			HAVING COUNT(id) > 25)
+		GROUP BY user_id
+		HAVING COUNT(id) > 25)
+		ORDER BY user_id
+		""")
 
-	# for r in rows. pick users and problems ids
-	# 
+	user_elos = {}
+	user_rcmd = {}
 
-	__cursor.execute("""SELECT user_id, problem_id, status FROM submission 
-		WHERE submissionDate >= '2017-09-01 00:00:00' 
-		AND submissionDate < '2018-09-01 00:00:00'
-		GROUP BY user_id, problem_id, status
-		ORDER BY user_id, problem_id """)
+	for u in __cursor.fetchall():
+		__cursor.execute("SELECT elo_global FROM user_scores WHERE user_id=?", (u[0],))
+		user_elos[u[0]] = __cursor.fetchone()[0]
+
+		__cursor.execute("SELECT problem_id FROM problem_scores WHERE elo_global BETWEEN ? AND ? ORDER BY elo_global ASC LIMIT 10", (user_elos[u[0]]-1,user_elos[u[0]]+1,))
+		user_rcmd[u[0]] = [p[0] for p in __cursor.fetchall()]
+
+	for k,v in user_elos.items():
+		print(k,v)
+
+	for k,v in user_rcmd.items():
+		print(k,v)
 
 def main():
 	#create_and_alter_needed_tables()
@@ -370,15 +386,17 @@ def main():
 	#train_all_with_tries()
 	#train_all_no_tries()
 
-	ACR_Stats.print_actual_elo_distribution(__cursor, 'Users')
-	ACR_Stats.print_actual_elo_distribution(__cursor, 'Problems')
+	#ACR_Stats.print_actual_elo_distribution(__cursor, 'Users')
+	#ACR_Stats.print_actual_elo_distribution(__cursor, 'Problems')
 	
-	ACR_Stats.print_elo_differences(__cursor)
+	#ACR_Stats.print_elo_differences(__cursor)
 	#ACR_Stats.print_tries_average(__cursor, '2015-09-01 00:00:00', '2018-09-01 00:00:00')
 
-	users_evolution()
-	problems_evolution()
-	user_categories()
+	#users_evolution()
+	#problems_evolution()
+	#user_categories()
+
+	recommender_precision_one()
 
 	connection.close()
 
