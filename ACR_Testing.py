@@ -71,6 +71,15 @@ def create_and_alter_needed_tables():
 		__cursor.execute("UPDATE submission SET user_elo=NULL")
 		__cursor.execute("UPDATE submission SET problem_elo=NULL")
 
+	__cursor.execute("SELECT * FROM submission WHERE status = 'AC' OR status = 'PE' GROUP BY user_id, problem_id, status ORDER BY user_id")
+	rows = __cursor.fetchall()
+
+	for r in rows:
+		try:
+			__cursor.execute(f"DELETE FROM submission WHERE user_id={r[2]} AND problem_id={r[1]} AND id > {r[0]}")
+		except:
+			pass
+
 	connection.commit()
 
 def train_subjects_and_insert_elos():
@@ -188,12 +197,12 @@ def train_all_with_tries():
 	current_fights = {}
 	problem_already_maxed = []
 
-	__cursor.execute("SELECT * FROM submission WHERE submissionDate >= '2015-09-01 00:00:00' AND submissionDate < '2018-09-01 00:00:00' ORDER BY id")
+	__cursor.execute("SELECT * FROM submission WHERE submissionDate >= '2015-09-01 00:00:00' AND submissionDate < '2017-09-01 00:00:00' ORDER BY id")
 
-	rows = __cursor.fetchall()
+	#rows = __cursor.fetchall()
 	for row in rows:
-		print(cnt, len(rows))
-		cnt += 1
+		#print(cnt, len(rows))
+		#cnt += 1
 
 		subm_id = row[0]
 		p_id = row[1]
@@ -375,6 +384,7 @@ def recommender_accuracy():
 	__cursor.execute("""SELECT user_id, problem_id FROM submission
 		WHERE submissionDate >= '2017-09-01 00:00:00' 
 		AND submissionDate < '2018-09-01 00:00:00'
+		AND (status = 'AC' or status = 'PE')
 		GROUP BY user_id, problem_id
 		ORDER BY user_id, problem_id """)
 
@@ -398,9 +408,9 @@ def recommender_accuracy():
 	print("F-Score: ", fScore)
 
 def main():
-	#create_and_alter_needed_tables()
+	create_and_alter_needed_tables()
 
-	#train_all_with_tries()
+	train_all_with_tries()
 	#train_all_no_tries()
 
 	#ACR_Stats.print_actual_elo_distribution(__cursor, 'Users')
@@ -409,9 +419,10 @@ def main():
 	#ACR_Stats.print_elo_differences(__cursor)
 	#ACR_Stats.print_tries_average(__cursor, '2015-09-01 00:00:00', '2018-09-01 00:00:00')
 
-	users_evolution()
-	problems_evolution()
-	user_categories()
+	#users_evolution()
+	#problems_evolution()
+	#user_categories()
+	recommender_accuracy()
 
 	connection.close()
 
