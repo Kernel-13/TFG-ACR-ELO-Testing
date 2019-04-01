@@ -31,6 +31,8 @@ connection = pymysql.connect(host="localhost",user="root",passwd="",database="ac
 __cursor = connection.cursor()
 
 def create_and_alter_needed_tables():
+
+	# Creates a table that will store ELO scores for each user (Global ELO and ELO for each category)
 	__cursor.execute("DROP TABLE IF EXISTS User_Scores")
 	__cursor.execute(f"""CREATE TABLE IF NOT EXISTS User_Scores(
 		user_id INT PRIMARY KEY, 
@@ -54,6 +56,7 @@ def create_and_alter_needed_tables():
 		__cursor.execute(f"INSERT INTO User_Scores(user_id) VALUES({usr[0]})")
 
 
+	# Creates a table that will store ELO scores for each problem
 	__cursor.execute("DROP TABLE IF EXISTS Problem_Scores")
 	__cursor.execute(f"""CREATE TABLE IF NOT EXISTS Problem_Scores(
 		problem_id INT PRIMARY KEY, 
@@ -64,6 +67,8 @@ def create_and_alter_needed_tables():
 	for prb in __cursor.fetchall():
 		__cursor.execute(f"INSERT INTO Problem_Scores(problem_id) VALUES({prb[0]})")
 
+	# Adds 2 new columns to the 'submission' table (user_elo, problem_elo)
+	# These store the resulting ELOs for both user and problem after a simulation
 	try:
 		__cursor.execute("ALTER TABLE submission ADD COLUMN user_elo FLOAT(18,16)")
 		__cursor.execute("ALTER TABLE submission ADD COLUMN problem_elo FLOAT(18,16)")
@@ -71,6 +76,7 @@ def create_and_alter_needed_tables():
 		__cursor.execute("UPDATE submission SET user_elo=NULL")
 		__cursor.execute("UPDATE submission SET problem_elo=NULL")
 
+	# Filters submissions
 	__cursor.execute("SELECT * FROM submission WHERE status = 'AC' OR status = 'PE' GROUP BY user_id, problem_id, status ORDER BY user_id")
 	rows = __cursor.fetchall()
 
@@ -406,9 +412,7 @@ def recommender_accuracy():
 
 def main():
 	create_and_alter_needed_tables()
-
 	train_all_with_tries("2015-09-01 00:00:00", "2017-09-01 00:00:00")
-	#train_all_no_tries()
 
 	#ACR_Stats.print_actual_elo_distribution(__cursor, 'Users')
 	#ACR_Stats.print_actual_elo_distribution(__cursor, 'Problems')
