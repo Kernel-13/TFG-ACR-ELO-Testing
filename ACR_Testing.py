@@ -205,7 +205,9 @@ def train_all_with_tries(start_date, end_date):
 		ORDER BY id""", (start_date, end_date,))
 
 	rows = __cursor.fetchall()
+	rw_sz = len(rows)
 	for row in rows:
+		print(rw_sz)
 		subm_id = row[0]
 		p_id = row[1]
 		u_id = row[2]
@@ -357,6 +359,7 @@ def recommender_accuracy():
 	__cursor.execute("""SELECT user_id FROM submission
 		WHERE submissionDate >= '2017-09-01 00:00:00' 
 		AND submissionDate < '2018-09-01 00:00:00'
+		AND (status = 'AC' or status = 'PE')
 		AND user_id IN 
 			(SELECT user_id FROM submission
 			WHERE submissionDate >= '2015-09-01 00:00:00' 
@@ -403,6 +406,9 @@ def recommender_accuracy():
 	Recall = true_positives/(true_positives+false_negatives)
 	fScore = 2*((Precision*Recall)/(Precision+Recall))
 
+	print("True Positives: ", true_positives)
+	print("False Positives: ", false_positives)
+	print("False Negatives: ", false_negatives)
 	print("Precision: ", Precision)
 	print("Recall: ", Recall)
 	print("F-Score: ", fScore)
