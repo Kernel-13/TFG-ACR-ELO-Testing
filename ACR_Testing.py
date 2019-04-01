@@ -1,8 +1,5 @@
 import os
-import math
 import pymysql
-import datetime
-import time
 import ELO
 import ACR_Stats
 import matplotlib.pyplot as plt
