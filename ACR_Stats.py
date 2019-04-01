@@ -240,22 +240,30 @@ def show_spider_chart(chart_data, filename, title=""):
 	plt.close()
 	#plt.show()
 
-def show_line_plot(x,y,filename):
+def show_line_plot(x,y,filename,x_label="", y_label="", title="", ylim_down=0, ylim_up=16, plot_type="r-"):
 	fig, ax = plt.subplots()
-	ax.plot(x,y,'ro-')
+	ax.plot(x,y,plot_type)
 	ax.grid()
-	axes = plt.gca()
-	axes.set_ylim([0,16])
 
-	position = (x[len(x)-1],float(y[len(y)-1])+0.5) if y[len(y)-1] < 16 else (x[len(x)-1],100)
+	ax.set_xlabel(x_label)
+	ax.set_ylabel(y_label)
+	plt.suptitle(title)
+
+	axes = plt.gca()
+	axes.set_ylim([ylim_down,ylim_up])
+
+	position = (x[len(x)-1],float(y[len(y)-1])+(abs(ylim_up - ylim_down)*0.03125)) if y[len(y)-1] < 16 else (x[len(x)-1],100)
 	plt.text(x[len(x)-1], y[len(y)-1], str(round(y[len(y)-1],2)), color="black", size=12 ,ha='center', va='center', alpha=0.5, position=position)
+
+	position = (x[0],float(y[0])+(abs(ylim_up - ylim_down)*0.03125)) if y[0] < 16 else (x[0],100)
+	plt.text(x[0], y[0], str(round(y[0],2)), color="black", size=12 ,ha='center', va='center', alpha=0.5, position=position)
 
 	"""
 	for idx, v in enumerate(x):
 		position = (v,float(y[idx])+0.5) if y[idx] < 16 else (v,100)
 		plt.text(v, y[idx], str(round(y[idx],2)), color="black", size=12 ,ha='center', va='center', alpha=0.5, position=position)
 	"""
-	fig.set_size_inches(12, 10)
+	fig.set_size_inches(11, 7)
 	fig.savefig(filename)
 	plt.close()
 	#plt.show()
