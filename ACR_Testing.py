@@ -382,6 +382,7 @@ def recommender_accuracy():
 	__cursor.execute("""SELECT user_id, problem_id FROM submission
 		WHERE submissionDate >= '2017-09-01 00:00:00' 
 		AND submissionDate < '2018-09-01 00:00:00'
+		AND (status = 'AC' or status = 'PE')
 		GROUP BY user_id, problem_id
 		ORDER BY user_id, problem_id """)
 
