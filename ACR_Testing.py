@@ -345,7 +345,7 @@ def user_categories():
 		ACR_Stats.show_spider_chart(chart_data=categories_data,filename=f"Categories' ELO\\User {str(row[0])} Categories.png")
 		#print('User: ', row[0])
 
-def recommender_accuracy():
+def recommender_global():
 	""" First we need to simulate ELO fights with the submissions from 2015 to 2017 to calculate ELO values for each problem/user
 	After that, we need to choose a group of problems that we want to recommend these users
 	With each user and group of recommended problems, we must check if he really tries those problems or not
@@ -354,27 +354,68 @@ def recommender_accuracy():
 	If he tries a problem outside the group of recommended problems, then its a false negative
 	If he doesn't try/solve problems that are outside the group of recommended problems, then its a true negative """
 
-	# Users from the SECOND half with more than 25 submissions
-	# that have more than 25 submissions in the FIRST half
-	__cursor.execute("""SELECT user_id FROM submission
-		WHERE submissionDate >= '2017-09-01 00:00:00' 
-		AND submissionDate < '2018-09-01 00:00:00'
-		AND (status = 'AC' or status = 'PE')
-		AND user_id IN 
-			(SELECT user_id FROM submission
-			WHERE submissionDate >= '2015-09-01 00:00:00' 
-			AND submissionDate < '2017-09-01 00:00:00'
-			GROUP BY user_id
-			HAVING COUNT(id) > 25)
-		GROUP BY user_id
-		HAVING COUNT(id) > 25
-		ORDER BY user_id""")
-
 	user_elos = {}
 	user_rcmd = {}
-	true_positives = 0
-	false_positives = 0
-	false_negatives = 0
+	u_p_pos = {}
+
+	# Users from the FIRST half with more than 5 solved problems 
+	users_from_first_half = """SELECT user_id FROM submission
+							WHERE submissionDate >= '2015-09-01 00:00:00' 
+							AND submissionDate < '2017-09-01 00:00:00'
+							GROUP BY user_id
+							HAVING sum(CASE 
+										WHEN status = 'AC' THEN 1
+										WHEN status = 'PE' THEN 1 
+										ELSE 0 
+										END) >= 5"""
+
+	# Users from the SECOND half with more than 5 solved problems 
+	users_from_second_half = """SELECT user_id FROM submission
+				WHERE submissionDate >= '2015-09-01 00:00:00' 
+				AND submissionDate < '2017-09-01 00:00:00'
+				AND user_id IN (%s)
+				GROUP BY user_id
+				HAVING sum(CASE 
+								WHEN status = 'AC' THEN 1
+								WHEN status = 'PE' THEN 1 
+								ELSE 0 
+								END) >= 5
+				ORDER BY id""" % users_from_first_half
+
+	# 
+	__cursor.execute(f"""SELECT user_id, elo_global FROM user_scores WHERE user_id IN ({users_from_second_half})""")
+	for r in __cursor.fetchall():
+		user_elos[r[0]] = r[1]
+		user_rcmd[r[0]] = []
+		u_p_pos[r[0]] = []
+
+	
+	for k,v in user_elos.items():
+		__cursor.execute(f"""SELECT problem_id, elo_global, ABS({v} - elo_global) as diff FROM problem_scores ORDER BY diff ASC LIMIT 20""")
+		for p in __cursor.fetchall():
+			user_rcmd[k].append(p[0])
+
+	__cursor.execute(f"""SELECT user_id, problem_id, status FROM submission
+				WHERE submissionDate >= '2015-09-01 00:00:00' 
+				AND submissionDate < '2017-09-01 00:00:00'
+				AND (status = 'AC' OR status='PE')
+				AND user_id IN ({users_from_second_half})
+				GROUP BY user_id, problem_id, status
+				ORDER BY id""")
+
+	for s in __cursor.fetchall():
+		try:
+			usr = s[0]
+			prb = s[1]
+			if prb in user_rcmd[usr]:
+				u_p_pos[usr].append(user_rcmd[usr].index(prb))
+		except:
+			pass
+
+	for u in user_elos:
+		print(u, u_p_pos[u])
+
+	"""
 
 	for u in __cursor.fetchall():
 		if u[0] not in user_elos:
@@ -384,38 +425,133 @@ def recommender_accuracy():
 		if u[0] not in user_rcmd:
 			__cursor.execute("SELECT problem_id FROM problem_scores WHERE elo_global BETWEEN %s AND %s ORDER BY elo_global ASC", (user_elos[u[0]]-1,user_elos[u[0]]+1,))
 			user_rcmd[u[0]] = [p[0] for p in __cursor.fetchall()]
+	"""
+	
+def recommender_per_category():
+	""" First we need to simulate ELO fights with the submissions from 2015 to 2017 to calculate ELO values for each problem/user
+	After that, we need to choose a group of problems that we want to recommend these users
+	With each user and group of recommended problems, we must check if he really tries those problems or not
+	If he tries/solves a problem from the group, then its a true positive (should he also solve it?)
+	If he doesn't, then its a false positive
+	If he tries a problem outside the group of recommended problems, then its a false negative
+	If he doesn't try/solve problems that are outside the group of recommended problems, then its a true negative """
 
-	__cursor.execute("""SELECT user_id, problem_id FROM submission
-		WHERE submissionDate >= '2017-09-01 00:00:00' 
-		AND submissionDate < '2018-09-01 00:00:00'
-		GROUP BY user_id, problem_id
-		ORDER BY user_id, problem_id """)
+	user_elos = {}
+	user_rcmd = {}
+	u_p_pos = {}
 
-	for sb in __cursor.fetchall():
-		if sb[0] in user_rcmd:
-			if sb[1] in user_rcmd[sb[0]]:
-				true_positives += 1
-				user_rcmd[sb[0]].remove(sb[1])
-			elif sb[1] not in user_rcmd[sb[0]]:
-				false_negatives += 1
+	# Users from the FIRST half with more than 5 solved problems 
+	users_from_first_half = """SELECT user_id FROM submission
+							WHERE submissionDate >= '2015-09-01 00:00:00' 
+							AND submissionDate < '2017-09-01 00:00:00'
+							GROUP BY user_id
+							HAVING sum(CASE 
+										WHEN status = 'AC' THEN 1
+										WHEN status = 'PE' THEN 1 
+										ELSE 0 
+										END) >= 5"""
 
-	for k,v in user_rcmd.items():
-		false_positives += len(v)
+	# Users from the SECOND half with more than 5 solved problems 
+	users_from_second_half = """SELECT user_id FROM submission
+				WHERE submissionDate >= '2015-09-01 00:00:00' 
+				AND submissionDate < '2017-09-01 00:00:00'
+				AND user_id IN (%s)
+				GROUP BY user_id
+				HAVING sum(CASE 
+								WHEN status = 'AC' THEN 1
+								WHEN status = 'PE' THEN 1 
+								ELSE 0 
+								END) >= 5
+				ORDER BY id""" % users_from_first_half
 
-	Precision = true_positives/(true_positives+false_positives)
-	Recall = true_positives/(true_positives+false_negatives)
-	fScore = 2*((Precision*Recall)/(Precision+Recall))
 
-	print("True Positives: ", true_positives)
-	print("False Positives: ", false_positives)
-	print("False Negatives: ", false_negatives)
-	print("Precision: ", Precision)
-	print("Recall: ", Recall)
-	print("F-Score: ", fScore)
+	# Store ELO per categories
+	categs_codes = []
+	categs_title = []
+	for k,v in categories.items():
+		categs_codes.append(k)
+		categs_title.append(v)
+
+	__cursor.execute(f"""SELECT * FROM user_scores WHERE user_id IN ({users_from_second_half})""")
+	for r in __cursor.fetchall():
+		cat_elos = {}
+		cat_recm = {}
+		cat_posi = {}
+		for i, elo in enumerate(r[2:]):
+			if elo != 8.0:
+				cat_elos[categs_title[i]] = elo
+				cat_recm[categs_title[i]] = []
+				cat_posi[categs_title[i]] = []
+
+		cat_elos['Global'] = r[1]
+		cat_recm['Global'] = []
+		cat_posi['Global'] = []
+
+		user_elos[r[0]] = cat_elos
+		user_rcmd[r[0]] = cat_recm		
+		u_p_pos[r[0]] = cat_posi
+
+	# Select problems to recommend based on ELO difference
+	for usr,elos in user_elos.items():
+		# usr -> user_id (int)
+		# elos -> (dict)
+		#		elos.cat -> category (string)
+		#		elos.elo -> ELO (float)
+
+
+		for cat,elo in elos.items():
+			if cat != 'Global':
+				code = categs_codes[categs_title.index(cat)]
+				__cursor.execute(f"""SELECT problem_id, ABS(elo_global - {elo}) as diff FROM problem_scores 
+					WHERE problem_id IN (
+						SELECT problem_id FROM problemcategories
+						WHERE categoryId = {code})
+					ORDER BY diff ASC""")
+			else:
+				__cursor.execute(f"""SELECT problem_id, ABS(elo_global - {elo}) as diff FROM problem_scores ORDER BY diff ASC""")
+
+			for p in __cursor.fetchall():
+				user_rcmd[usr][cat].append(p[0])
+
+	__cursor.execute(f"""SELECT user_id, problem_id, status FROM submission
+				WHERE submissionDate >= '2015-09-01 00:00:00' 
+				AND submissionDate < '2017-09-01 00:00:00'
+				AND (status = 'AC' OR status='PE')
+				AND user_id IN ({users_from_second_half})
+				GROUP BY user_id, problem_id, status""")
+
+	for s in __cursor.fetchall():
+		try:
+			usr = s[0]
+			prb = s[1]
+			for cat,elo in user_rcmd[usr].items():
+				if prb in user_rcmd[usr][cat]:
+					u_p_pos[usr][cat].append(user_rcmd[usr][cat].index(prb))
+		except:
+			pass
+	
+	for usr in user_elos:
+		print('\nUser: ', usr)
+		for cat, prb in u_p_pos[usr].items():
+			print(f'	{cat}: ', prb)
+
+
+	"""
+
+	for u in __cursor.fetchall():
+		if u[0] not in user_elos:
+			__cursor.execute("SELECT elo_global FROM user_scores WHERE user_id=%s", (u[0],))
+			user_elos[u[0]] = __cursor.fetchone()[0]
+
+		if u[0] not in user_rcmd:
+			__cursor.execute("SELECT problem_id FROM problem_scores WHERE elo_global BETWEEN %s AND %s ORDER BY elo_global ASC", (user_elos[u[0]]-1,user_elos[u[0]]+1,))
+			user_rcmd[u[0]] = [p[0] for p in __cursor.fetchall()]
+	"""
+
 
 def main():
-	create_and_alter_needed_tables()
-	train_all_with_tries("2015-09-01 00:00:00", "2017-09-01 00:00:00")
+	#create_and_alter_needed_tables()
+	#train_all_with_tries("2015-09-01 00:00:00", "2017-09-01 00:00:00")
 
 	#ACR_Stats.print_actual_elo_distribution(__cursor, 'Users')
 	#ACR_Stats.print_actual_elo_distribution(__cursor, 'Problems')
@@ -427,7 +563,8 @@ def main():
 	#problems_evolution()
 	#user_categories()
 
-	recommender_accuracy()
+	#recommender_global()
+	#recommender_per_category()
 
 	connection.close()
 
