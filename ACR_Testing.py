@@ -345,6 +345,12 @@ def user_categories():
 		ACR_Stats.show_spider_chart(chart_data=categories_data,filename=f"Categories' ELO\\User {str(row[0])} Categories.png")
 		#print('User: ', row[0])
 
+def average_precision_at_n():
+	pass
+
+def _1_hit():
+	pass
+
 def recommender_global():
 	""" First we need to simulate ELO fights with the submissions from 2015 to 2017 to calculate ELO values for each problem/user
 	After that, we need to choose a group of problems that we want to recommend these users
@@ -547,7 +553,6 @@ def recommender_per_category():
 			__cursor.execute("SELECT problem_id FROM problem_scores WHERE elo_global BETWEEN %s AND %s ORDER BY elo_global ASC", (user_elos[u[0]]-1,user_elos[u[0]]+1,))
 			user_rcmd[u[0]] = [p[0] for p in __cursor.fetchall()]
 	"""
-
 
 def main():
 	#create_and_alter_needed_tables()
