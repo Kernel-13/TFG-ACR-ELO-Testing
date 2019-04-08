@@ -95,6 +95,38 @@ def GRAPH_TRIES_AVERAGE():
 
 	GRAPH_BAR_AND_CUMULATIVE(x,y1,y2, x_label="Nº of AC / Submissions", y_label="Nº of Users", title="")
 
+def GRAPH_AVERAGE_SOLVED():
+	ACR_Globals.__CURSOR.execute("""SELECT user_id, SUM(CASE 
+		WHEN status = 'AC' THEN 1 
+		WHEN status = 'PE' THEN 1 
+		ELSE 0 END) FROM submission GROUP BY user_id""")
+
+	tmp = {}
+	for row in ACR_Globals.__CURSOR.fetchall():
+		if row[1] not in tmp:
+			tmp[row[1]] = 1
+		else:
+			tmp[row[1]] += 1
+
+	tmp[1000] = 0
+	x = []
+	y = []
+
+	for k,v in tmp.items():
+		if k <= 20 :
+			x.append(k)
+		else :
+			tmp[1000] += 1
+
+	x.sort()
+	for i in x:
+		y.append(tmp[i])
+
+	x.append('+20')
+	y.append(tmp[1000])
+	y = [(i/sum(y))*100 for i in y]
+	GRAPH_BAR_CHART(x,y,x_label="Nº of Problems Solved", y_label="Nº of Users", title="")
+
 def GRAPH_EXPECTATION_DIFF():
 	elo_test = [16,8,0]
 	elos = []

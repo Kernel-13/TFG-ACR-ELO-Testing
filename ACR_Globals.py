@@ -1,7 +1,10 @@
 import pymysql
 __CONNECTION = pymysql.connect(host="localhost",user="root",passwd="",database="acr_dat")
 __CURSOR = __CONNECTION.cursor()
-__DB_SPLITTER = 129010 	# 97513 rows for each half
+
+# First Half: id <= 129010
+# Second Half: id > 129010
+__DB_SPLITTER = 129010 	
 
 __MAX_TRIES = 10
 __MAX_ELO = 16
