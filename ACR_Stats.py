@@ -5,25 +5,29 @@ import matplotlib
 import matplotlib.pyplot as plt
 matplotlib.style.use('ggplot')
 
-def print_submissions_per_months():
+def GRAPH_ELO_DISTRIBUTION(items):
+	elo_scores = {}
+	[elo_scores.update({k:0}) for k in range(16)]
 
-	months = {}
-	[months.update({k:0}) for k in range(1,13)]
-	ACR_Globals.__CURSOR.execute("""SELECT * from submission order by submissionDate asc""")
-	for r in ACR_Globals.__CURSOR.fetchall():
-		months[int(str(r[-1]).split('-')[1])] += 1
+	ACR_Globals.__CURSOR.execute("""SELECT elo_global FROM {} WHERE elo_global != 8.0""".format('user_scores' if items=='Users' else 'problem_scores'))
 
-	month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+	for row in ACR_Globals.__CURSOR.fetchall():
+		if row[0] != 16: 
+			elo_scores[math.floor(row[0])] += 1 
+		else: 
+			elo_scores[15] += 1
+
+	ranges = []
 	values = []
-	print("\nNº of Submissions Per Month")
+	value_sum = sum([v for k,v in elo_scores.items()])
 
-	for k,v in months.items(): 
-		print(f"Month {k} :	{v}")
-		values.append(v)
+	for k,v in elo_scores.items(): 
+		ranges.append(f"[{k} - {k+1})")
+		values.append((v/value_sum)*100)
 
-	show_bar_plot(month,values,x_label="Months", y_label="Nº of Submissions", title="Nº of Submissions Per Month")
+	GRAPH_BAR_PLOT(ranges,values,x_label="ELO Ranges", y_label=f"Nº of {items}", title=f"ELO Distribution ({items})")
 
-def print_elo_differences():
+def GRAPH_ELO_DIFFERENCES():
 	
 	elo_diff = {}
 	[elo_diff.update({k:0}) for k in range(16)]
@@ -58,118 +62,13 @@ def print_elo_differences():
 		ranges.append(f"[{k} - {k+1})")
 		values.append((v/value_sum)*100)
 
-	show_bar_plot(ranges,values,x_label="ELO Difference (Ranges)", y_label="Submissions with Status AC or PE", title="ELO Differences between Users and the Problems they solved")
+	GRAPH_BAR_PLOT(ranges,values,x_label="ELO Difference (Ranges)", y_label="Submissions with Status AC or PE", title="ELO Differences between Users and the Problems they solved")
 
-def print_actual_elo_distribution(items):
-	elo_scores = {}
-	[elo_scores.update({k:0}) for k in range(16)]
-
-	field = 'user_scores' if items=='Users' else 'problem_scores'
-
-	ACR_Globals.__CURSOR.execute(f"""SELECT elo_global FROM {field} WHERE elo_global != 8.0""")
-	rows = ACR_Globals.__CURSOR.fetchall()
-
-	for row in rows:
-		if row[0] != 16: 
-			elo_scores[math.floor(row[0])] += 1 
-		else: 
-			elo_scores[15] += 1
-
-	ranges = []
-	values = []
-	value_sum = sum([v for k,v in elo_scores.items()])
-
-	for k,v in elo_scores.items(): 
-		ranges.append(f"[{k} - {k+1})")
-		values.append((v/value_sum)*100)
-
-	show_bar_plot(ranges,values,x_label="ELO Ranges", y_label=f"Nº of {items}", title=f"ELO Distribution ({items})")
-
-def print_elo_distribution(items, start_date, end_date):
-	elo_scores = {}
-	[elo_scores.update({k:0}) for k in range(16)]
-
-	field = 'user_id' if items=='Users' else 'problem_id'
-
-	ACR_Globals.__CURSOR.execute(f"""SELECT {field} FROM submission WHERE submissionDate >= '{start_date}' AND submissionDate < '{end_date}' GROUP BY {field}""")
-	rows = ACR_Globals.__CURSOR.fetchall()
-
-	for row in rows:
-
-		ACR_Globals.__CURSOR.execute(f"""SELECT * FROM submission 
-			WHERE submissionDate >= '{start_date}'
-			AND submissionDate < '{end_date}'
-			AND {field}={row[0]} 
-			AND problem_elo IS NOT NULL 
-			AND user_elo IS NOT NULL 
-			ORDER BY id DESC 
-			LIMIT 1""")
-
-		r = ACR_Globals.__CURSOR.fetchall()
-		try:
-			ELO = r[0][7] if items=='Users' else r[0][8]
-			if ELO != 16: 
-				elo_scores[math.floor(ELO)] += 1 
-			else: 
-				elo_scores[15] += 1
-		except:
-			# User #1952:  second-to-last submission on 2016-12-19 / last submission on 2018-05-16
-			pass
-
-	ranges = []
-	values = []
-	print(f"\nELO Distribution ({items})")
-
-	for k,v in elo_scores.items(): 
-		#print(f"Range [{k} - {k+1}]   :	{v}")
-		ranges.append(f"[{k} - {k+1})")
-		values.append(v)
-
-	show_bar_plot(ranges,values,x_label="ELO Ranges", y_label=f"Nº of {items}", title=f"ELO Distribution ({items})")
-
-def print_tries_till_solved(start_date, end_date):
-	ACR_Globals.__CURSOR.execute(f"""SELECT * from submission 
-		WHERE submissionDate >= '{start_date}' 
-		AND submissionDate < '{end_date}' 
-		AND user_elo IS NOT NULL 
-		ORDER BY user_id, problem_id, submissionDate""")
+def GRAPH_TRIES_AVERAGE():
+	ACR_Globals.__CURSOR.execute("""SELECT user_id, SUM(CASE WHEN status = 'AC' THEN 1 WHEN status = 'PE' THEN 1 ELSE 0 END), COUNT(id) FROM submission GROUP BY user_id""")
 
 	num_subm = {}
 	for i in range(1,21): num_subm[str(i)] = 0
-	num_subm['20+'] = 0
-
-	problem_already_solved = []
-	previous_tuple = (-1,-1)
-	tries = 0
-
-	for row in ACR_Globals.__CURSOR.fetchall():
-		if (row[2],row[1]) not in problem_already_solved:
-			tries += 1
-			if (row[2],row[1]) != previous_tuple: 
-				previous_tuple = (row[2],row[1])
-				tries = 1
-			if row[5] in ('AC', 'PE'):
-				problem_already_solved.append((row[2],row[1]))
-				if tries < 21:  num_subm[str(tries)] += 1
-				else: num_subm['20+'] += 1
-				tries = 0
-
-	x = []
-	y = []
-	for k,v in num_subm.items():
-		x.append(k)
-		y.append(v)
-
-	show_bar_plot(x,y, x_label="Nº of Tries (Submissions) until the problem is solved", y_label="Nº of Distinct User/Problem Confrontations", title="")
-
-def print_tries_average(start_date, end_date):
-	ACR_Globals.__CURSOR.execute(f"""SELECT user_id, SUM(CASE WHEN status='AC' THEN 1 ELSE 0 END), SUM(CASE WHEN status!='AC' THEN 1 ELSE 0 END) from submission 
-		WHERE submissionDate >= '{start_date}' 
-		AND submissionDate < '{end_date}' 
-		GROUP BY user_id""")
-
-	num_subm = {}
-	for i in range(21): num_subm[str(i)] = 0
 	num_subm['20+'] = 0
 	num_subm['NS'] = 0
 
@@ -180,6 +79,7 @@ def print_tries_average(start_date, end_date):
 			else: num_subm['20+'] += 1
 		else:
 			num_subm['NS'] += 1
+
 	x = []
 	y1 = []
 	y2 = []
@@ -192,11 +92,114 @@ def print_tries_average(start_date, end_date):
 		perc_sum += i
 		y2.append((perc_sum/sum(y1))*100)
 
-	ACR_Stats.show_bar_and_cumulative(x,y1,y2, x_label="Nº of AC / NON_AC Submissions", y_label="Nº of Users", title="")
+	show_bar_and_cumulative(x,y1,y2, x_label="Nº of AC / Submissions", y_label="Nº of Users", title="")
 
-def show_bar_plot(x,y,x_label="", y_label="", title=""):
+def GRAPH_EXPECTATION_DIFF():
+	elo_test = [16,8,0]
+	colors = ["r-", "m-", "b-"]
+	elos = []
+	expects = []
+	cnt = 0
+	while cnt <= 15:
+		for i in range(10):
+			elos.append(round(cnt+i*0.1,1))
+		cnt += 1
+	elos.append(16)
+
+	for i,t in enumerate(elo_test):
+		for e in elos:
+			expects.append(ELO.EXPECTATION(t,e))
+
+		GRAPH_LINE_PLOT(elos,expects,f"Expectation (ELO {t}).png",x_label="Problem ELO", y_label="Expectation", title=f"Expectation for a user with ELO {t}", ylim_down=0, ylim_up=1, plot_type=colors[i])
+		expects = []
+
+def GRAPH_SUBMISSIONS_PER_MONTHS():
+	months = {}
+	[months.update({k:0}) for k in range(1,13)]
+	ACR_Globals.__CURSOR.execute("""SELECT * FROM submission ORDER BY submissionDate ASC""")
+	for r in ACR_Globals.__CURSOR.fetchall():
+		months[int(str(r[-1]).split('-')[1])] += 1
+
+	month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+	values = []
+
+	for k,v in months.items(): values.append(v)
+	GRAPH_BAR_PLOT(month,values,x_label="Months", y_label="Nº of Submissions", title="Nº of Submissions Per Month")
+
+def GRAPH_USERS_EVOLUTION():
+	if not os.path.exists("Users' ELO History"):
+		os.makedirs("Users' ELO History")
+
+	ACR_Globals.__CURSOR.execute("""SELECT user_id, count(id) FROM submission 
+		WHERE id <= {}
+		AND user_elo IS NOT NULL 
+		AND user_id in {}
+		GROUP BY user_id 
+		ORDER BY user_id""".format(ACR_Globals.__DB_SPLITTER, str(ACR_Globals.__USRS_CHKD)))
+	
+	for usr in [r[0] for r in ACR_Globals.__CURSOR.fetchall()]:
+		ACR_Globals.__CURSOR.execute("""SELECT * FROM submission 
+		WHERE id <= {}
+		AND user_id = {}
+		AND user_elo IS NOT NULL 
+		ORDER BY id""".format(ACR_Globals.__DB_SPLITTER, usr))
+		
+		y = [x[7] for x in ACR_Globals.__CURSOR.fetchall()]
+		y.insert(0,8)
+
+		GRAPH_LINE_PLOT(range(len(y)), y,f"Users' ELO History\\User({str(usr)})Evolution.png")
+
+def GRAPH_PROBLEMS_EVOLUTION():
+	if not os.path.exists("Problems' ELO History"):
+		os.makedirs("Problems' ELO History")
+
+	ACR_Globals.__CURSOR.execute("""SELECT problem_id, count(id) FROM submission 
+		WHERE id <= {}
+		AND problem_id in {} 
+		AND problem_elo IS NOT NULL 
+		GROUP BY problem_id 
+		ORDER BY problem_id""".format(ACR_Globals.__DB_SPLITTER, str(ACR_Globals.__PRBS_CHKD)))
+
+	for prob in [r[0] for r in ACR_Globals.__CURSOR.fetchall()]:
+
+		ACR_Globals.__CURSOR.execute("""SELECT * FROM submission 
+			WHERE id <= {}
+			AND problem_id = {}
+			AND problem_elo IS NOT NULL 
+			ORDER BY id""".format(ACR_Globals.__DB_SPLITTER, prob))
+
+		y = [x[8] for x in ACR_Globals.__CURSOR.fetchall()]
+		y.insert(0,8)
+
+		GRAPH_LINE_PLOT(range(len(y)), y,f"Problems' ELO History\\Problem({str(prob)})Evolution.png")
+
+def GRAPH_USER_CATEGORIES():
+	if not os.path.exists("Categories' ELO"):
+		os.makedirs("Categories' ELO")
+
+	ACR_Globals.__CURSOR.execute("""SELECT * FROM User_Scores WHERE user_id in {}""".format(str(ACR_Globals.__USRS_CHKD)))
+
+	for row in ACR_Globals.__CURSOR.fetchall():
+		categories_data = {
+			'Ad-hoc': row[2],
+			'Recorridos': row[3],
+			'Búsqueda': row[4],
+			'Búsqueda\n Binaria': row[5],
+			'Ordenación': row[6],
+			'Algoritmos\n voraces': row[7],
+			'Programación\n dinámica': row[8],
+			'Divide y\n vencerás': row[9],
+			'Búsqueda exhaustiva,\n vuelta atrás': row[10],
+			'Búsqueda en el espacio\n de soluciones': row[11],
+			'Grafos': row[12],
+			'Geometría': row[13]
+		}
+		GRAPH_SPIDER_CHART(chart_data=categories_data,filename=f"Categories' ELO\\User {str(row[0])} Categories.png")
+
+def GRAPH_BAR_PLOT(x,y,x_label="", y_label="", title=""):
 	x_idx = [i for i, _ in enumerate(x)]
 	_, ax = plt.subplots()
+
 	bars = ax.bar(x_idx, y, color='b')
 	plt.xlabel(x_label)
 	plt.ylabel(y_label)
@@ -210,7 +213,7 @@ def show_bar_plot(x,y,x_label="", y_label="", title=""):
 	plt.show()
 	plt.close()
 
-def show_spider_chart(chart_data, filename, title=""):
+def GRAPH_SPIDER_CHART(chart_data, filename, title=""):
 	categories = []
 	values = []
 	for k,v in chart_data.items():
@@ -242,9 +245,8 @@ def show_spider_chart(chart_data, filename, title=""):
 	fig.set_size_inches(9,9)
 	plt.savefig(filename)
 	plt.close()
-	#plt.show()
 
-def show_line_plot(x,y,filename, x_label="", y_label="", title=""):
+def GRAPH_LINE_PLOT(x,y,filename, x_label="", y_label="", title=""):
 	fig, ax = plt.subplots()
 	ax.plot(x,y,'ro-')
 	ax.grid()
@@ -262,9 +264,8 @@ def show_line_plot(x,y,filename, x_label="", y_label="", title=""):
 	fig.set_size_inches(12, 10)
 	fig.savefig(filename)
 	plt.close()
-	#plt.show()
 
-def show_scatter(x,y,label, x_label="", y_label="", title=""):
+def GRAPH_SCATTER(x,y,label, x_label="", y_label="", title=""):
 	fig, ax1 = plt.subplots()
 
 	ax1.set_xlabel(x_label)
@@ -279,13 +280,10 @@ def show_scatter(x,y,label, x_label="", y_label="", title=""):
 
 	fig.set_size_inches(18, 15)
 	ax1.legend(loc="best")
-	fig.savefig(f"whatever_{label}.png")
+	fig.savefig(f"SCATTER_{label}.png")
 	plt.close()
 
-	#fig.set_size_inches(180, 150)
-	#fig.savefig(f"whatever_big_{label}.png")
-
-def show_ELO_gain(x,y1,y2,x_label="", y_label="", title="", filename="Gain"):
+def GRAPH_ELO_GAIN(x,y1,y2,x_label="", y_label="", title="", filename="GAIN.png"):
 	# Code from https://matplotlib.org/gallery/subplots_axes_and_figures/two_scales.html
 	fig, ax1 = plt.subplots()
 
@@ -308,14 +306,9 @@ def show_ELO_gain(x,y1,y2,x_label="", y_label="", title="", filename="Gain"):
 	ax1.legend(loc="upper left")
 	ax2.legend(loc="upper right")
 	fig.savefig(filename)
-
-
-	#fig.set_size_inches(36, 30)
-	#fig.savefig("Bigger " + filename)
 	plt.close()
-	#plt.show()
 
-def show_bar_and_cumulative(x,y1,y2,x_label="", y_label="", title="", filename="show_bar_and_cumulative.png"):
+def GRAPH_BAR_AND_CUMULATIVE(x,y1,y2,x_label="", y_label="", title="", filename="GRAPH_BAR_AND_CUMULATIVE.png"):
 	# Code from https://matplotlib.org/gallery/subplots_axes_and_figures/two_scales.html
 	fig, ax1 = plt.subplots()
 
@@ -337,14 +330,6 @@ def show_bar_and_cumulative(x,y1,y2,x_label="", y_label="", title="", filename="
 		ax2.text(v, y2[idx], str(round(y2[idx],1))+'%', color="black", size=8 ,ha='center', va='center', alpha=0.8, position=(v,float(y2[idx])+3.5))
 
 	ax2.set_ylim([0,100])
-
-	#fig.set_size_inches(15, 10)
-	#ax1.legend(loc="upper left")
-	#ax2.legend(loc="upper right")
-	#fig.savefig(filename)
-
-
-	#fig.set_size_inches(36, 30)
-	#fig.savefig("Bigger " + filename)
 	plt.show()
 	plt.close()
+

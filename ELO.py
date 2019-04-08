@@ -56,4 +56,3 @@ def SIMULATE(ELO_user, ELO_problem, Submission_State, tries):
 		Problem_New_Score = Problem_Old_Score
 	
 	return User_New_Score, Problem_New_Score
-	
