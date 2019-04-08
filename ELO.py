@@ -1,4 +1,5 @@
 import math 
+import ACR_Globals
 
 __MAX_TRIES = 10
 __MAX_ELO = 16

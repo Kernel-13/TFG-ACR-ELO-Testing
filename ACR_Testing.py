@@ -377,8 +377,8 @@ def recommender_global():
 
 	# Users from the SECOND half with more than 5 solved problems 
 	users_from_second_half = """SELECT user_id FROM submission
-				WHERE submissionDate >= '2015-09-01 00:00:00' 
-				AND submissionDate < '2017-09-01 00:00:00'
+				WHERE submissionDate >= '2017-09-01 00:00:00' 
+				AND submissionDate < '2018-09-01 00:00:00'
 				AND user_id IN (%s)
 				GROUP BY user_id
 				HAVING sum(CASE 
@@ -402,8 +402,8 @@ def recommender_global():
 			user_rcmd[k].append(p[0])
 
 	__cursor.execute(f"""SELECT user_id, problem_id, status FROM submission
-				WHERE submissionDate >= '2015-09-01 00:00:00' 
-				AND submissionDate < '2017-09-01 00:00:00'
+				WHERE submissionDate >= '2017-09-01 00:00:00' 
+				AND submissionDate < '2018-09-01 00:00:00'
 				AND (status = 'AC' OR status='PE')
 				AND user_id IN ({users_from_second_half})
 				GROUP BY user_id, problem_id, status
@@ -459,8 +459,8 @@ def recommender_per_category():
 
 	# Users from the SECOND half with more than 5 solved problems 
 	users_from_second_half = """SELECT user_id FROM submission
-				WHERE submissionDate >= '2015-09-01 00:00:00' 
-				AND submissionDate < '2017-09-01 00:00:00'
+				WHERE submissionDate >= '2017-09-01 00:00:00' 
+				AND submissionDate < '2018-09-01 00:00:00'
 				AND user_id IN (%s)
 				GROUP BY user_id
 				HAVING sum(CASE 
@@ -520,8 +520,8 @@ def recommender_per_category():
 				user_rcmd[usr][cat].append(p[0])
 
 	__cursor.execute(f"""SELECT user_id, problem_id, status FROM submission
-				WHERE submissionDate >= '2015-09-01 00:00:00' 
-				AND submissionDate < '2017-09-01 00:00:00'
+				WHERE submissionDate >= '2017-09-01 00:00:00' 
+				AND submissionDate < '2018-09-01 00:00:00'
 				AND (status = 'AC' OR status='PE')
 				AND user_id IN ({users_from_second_half})
 				GROUP BY user_id, problem_id, status""")
