@@ -1,5 +1,31 @@
 import ACR_Globals
 
+__NUM_RECOMD = 3
+__NUM_SOL_1st = 10
+__NUM_SOL_2nd = 3
+
+# Users from the FIRST half with at least __NUM_SOL_1st solved problems 
+users_from_first_half = """SELECT user_id FROM submission
+						WHERE id <= {}
+						GROUP BY user_id
+						HAVING sum(CASE 
+									WHEN status = 'AC' THEN 1
+									WHEN status = 'PE' THEN 1 
+									ELSE 0 
+									END) >= {}""".format(ACR_Globals.__DB_SPLITTER, __NUM_SOL_1st)
+
+# Users from the SECOND half with at least __NUM_SOL_2nd solved problems 
+users_from_second_half = """SELECT user_id FROM submission
+						WHERE id > {}
+						AND user_id IN ({})
+						GROUP BY user_id
+						HAVING sum(CASE 
+									WHEN status = 'AC' THEN 1
+									WHEN status = 'PE' THEN 1 
+									ELSE 0 
+									END) >= {}
+						ORDER BY id""".format(ACR_Globals.__DB_SPLITTER, users_from_first_half, __NUM_SOL_1st)
+
 def AVERAGE_PRECISION_AT_N():
 	pass
 
@@ -9,28 +35,6 @@ def ONE_HIT_GLOBAL():
 	u_p_pos = {}
 	hits = []
 
-	# Users from the FIRST half with more than 5 solved problems 
-	users_from_first_half = """SELECT user_id FROM submission
-							WHERE id <= {}
-							GROUP BY user_id
-							HAVING sum(CASE 
-										WHEN status = 'AC' THEN 1
-										WHEN status = 'PE' THEN 1 
-										ELSE 0 
-										END) >= 10""".format(ACR_Globals.__DB_SPLITTER)
-
-	# Users from the SECOND half with more than 5 solved problems 
-	users_from_second_half = """SELECT user_id FROM submission
-							WHERE id > {}
-							AND user_id IN ({})
-							GROUP BY user_id
-							HAVING sum(CASE 
-										WHEN status = 'AC' THEN 1
-										WHEN status = 'PE' THEN 1 
-										ELSE 0 
-										END) >= 10
-							ORDER BY id""".format(ACR_Globals.__DB_SPLITTER, users_from_first_half)
-
 	ACR_Globals.__CURSOR.execute("SELECT user_id, elo_global FROM user_scores WHERE user_id IN ({})".format(users_from_second_half))
 	for r in ACR_Globals.__CURSOR.fetchall():
 		user_elos[r[0]] = r[1]
@@ -38,10 +42,20 @@ def ONE_HIT_GLOBAL():
 		u_p_pos[r[0]] = []
 
 	for k,v in user_elos.items():
-		ACR_Globals.__CURSOR.execute("SELECT problem_id, elo_global, ABS({} - elo_global) as diff FROM problem_scores ORDER BY diff ASC LIMIT 10".format(v))
+		ACR_Globals.__CURSOR.execute("""SELECT problem_id, elo_global, ABS({} - elo_global) as diff FROM problem_scores
+			WHERE problem_id NOT IN (
+				SELECT DISTINCT(problem_id) FROM submission
+				WHERE id < {}
+				AND user_id = {}
+				AND (status = 'AC' or status = 'PE')
+				GROUP BY problem_id
+			)
+			ORDER BY diff ASC LIMIT {}""".format(v, ACR_Globals.__DB_SPLITTER, k, __NUM_RECOMD))
+
 		for p in ACR_Globals.__CURSOR.fetchall():
 			user_rcmd[k].append(p[0])
 
+	# Check if the user solves the problems we would recommend him
 	ACR_Globals.__CURSOR.execute("""SELECT user_id, problem_id, status FROM submission
 				WHERE id > {}
 				AND (status = 'AC' OR status='PE')
@@ -60,38 +74,16 @@ def ONE_HIT_GLOBAL():
 		except:
 			pass
 
-	for u in user_elos:
-		print(u, u_p_pos[u])
-
-	print("\n ONE_HIT: ", len(hits)/len(u_p_pos))
+	with open('ONE HIT (@ {} - {}x{} AC).txt'.format(__NUM_RECOMD, __NUM_SOL_1st, __NUM_SOL_2nd), 'w') as fd:
+		for u in user_elos:
+			fd.write("{} {}\n".format(u, u_p_pos[u]))
+		fd.write("\n ONE_HIT: {}".format(len(hits)/len(u_p_pos)))
 
 def ONE_HIT_CATEGORIES():
 	user_elos = {}
 	user_rcmd = {}
 	u_p_pos = {}
 	hits = []
-
-	# Users from the FIRST half with more than 5 solved problems 
-	users_from_first_half = """SELECT user_id FROM submission
-							WHERE id <= {}
-							GROUP BY user_id
-							HAVING sum(CASE 
-										WHEN status = 'AC' THEN 1
-										WHEN status = 'PE' THEN 1 
-										ELSE 0 
-										END) >= 3""".format(ACR_Globals.__DB_SPLITTER)
-
-	# Users from the SECOND half with more than 5 solved problems 
-	users_from_second_half = """SELECT user_id FROM submission
-				WHERE id > {}
-				AND user_id IN ({})
-				GROUP BY user_id
-				HAVING sum(CASE 
-								WHEN status = 'AC' THEN 1
-								WHEN status = 'PE' THEN 1 
-								ELSE 0 
-								END) >= 3
-				ORDER BY id""".format(ACR_Globals.__DB_SPLITTER, users_from_first_half)
 
 	# Store ELO per categories
 	categs_codes = []
@@ -134,9 +126,22 @@ def ONE_HIT_CATEGORIES():
 					WHERE problem_id IN (
 						SELECT problem_id FROM problemcategories
 						WHERE categoryId = {})
-					ORDER BY diff ASC LIMIT 3""".format(elo, code))
+					AND problem_id NOT IN (
+						SELECT DISTINCT(problem_id) FROM submission
+						WHERE id < {}
+						AND user_id = {}
+						AND (status = 'AC' or status = 'PE')
+						GROUP BY problem_id	)
+					ORDER BY diff ASC LIMIT {}""".format(elo, code, ACR_Globals.__DB_SPLITTER, usr, __NUM_RECOMD))
 			else:
-				ACR_Globals.__CURSOR.execute("SELECT problem_id, ABS(elo_global - {}) as diff FROM problem_scores ORDER BY diff ASC LIMIT 3".format(elo))
+				ACR_Globals.__CURSOR.execute("""SELECT problem_id, ABS(elo_global - {}) as diff FROM problem_scores 
+					WHERE problem_id NOT IN (
+						SELECT DISTINCT(problem_id) FROM submission
+						WHERE id < {}
+						AND user_id = {}
+						AND (status = 'AC' or status = 'PE')
+						GROUP BY problem_id	)
+					ORDER BY diff ASC LIMIT 3""".format(elo, ACR_Globals.__DB_SPLITTER, usr))
 
 			for p in ACR_Globals.__CURSOR.fetchall():
 				user_rcmd[usr][cat].append(p[0])
@@ -158,14 +163,33 @@ def ONE_HIT_CATEGORIES():
 						hits.append(usr)
 		except:
 			pass
-	
+
+	print(__NUM_RECOMD, __NUM_SOL_1st, __NUM_SOL_2nd)
+	print_list = []
+
 	for usr in user_elos:
 		print('\nUser: ', usr)
+		print_list.append("\nUser: {}".format(usr))
 		for cat, prb in u_p_pos[usr].items():
 			print(f'	{cat}: ', prb)
+			print_list.append("\n	{}: {}".format(cat,prb))
+	print_list.append("\n ONE_HIT: {}".format(len(hits)/len(u_p_pos)))
 
 
-	print("\n ONE_HIT: ", len(hits)/len(u_p_pos))
+	with open('ONE HIT CAT(@ {} - {}x{} AC).txt'.format(__NUM_RECOMD, __NUM_SOL_1st, __NUM_SOL_2nd), 'w') as fd:
+		for p in print_list:
+			fd.write(p)
+	"""
+	with open('ONE HIT CAT(@ {} - {}x{} AC).txt'.format(__NUM_RECOMD, __NUM_SOL_1st, __NUM_SOL_2nd), 'w') as fd:
+		for u in user_elos:
+			print('\nUser: ', usr)
+			fd.write("\nUser: {}\n".format(u))
+			for cat, prb in u_p_pos[usr].items():
+				print(f'	{cat}: ', prb)
+				fd.write("	{}: {}\n".format(str(cat), str(prb)))
+
+		fd.write("\n ONE_HIT: {}".format(len(hits)/len(u_p_pos)))
+	"""
 
 def recommender_global():
 	""" First we need to simulate ELO fights with the submissions from 2015 to 2017 to calculate ELO values for each problem/user
@@ -372,4 +396,34 @@ def recommender_per_category():
 			user_rcmd[u[0]] = [p[0] for p in ACR_Globals.__CURSOR.fetchall()]
 	"""
 
-ONE_HIT_CATEGORIES()
+for i in [3,10,20]:
+	for j in [1,3,5,8,10]:
+		for k in [1,3,5,8,10]:
+
+			__NUM_RECOMD = i
+			__NUM_SOL_1st = k
+			__NUM_SOL_2nd = j
+
+			# Users from the FIRST half with more than __NUM_SOL_1st solved problems 
+			users_from_first_half = """SELECT user_id FROM submission
+									WHERE id <= {}
+									GROUP BY user_id
+									HAVING sum(CASE 
+												WHEN status = 'AC' THEN 1
+												WHEN status = 'PE' THEN 1 
+												ELSE 0 
+												END) >= {}""".format(ACR_Globals.__DB_SPLITTER, __NUM_SOL_1st)
+
+			# Users from the SECOND half with more than __NUM_SOL_1st solved problems 
+			users_from_second_half = """SELECT user_id FROM submission
+									WHERE id > {}
+									AND user_id IN ({})
+									GROUP BY user_id
+									HAVING sum(CASE 
+												WHEN status = 'AC' THEN 1
+												WHEN status = 'PE' THEN 1 
+												ELSE 0 
+												END) >= {}
+									ORDER BY id""".format(ACR_Globals.__DB_SPLITTER, users_from_first_half, __NUM_SOL_2nd)
+
+			ONE_HIT_CATEGORIES()
