@@ -105,7 +105,7 @@ def train_subjects():
 			__cursor.execute("SELECT elo_global FROM Problem_Scores WHERE problem_id = {}".format(p_id))
 			old_problem_elo = __cursor.fetchone()[0]
 
-			new_user_elo, new_problem_elo = ELO.simulate_with_tries(old_user_elo, old_problem_elo, status, tries_per_couple[(u_id,p_id)])
+			new_user_elo, new_problem_elo = ELO.SIMULATE(old_user_elo, old_problem_elo, status, tries_per_couple[(u_id,p_id)])
 
 			__cursor.execute("SELECT categoryId FROM problemcategories WHERE problemId = {}".format(p_id))
 			for cat in __cursor.fetchall():
@@ -113,7 +113,7 @@ def train_subjects():
 					category = ACR_Globals.__CATEGORIES[cat[0]]
 					__cursor.execute("SELECT {} FROM User_Scores WHERE user_id = {}".format(category, u_id))
 					Old_Category_ELO = __cursor.fetchone()[0]
-					New_Category_ELO, _ = ELO.simulate_with_tries(Old_Category_ELO, old_problem_elo, status, tries_per_couple[(u_id,p_id)])
+					New_Category_ELO, _ = ELO.SIMULATE(Old_Category_ELO, old_problem_elo, status, tries_per_couple[(u_id,p_id)])
 					
 					__cursor.execute("UPDATE User_Scores SET {} = {} WHERE user_id = {}".format(category, New_Category_ELO, u_id))
 				except:
