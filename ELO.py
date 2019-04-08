@@ -6,7 +6,7 @@ def EXPECTATION(P1, P2):
 	""" if P1 has ACR_Globals.__MAX_DIFF more ELO points than P2, they are 10 times better (and should win 10/11, ~90.1% of the time). [https://blog.mackie.io/the-elo-algorithm] """
 	return 1.0 / (1 + math.pow(10, -((P1 - P2) / ACR_Globals.__MAX_DIFF)))
 
-def K_FACTOR(elo_diff, underdog_won)
+def K_FACTOR(elo_diff, underdog_won, tries):
 	if tries >= ACR_Globals.__MAX_TRIES: 
 		tries = ACR_Globals.__MAX_TRIES
 	if underdog_won: 	

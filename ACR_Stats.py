@@ -1,3 +1,4 @@
+import ELO
 import math
 import pymysql
 import ACR_Globals
@@ -25,7 +26,7 @@ def GRAPH_ELO_DISTRIBUTION(items):
 		ranges.append(f"[{k} - {k+1})")
 		values.append((v/value_sum)*100)
 
-	GRAPH_BAR_PLOT(ranges,values,x_label="ELO Ranges", y_label=f"Nº of {items}", title=f"ELO Distribution ({items})")
+	GRAPH_BAR_CHART(ranges,values,x_label="ELO Ranges", y_label=f"Nº of {items}", title=f"ELO Distribution ({items})")
 
 def GRAPH_ELO_DIFFERENCES():
 	
@@ -62,7 +63,7 @@ def GRAPH_ELO_DIFFERENCES():
 		ranges.append(f"[{k} - {k+1})")
 		values.append((v/value_sum)*100)
 
-	GRAPH_BAR_PLOT(ranges,values,x_label="ELO Difference (Ranges)", y_label="Submissions with Status AC or PE", title="ELO Differences between Users and the Problems they solved")
+	GRAPH_BAR_CHART(ranges,values,x_label="ELO Difference (Ranges)", y_label="Submissions with Status AC or PE", title="ELO Differences between Users and the Problems they solved")
 
 def GRAPH_TRIES_AVERAGE():
 	ACR_Globals.__CURSOR.execute("""SELECT user_id, SUM(CASE WHEN status = 'AC' THEN 1 WHEN status = 'PE' THEN 1 ELSE 0 END), COUNT(id) FROM submission GROUP BY user_id""")
@@ -92,11 +93,10 @@ def GRAPH_TRIES_AVERAGE():
 		perc_sum += i
 		y2.append((perc_sum/sum(y1))*100)
 
-	show_bar_and_cumulative(x,y1,y2, x_label="Nº of AC / Submissions", y_label="Nº of Users", title="")
+	GRAPH_BAR_AND_CUMULATIVE(x,y1,y2, x_label="Nº of AC / Submissions", y_label="Nº of Users", title="")
 
 def GRAPH_EXPECTATION_DIFF():
 	elo_test = [16,8,0]
-	colors = ["r-", "m-", "b-"]
 	elos = []
 	expects = []
 	cnt = 0
@@ -110,7 +110,7 @@ def GRAPH_EXPECTATION_DIFF():
 		for e in elos:
 			expects.append(ELO.EXPECTATION(t,e))
 
-		GRAPH_LINE_PLOT(elos,expects,f"Expectation (ELO {t}).png",x_label="Problem ELO", y_label="Expectation", title=f"Expectation for a user with ELO {t}", ylim_down=0, ylim_up=1, plot_type=colors[i])
+		GRAPH_LINE_PLOT(elos,expects,f"Expectation (ELO {t}).png",x_label="Problem ELO", y_label="Expectation", title=f"Expectation for a user with ELO {t}", ylim_down=0, ylim_up=1, plot_type=i+1)
 		expects = []
 
 def GRAPH_SUBMISSIONS_PER_MONTHS():
@@ -124,7 +124,7 @@ def GRAPH_SUBMISSIONS_PER_MONTHS():
 	values = []
 
 	for k,v in months.items(): values.append(v)
-	GRAPH_BAR_PLOT(month,values,x_label="Months", y_label="Nº of Submissions", title="Nº of Submissions Per Month")
+	GRAPH_BAR_CHART(month,values,x_label="Months", y_label="Nº of Submissions", title="Nº of Submissions Per Month")
 
 def GRAPH_USERS_EVOLUTION():
 	if not os.path.exists("Users' ELO History"):
@@ -196,7 +196,7 @@ def GRAPH_USER_CATEGORIES():
 		}
 		GRAPH_SPIDER_CHART(chart_data=categories_data,filename=f"Categories' ELO\\User {str(row[0])} Categories.png")
 
-def GRAPH_BAR_PLOT(x,y,x_label="", y_label="", title=""):
+def GRAPH_BAR_CHART(x,y,x_label="", y_label="", title=""):
 	x_idx = [i for i, _ in enumerate(x)]
 	_, ax = plt.subplots()
 
@@ -246,30 +246,40 @@ def GRAPH_SPIDER_CHART(chart_data, filename, title=""):
 	plt.savefig(filename)
 	plt.close()
 
-def GRAPH_LINE_PLOT(x,y,filename, x_label="", y_label="", title=""):
+def GRAPH_LINE_PLOT(x,y,filename, x_label="", y_label="", title="", ylim_down=0, ylim_up=16, plot_type=0):
+	colors = ["ro-","r-", "m-", "b-", "g-", "y-", "k-"]
+
 	fig, ax = plt.subplots()
-	ax.plot(x,y,'ro-')
+	ax.plot(x,y,colors[plot_type])
 	ax.grid()
 	axes = plt.gca()
-	axes.set_ylim([0,16])
+	axes.set_ylim([ylim_down,ylim_up])
 
-	position = (x[len(x)-1],float(y[len(y)-1])+0.5) if y[len(y)-1] < 16 else (x[len(x)-1],100)
+	position = (x[len(x)-1],float(y[len(y)-1])+ylim_up*0.03125) if y[len(y)-1] < 16 else (x[len(x)-1],10000)
 	plt.text(x[len(x)-1], y[len(y)-1], str(round(y[len(y)-1],2)), color="black", size=12 ,ha='center', va='center', alpha=0.5, position=position)
+
+	position = (x[0],float(y[0])+ylim_up*0.03125) if y[0] < 16 else (x[0],10000)
+	plt.text(x[0], y[0], str(round(y[0],2)), color="black", size=12 ,ha='center', va='center', alpha=0.5, position=position)
+
+	plt.xlabel(x_label)
+	plt.ylabel(y_label)
+	plt.suptitle(title)
 
 	"""
 	for idx, v in enumerate(x):
 		position = (v,float(y[idx])+0.5) if y[idx] < 16 else (v,100)
 		plt.text(v, y[idx], str(round(y[idx],2)), color="black", size=12 ,ha='center', va='center', alpha=0.5, position=position)
 	"""
-	fig.set_size_inches(12, 10)
+	fig.set_size_inches(12, 8)
 	fig.savefig(filename)
 	plt.close()
 
 def GRAPH_SCATTER(x,y,label, x_label="", y_label="", title=""):
 	fig, ax1 = plt.subplots()
 
-	ax1.set_xlabel(x_label)
-	ax1.set_ylabel(y_label)
+	plt.xlabel(x_label)
+	plt.ylabel(y_label)
+	plt.suptitle(title)
 
 	color = 'tab:red'
 	ax1.scatter(x, y, color=color, label=label)
@@ -287,9 +297,6 @@ def GRAPH_ELO_GAIN(x,y1,y2,x_label="", y_label="", title="", filename="GAIN.png"
 	# Code from https://matplotlib.org/gallery/subplots_axes_and_figures/two_scales.html
 	fig, ax1 = plt.subplots()
 
-	ax1.set_xlabel(x_label)
-	ax1.set_ylabel(y_label)
-
 	color = 'tab:red'
 	ax1.scatter(x, y1, color=color, label="User Gain")
 
@@ -305,6 +312,11 @@ def GRAPH_ELO_GAIN(x,y1,y2,x_label="", y_label="", title="", filename="GAIN.png"
 	fig.set_size_inches(18, 15)
 	ax1.legend(loc="upper left")
 	ax2.legend(loc="upper right")
+
+	plt.xlabel(x_label)
+	plt.ylabel(y_label)
+	plt.suptitle(title)
+
 	fig.savefig(filename)
 	plt.close()
 
@@ -330,6 +342,7 @@ def GRAPH_BAR_AND_CUMULATIVE(x,y1,y2,x_label="", y_label="", title="", filename=
 		ax2.text(v, y2[idx], str(round(y2[idx],1))+'%', color="black", size=8 ,ha='center', va='center', alpha=0.8, position=(v,float(y2[idx])+3.5))
 
 	ax2.set_ylim([0,100])
+	plt.suptitle(title)
 	plt.show()
 	plt.close()
 

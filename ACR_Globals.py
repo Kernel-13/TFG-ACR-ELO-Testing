@@ -1,3 +1,4 @@
+import pymysql
 __CONNECTION = pymysql.connect(host="localhost",user="root",passwd="",database="acr_dat")
 __CURSOR = __CONNECTION.cursor()
 __DB_SPLITTER = 129010 	# 97513 rows for each half
