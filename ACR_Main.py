@@ -1,5 +1,4 @@
 import pymysql
-import os
 import ELO
 import ACR_Stats
 import ACR_Globals
@@ -60,7 +59,7 @@ def CREATE_AND_ALTER_NEEDED_TABLES():
 		ACR_Globals.__CURSOR.execute("UPDATE submission SET user_elo=NULL")
 		ACR_Globals.__CURSOR.execute("UPDATE submission SET problem_elo=NULL")
 
-	connection.commit()
+	ACR_Globals.__CONNECTION.commit()
 
 def TRAIN_SUBJECTS():
 	current_fights = {}
@@ -119,19 +118,18 @@ def TRAIN_SUBJECTS():
 			ACR_Globals.__CURSOR.execute("UPDATE User_Scores SET elo_global = {} WHERE user_id = {}".format(new_user_elo, u_id))
 			ACR_Globals.__CURSOR.execute("UPDATE Problem_Scores SET elo_global = {} WHERE problem_id = {}".format(new_problem_elo, p_id))
 
-	connection.commit()
+	ACR_Globals.__CONNECTION.commit()
 
 def main():
-	#CREATE_AND_ALTER_NEEDED_TABLES()
-	#TRAIN_SUBJECTS()
+	CREATE_AND_ALTER_NEEDED_TABLES()
+	TRAIN_SUBJECTS()
 
-	#ACR_Stats.GRAPH_ELO_DISTRIBUTION()
-	#ACR_Stats.GRAPH_ELO_DIFFERENCES('Users')
-	#ACR_Stats.GRAPH_ELO_DIFFERENCES('Problems')
+	ACR_Stats.GRAPH_ELO_DISTRIBUTION('Users')
+	ACR_Stats.GRAPH_ELO_DISTRIBUTION('Problems')
 
-	#USERS_EVOLUTION()
-	#PROBLEMS_EVOLUTION()
-	#USER_CATEGORIES()
+	ACR_Stats.GRAPH_USERS_EVOLUTION()
+	ACR_Stats.GRAPH_PROBLEMS_EVOLUTION()
+	ACR_Stats.GRAPH_USER_CATEGORIES()
 	ACR_Globals.__CONNECTION.close()
 
 if __name__== "__main__":

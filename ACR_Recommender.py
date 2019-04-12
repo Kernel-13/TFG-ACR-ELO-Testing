@@ -3,6 +3,7 @@ import ACR_Globals
 __NUM_RECOMD = 3
 __NUM_SOL_1st = 10
 __NUM_SOL_2nd = 3
+__ONLY_SOLVED = True
 
 # Users from the FIRST half with at least __NUM_SOL_1st solved problems 
 users_from_first_half = """SELECT user_id FROM submission
@@ -58,10 +59,10 @@ def ONE_HIT_GLOBAL():
 	# Check if the user solves the problems we would recommend him
 	ACR_Globals.__CURSOR.execute("""SELECT user_id, problem_id, status FROM submission
 				WHERE id > {}
-				AND (status = 'AC' OR status='PE')
+				{}
 				AND user_id IN ({})
 				GROUP BY user_id, problem_id, status
-				ORDER BY id""".format(ACR_Globals.__DB_SPLITTER, users_from_second_half))
+				ORDER BY id""".format(ACR_Globals.__DB_SPLITTER, " AND (status = 'AC' OR status='PE') " if __ONLY_SOLVED else "" , users_from_second_half))
 
 	for s in ACR_Globals.__CURSOR.fetchall():
 		try:
@@ -74,10 +75,14 @@ def ONE_HIT_GLOBAL():
 		except:
 			pass
 
-	with open('ONE HIT (@ {} - {}x{} AC).txt'.format(__NUM_RECOMD, __NUM_SOL_1st, __NUM_SOL_2nd), 'w') as fd:
-		for u in user_elos:
-			fd.write("{} {}\n".format(u, u_p_pos[u]))
-		fd.write("\n ONE_HIT: {}".format(len(hits)/len(u_p_pos)))
+	print_list = []
+	for usr in user_elos:
+		print_list.append("{} {}\n".format(usr, u_p_pos[usr]))
+	print_list.append("\n ONE_HIT: {}".format(len(hits)/len(u_p_pos)))
+
+	with open('ONE HIT (@ {} - {}x{} AC [{}]).txt'.format(__NUM_RECOMD, __NUM_SOL_1st, __NUM_SOL_2nd, "SOLVED ONLY" if __ONLY_SOLVED else "TRIED"), 'w') as fd:
+		for p in print_list:
+			fd.write(p)
 
 def ONE_HIT_CATEGORIES():
 	user_elos = {}
@@ -148,9 +153,9 @@ def ONE_HIT_CATEGORIES():
 
 	ACR_Globals.__CURSOR.execute("""SELECT user_id, problem_id, status FROM submission
 				WHERE id > {}
-				AND (status = 'AC' OR status='PE')
+				{}
 				AND user_id IN ({})
-				GROUP BY user_id, problem_id, status""".format(ACR_Globals.__DB_SPLITTER, users_from_second_half))
+				GROUP BY user_id, problem_id, status""".format(ACR_Globals.__DB_SPLITTER, " AND (status = 'AC' OR status='PE') " if __ONLY_SOLVED else "" , users_from_second_half))
 
 	for s in ACR_Globals.__CURSOR.fetchall():
 		try:
@@ -176,7 +181,7 @@ def ONE_HIT_CATEGORIES():
 	print_list.append("\n ONE_HIT: {}".format(len(hits)/len(u_p_pos)))
 
 
-	with open('ONE HIT CAT(@ {} - {}x{} AC).txt'.format(__NUM_RECOMD, __NUM_SOL_1st, __NUM_SOL_2nd), 'w') as fd:
+	with open('ONE HIT CAT(@ {} - {}x{} AC [{}]).txt'.format(__NUM_RECOMD, __NUM_SOL_1st, __NUM_SOL_2nd, "SOLVED ONLY" if __ONLY_SOLVED else "TRIED"), 'w') as fd:
 		for p in print_list:
 			fd.write(p)
 	"""
@@ -426,4 +431,4 @@ for i in [3,10,20]:
 												END) >= {}
 									ORDER BY id""".format(ACR_Globals.__DB_SPLITTER, users_from_first_half, __NUM_SOL_2nd)
 
-			ONE_HIT_CATEGORIES()
+			ONE_HIT_GLOBAL()
