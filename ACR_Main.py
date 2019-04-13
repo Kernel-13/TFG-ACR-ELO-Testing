@@ -91,45 +91,60 @@ def TRAIN_SUBJECTS():
 		# Checks all conditions that could trigger a simulation (AC/PE, Problem Switch and 10 tries)
 		if current_fights[u_id] != p_id or status in ('AC', 'PE') or tries_per_couple[(u_id,p_id)] == ACR_Globals.__MAX_TRIES:
 
-			if current_fights[u_id] != p_id:	current_fights[u_id] = p_id
-			elif status in ('AC', 'PE'):		del current_fights[u_id]
+			# If he switches
+			if current_fights[u_id] != p_id:
+				CHANGE_ELOS(subm_id, u_id, current_fights[u_id], status, tries_per_couple[(u_id,current_fights[u_id])])
+				current_fights[u_id] = p_id
 
-			ACR_Globals.__CURSOR.execute("SELECT elo_global FROM User_Scores WHERE user_id = {}".format(u_id))
-			old_user_elo = ACR_Globals.__CURSOR.fetchone()[0]
+			# If he wins
+			if status in ('AC', 'PE'):			
+				del current_fights[u_id]
+				CHANGE_ELOS(subm_id, u_id, p_id, status, tries_per_couple[(u_id,p_id)])
 
-			ACR_Globals.__CURSOR.execute("SELECT elo_global FROM Problem_Scores WHERE problem_id = {}".format(p_id))
-			old_problem_elo = ACR_Globals.__CURSOR.fetchone()[0]
+			# If reaches __MAX_TRIES tries
+			elif tries_per_couple[(u_id,p_id)] == ACR_Globals.__MAX_TRIES:
+				CHANGE_ELOS(subm_id, u_id, p_id, status, tries_per_couple[(u_id,p_id)])
 
-			new_user_elo, new_problem_elo = ELO.SIMULATE(old_user_elo, old_problem_elo, status, tries_per_couple[(u_id,p_id)])
+def CHANGE_ELOS(subm_id, u_id, p_id, status, tries):
+	ACR_Globals.__CURSOR.execute("SELECT elo_global FROM User_Scores WHERE user_id = {}".format(u_id))
+	old_user_elo = ACR_Globals.__CURSOR.fetchone()[0]
 
-			ACR_Globals.__CURSOR.execute("SELECT categoryId FROM problemcategories WHERE problemId = {}".format(p_id))
-			for cat in ACR_Globals.__CURSOR.fetchall():
-				try:
-					category = ACR_Globals.__CATEGORIES[cat[0]]
-					ACR_Globals.__CURSOR.execute("SELECT {} FROM User_Scores WHERE user_id = {}".format(category, u_id))
-					Old_Category_ELO = ACR_Globals.__CURSOR.fetchone()[0]
-					New_Category_ELO, _ = ELO.SIMULATE(Old_Category_ELO, old_problem_elo, status, tries_per_couple[(u_id,p_id)])
-					
-					ACR_Globals.__CURSOR.execute("UPDATE User_Scores SET {} = {} WHERE user_id = {}".format(category, New_Category_ELO, u_id))
-				except:
-					pass
+	ACR_Globals.__CURSOR.execute("SELECT elo_global FROM Problem_Scores WHERE problem_id = {}".format(p_id))
+	old_problem_elo = ACR_Globals.__CURSOR.fetchone()[0]
 
-			ACR_Globals.__CURSOR.execute("UPDATE submission SET problem_elo = {}, user_elo = {} WHERE id = {}".format(new_problem_elo, new_user_elo, subm_id))
-			ACR_Globals.__CURSOR.execute("UPDATE User_Scores SET elo_global = {} WHERE user_id = {}".format(new_user_elo, u_id))
-			ACR_Globals.__CURSOR.execute("UPDATE Problem_Scores SET elo_global = {} WHERE problem_id = {}".format(new_problem_elo, p_id))
+	new_user_elo, new_problem_elo = ELO.SIMULATE(old_user_elo, old_problem_elo, status, tries)
 
+	ACR_Globals.__CURSOR.execute("SELECT categoryId FROM problemcategories WHERE problemId = {}".format(p_id))
+	for cat in ACR_Globals.__CURSOR.fetchall():
+		try:
+			category = ACR_Globals.__CATEGORIES[cat[0]]
+			ACR_Globals.__CURSOR.execute("SELECT {} FROM User_Scores WHERE user_id = {}".format(category, u_id))
+			Old_Category_ELO = ACR_Globals.__CURSOR.fetchone()[0]
+			New_Category_ELO, _ = ELO.SIMULATE(Old_Category_ELO, old_problem_elo, status, tries)
+			
+			ACR_Globals.__CURSOR.execute("UPDATE User_Scores SET {} = {} WHERE user_id = {}".format(category, New_Category_ELO, u_id))
+		except:
+			pass
+
+	ACR_Globals.__CURSOR.execute("UPDATE submission SET problem_elo = {}, user_elo = {} WHERE id = {} and user_id = {} and problem_id = {}".format(new_problem_elo, new_user_elo, subm_id, u_id, p_id))
+	ACR_Globals.__CURSOR.execute("UPDATE User_Scores SET elo_global = {} WHERE user_id = {}".format(new_user_elo, u_id))
+	ACR_Globals.__CURSOR.execute("UPDATE Problem_Scores SET elo_global = {} WHERE problem_id = {}".format(new_problem_elo, p_id))
 	ACR_Globals.__CONNECTION.commit()
 
 def main():
+	"""
 	CREATE_AND_ALTER_NEEDED_TABLES()
 	TRAIN_SUBJECTS()
-
 	ACR_Stats.GRAPH_ELO_DISTRIBUTION('Users')
 	ACR_Stats.GRAPH_ELO_DISTRIBUTION('Problems')
 
 	ACR_Stats.GRAPH_USERS_EVOLUTION()
 	ACR_Stats.GRAPH_PROBLEMS_EVOLUTION()
 	ACR_Stats.GRAPH_USER_CATEGORIES()
+
+	ACR_Stats.GRAPH_ELO_DIFFERENCES()
+	"""
+
 	ACR_Globals.__CONNECTION.close()
 
 if __name__== "__main__":
