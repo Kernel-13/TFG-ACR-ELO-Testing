@@ -2,6 +2,7 @@ import pymysql
 import ELO
 import ACR_Stats
 import ACR_Globals
+from tqdm import tqdm
 
 def CREATE_AND_ALTER_NEEDED_TABLES():
 
@@ -68,8 +69,7 @@ def TRAIN_SUBJECTS():
 	ACR_Globals.__CURSOR.execute("SELECT * FROM submission WHERE id <= {} ORDER BY id".format(ACR_Globals.__DB_SPLITTER))
 
 	rows = ACR_Globals.__CURSOR.fetchall()
-	for row in rows:
-		print(0)
+	for row in tqdm(rows, desc="Calculating ELOs"):
 		subm_id = row[0]
 		p_id = row[1]
 		u_id = row[2]
@@ -132,18 +132,18 @@ def CHANGE_ELOS(subm_id, u_id, p_id, status, tries):
 	ACR_Globals.__CONNECTION.commit()
 
 def main():
-	"""
 	CREATE_AND_ALTER_NEEDED_TABLES()
 	TRAIN_SUBJECTS()
-	ACR_Stats.GRAPH_ELO_DISTRIBUTION('Users')
-	ACR_Stats.GRAPH_ELO_DISTRIBUTION('Problems')
-
+	
 	ACR_Stats.GRAPH_USERS_EVOLUTION()
 	ACR_Stats.GRAPH_PROBLEMS_EVOLUTION()
 	ACR_Stats.GRAPH_USER_CATEGORIES()
 
-	ACR_Stats.GRAPH_ELO_DIFFERENCES()
-	"""
+	ACR_Stats.GRAPH_ELO_DISTRIBUTION('Users')
+	ACR_Stats.GRAPH_ELO_DISTRIBUTION('Problems')
+
+	ACR_Stats.GRAPH_ELO_DIFFERENCES('<=')
+	ACR_Stats.GRAPH_ELO_DIFFERENCES('>')
 
 	ACR_Globals.__CONNECTION.close()
 

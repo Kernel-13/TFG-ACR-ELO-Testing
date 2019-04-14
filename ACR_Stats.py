@@ -29,17 +29,17 @@ def GRAPH_ELO_DISTRIBUTION(items):
 
 	GRAPH_BAR_CHART(ranges,values,x_label="ELO Ranges", y_label=f"Nº of {items}", title=f"ELO Distribution ({items})")
 
-def GRAPH_ELO_DIFFERENCES():
+def GRAPH_ELO_DIFFERENCES(sign):
 	
 	elo_diff = {}
 	[elo_diff.update({k:0}) for k in range(16)]
 
 	# We get the user/problem couples
 	ACR_Globals.__CURSOR.execute("""SELECT user_id, problem_id FROM submission 
-		WHERE id <= {}
+		WHERE id {} {}
 		AND (status='AC' OR status='PE')
 		GROUP BY user_id, problem_id
-		ORDER BY id""".format(ACR_Globals.__DB_SPLITTER))
+		ORDER BY id""".format(sign, ACR_Globals.__DB_SPLITTER))
 	
 	for row in ACR_Globals.__CURSOR.fetchall():
 		usr = row[0]
