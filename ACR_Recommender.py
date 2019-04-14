@@ -81,7 +81,7 @@ def ONE_HIT_GLOBAL():
 		for p in print_list:
 			fd.write(p)
 
-	print('ONE HIT (@ {} - {}x{} AC [{}])	-	ONE_HIT: {}'.format(__NUM_RECOMD, __NUM_SOL_1st, __NUM_SOL_2nd, "SOLVED" if __ONLY_SOLVED else "TRIED",len(hits)/len(u_p_pos)))
+	print('ONE_HIT: {}	-	GLOBAL (@ {} - {}x{} AC [{}])'.format(len(hits)/len(u_p_pos), __NUM_RECOMD, __NUM_SOL_1st, __NUM_SOL_2nd, "SOLVED" if __ONLY_SOLVED else "TRIED"))
 
 def ONE_HIT_CATEGORIES():
 	user_elos = {}
@@ -181,7 +181,7 @@ def ONE_HIT_CATEGORIES():
 		for p in print_list:
 			fd.write(p)
 
-	print('ONE HIT CAT(@ {} - {}x{} AC [{}])	-	ONE_HIT: {}'.format(__NUM_RECOMD, __NUM_SOL_1st, __NUM_SOL_2nd, "SOLVED" if __ONLY_SOLVED else "TRIED",len(hits)/len(u_p_pos)))
+	print('ONE_HIT: {}	-	CATEGORIES (@ {} - {}x{} AC [{}])'.format(len(hits)/len(u_p_pos), __NUM_RECOMD, __NUM_SOL_1st, __NUM_SOL_2nd, "SOLVED" if __ONLY_SOLVED else "TRIED"))
 
 for i in [3,5,10,20]:
 	for j in [1,3,5,8,10]:
