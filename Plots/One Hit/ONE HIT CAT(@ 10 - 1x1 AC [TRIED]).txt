@@ -1,0 +1,2857 @@
+
+User: 5
+	elo_adhoc: []
+	elo_sorting: [9]
+	elo_dyv: []
+	elo_graph: [9]
+	Global: []
+User: 9
+	elo_adhoc: []
+	elo_recorr: []
+	elo_search: []
+	elo_sorting: []
+	elo_geo: []
+	Global: []
+User: 15
+	elo_adhoc: [7, 6]
+	elo_recorr: []
+	elo_search: [5]
+	elo_sorting: [7]
+	elo_dyv: []
+	Global: []
+User: 17
+	elo_adhoc: []
+	elo_dnmc: []
+	elo_geo: []
+	Global: []
+User: 18
+	elo_adhoc: []
+	elo_recorr: []
+	elo_search: []
+	elo_bin_srch: []
+	elo_sorting: []
+	elo_dnmc: []
+	elo_graph: []
+	Global: []
+User: 25
+	elo_adhoc: []
+	elo_recorr: []
+	elo_search: []
+	elo_sorting: []
+	elo_vrz: [4]
+	elo_dnmc: []
+	elo_bk_trk: []
+	elo_geo: []
+	Global: []
+User: 35
+	elo_adhoc: [4, 8, 8]
+	elo_recorr: []
+	elo_search: [8]
+	elo_sorting: [2, 8, 8]
+	elo_dnmc: [3, 8, 8]
+	elo_bk_trk: [2, 8, 8]
+	elo_space: [2, 8, 8]
+	Global: []
+User: 54
+	elo_adhoc: []
+	elo_sorting: []
+	elo_vrz: []
+	elo_dnmc: []
+	elo_geo: []
+	Global: []
+User: 60
+	elo_adhoc: []
+	elo_recorr: [7, 7]
+	elo_search: []
+	elo_sorting: []
+	elo_geo: [5]
+	Global: []
+User: 62
+	elo_adhoc: []
+	elo_recorr: []
+	elo_search: []
+	elo_sorting: []
+	elo_vrz: []
+	elo_dnmc: []
+	elo_bk_trk: []
+	elo_graph: []
+	elo_geo: []
+	Global: []
+User: 64
+	elo_adhoc: []
+	elo_recorr: []
+	elo_dnmc: []
+	elo_space: []
+	Global: []
+User: 67
+	elo_adhoc: []
+	elo_recorr: []
+	elo_sorting: []
+	elo_geo: []
+	Global: []
+User: 89
+	elo_adhoc: [0]
+	elo_recorr: []
+	elo_search: []
+	elo_sorting: [1, 1]
+	elo_vrz: []
+	elo_dnmc: []
+	elo_bk_trk: []
+	elo_space: []
+	elo_geo: []
+	Global: []
+User: 103
+	elo_adhoc: [1, 4, 9, 9, 2]
+	elo_recorr: [1, 1, 7]
+	elo_search: [5, 4, 0]
+	elo_bin_srch: [3, 3, 7]
+	elo_sorting: [5, 6, 6, 9]
+	elo_vrz: [8, 1, 2]
+	elo_dnmc: [6, 3, 3, 0]
+	elo_dyv: [1, 9, 9, 4]
+	elo_bk_trk: [0, 7, 7, 5]
+	elo_graph: [5]
+	elo_geo: [2, 2, 7]
+	Global: [0, 0]
+User: 105
+	elo_adhoc: []
+	elo_recorr: [8]
+	elo_sorting: []
+	Global: []
+User: 124
+	elo_adhoc: []
+	elo_recorr: [0]
+	elo_search: []
+	elo_sorting: []
+	elo_vrz: []
+	elo_dnmc: []
+	Global: []
+User: 130
+	elo_adhoc: [8]
+	elo_recorr: []
+	elo_search: []
+	elo_sorting: [9]
+	elo_vrz: [5, 5]
+	elo_dnmc: [9, 4, 3, 2, 0]
+	elo_dyv: [5, 4, 3, 1]
+	elo_bk_trk: [8, 8]
+	elo_space: [3]
+	elo_graph: [5, 5]
+	elo_geo: []
+	Global: [1, 2, 2]
+User: 176
+	elo_adhoc: [4]
+	elo_recorr: [9]
+	elo_search: []
+	elo_dnmc: []
+	Global: []
+User: 195
+	elo_recorr: []
+	elo_search: []
+	Global: []
+User: 206
+	elo_adhoc: [7]
+	elo_recorr: []
+	elo_search: [6]
+	elo_sorting: []
+	elo_vrz: []
+	elo_dnmc: []
+	elo_dyv: [1]
+	elo_bk_trk: []
+	elo_graph: []
+	elo_geo: []
+	Global: []
+User: 254
+	elo_recorr: []
+	elo_search: []
+	elo_sorting: []
+	elo_dnmc: []
+	Global: []
+User: 302
+	elo_recorr: []
+	elo_search: []
+	elo_dnmc: []
+	elo_graph: [9]
+	Global: []
+User: 376
+	elo_recorr: []
+	elo_sorting: [8, 8, 8, 8, 8]
+	Global: []
+User: 377
+	elo_graph: []
+	Global: []
+User: 382
+	elo_adhoc: []
+	elo_recorr: []
+	elo_search: []
+	elo_sorting: []
+	Global: []
+User: 414
+	elo_adhoc: [0, 0]
+	elo_recorr: []
+	elo_search: []
+	elo_bin_srch: []
+	elo_sorting: []
+	elo_vrz: []
+	elo_dnmc: [9]
+	elo_dyv: []
+	elo_bk_trk: []
+	elo_geo: []
+	Global: []
+User: 436
+	Global: []
+User: 437
+	elo_adhoc: [6, 4, 4, 2, 2, 5]
+	elo_recorr: [6, 4, 4, 1, 1, 5]
+	elo_search: [4, 2, 2, 8, 8, 3]
+	elo_bin_srch: [1, 2, 2, 5]
+	elo_sorting: [3, 1, 1, 2, 8, 8]
+	elo_vrz: [4, 6, 6, 5, 3, 3]
+	elo_dnmc: [4, 2, 2, 9, 9, 3]
+	elo_dyv: [4, 6, 6, 5, 3, 3]
+	elo_bk_trk: [2, 0, 0, 1, 7, 7]
+	elo_space: [0, 5, 5, 2, 6, 6]
+	elo_graph: [4, 1, 1, 3, 8, 8]
+	elo_geo: [1, 2, 2, 5]
+	Global: [1, 1]
+User: 443
+	elo_adhoc: []
+	elo_recorr: []
+	elo_search: []
+	elo_sorting: []
+	elo_vrz: [7, 7, 7]
+	elo_dnmc: []
+	elo_geo: [5, 5, 5]
+	Global: []
+User: 448
+	elo_adhoc: []
+	elo_recorr: []
+	elo_search: []
+	elo_sorting: []
+	elo_vrz: []
+	elo_dnmc: []
+	elo_dyv: []
+	elo_bk_trk: []
+	elo_space: []
+	elo_graph: []
+	elo_geo: []
+	Global: [2, 2]
+User: 483
+	elo_adhoc: []
+	elo_sorting: []
+	elo_dnmc: []
+	Global: []
+User: 488
+	elo_adhoc: []
+	elo_recorr: []
+	elo_search: []
+	elo_sorting: []
+	elo_vrz: []
+	elo_dnmc: []
+	elo_geo: []
+	Global: []
+User: 511
+	elo_adhoc: []
+	elo_recorr: []
+	elo_search: []
+	elo_sorting: [8]
+	Global: []
+User: 562
+	elo_adhoc: []
+	elo_recorr: []
+	elo_search: []
+	elo_sorting: []
+	elo_vrz: []
+	elo_dnmc: []
+	elo_geo: []
+	Global: []
+User: 571
+	elo_recorr: [8, 7, 7, 6]
+	elo_search: []
+	elo_sorting: []
+	elo_dyv: []
+	Global: []
+User: 595
+	elo_recorr: []
+	elo_search: []
+	elo_sorting: []
+	elo_vrz: []
+	Global: [0, 0]
+User: 604
+	elo_search: []
+	elo_geo: []
+	Global: []
+User: 605
+	elo_adhoc: []
+	elo_recorr: []
+	elo_search: []
+	elo_sorting: []
+	Global: []
+User: 623
+	elo_sorting: []
+	elo_dnmc: []
+	elo_bk_trk: []
+	Global: []
+User: 651
+	Global: []
+User: 655
+	elo_recorr: []
+	elo_search: []
+	elo_sorting: []
+	Global: []
+User: 657
+	elo_geo: []
+	Global: []
+User: 676
+	elo_recorr: []
+	elo_search: []
+	elo_sorting: []
+	Global: []
+User: 686
+	elo_adhoc: []
+	elo_recorr: []
+	elo_search: []
+	elo_sorting: []
+	elo_vrz: []
+	elo_dnmc: []
+	elo_bk_trk: []
+	Global: []
+User: 689
+	elo_adhoc: []
+	elo_recorr: [7]
+	elo_search: []
+	elo_bin_srch: []
+	elo_sorting: []
+	elo_vrz: []
+	elo_dnmc: [8, 8]
+	elo_dyv: []
+	elo_bk_trk: [3, 3, 8, 8, 8, 9, 7, 7, 6, 0, 0]
+	elo_graph: []
+	elo_geo: [8, 7, 7, 6, 9]
+	Global: []
+User: 690
+	elo_recorr: []
+	elo_search: []
+	Global: []
+User: 695
+	elo_recorr: []
+	elo_search: []
+	elo_sorting: []
+	elo_geo: []
+	Global: []
+User: 702
+	elo_recorr: []
+	elo_search: []
+	elo_sorting: []
+	elo_graph: []
+	Global: []
+User: 713
+	elo_recorr: []
+	elo_sorting: []
+	elo_dnmc: []
+	Global: []
+User: 743
+	elo_recorr: []
+	Global: []
+User: 749
+	elo_recorr: []
+	Global: []
+User: 762
+	elo_recorr: []
+	elo_search: []
+	Global: []
+User: 783
+	elo_recorr: []
+	Global: []
+User: 786
+	elo_adhoc: []
+	elo_sorting: []
+	Global: []
+User: 791
+	Global: []
+User: 799
+	elo_recorr: []
+	elo_search: []
+	Global: []
+User: 843
+	elo_recorr: []
+	elo_search: []
+	elo_sorting: []
+	Global: []
+User: 847
+	elo_adhoc: []
+	elo_recorr: []
+	elo_search: [4]
+	elo_sorting: [5]
+	elo_vrz: []
+	elo_dnmc: [7]
+	elo_dyv: [9]
+	elo_bk_trk: [9, 9]
+	elo_graph: []
+	elo_geo: []
+	Global: []
+User: 912
+	elo_adhoc: [0, 0]
+	elo_recorr: [3, 3]
+	elo_search: []
+	elo_bin_srch: [0, 0]
+	elo_sorting: []
+	elo_dnmc: []
+	elo_dyv: [1, 1]
+	elo_bk_trk: [8, 8]
+	Global: [0]
+User: 916
+	elo_search: []
+	elo_dnmc: []
+	elo_graph: []
+	Global: []
+User: 918
+	elo_adhoc: []
+	elo_dnmc: []
+	Global: []
+User: 919
+	elo_recorr: []
+	elo_sorting: []
+	Global: []
+User: 935
+	elo_adhoc: [2, 7, 3, 5]
+	elo_recorr: [9, 0, 3]
+	elo_search: [2, 4, 5, 7]
+	elo_bin_srch: [8, 2, 3, 4, 5, 6, 7, 9]
+	elo_sorting: [2, 5, 4, 7]
+	elo_vrz: [0, 1, 3, 8, 9]
+	elo_dnmc: [6, 1, 9, 5]
+	elo_dyv: [0, 1, 3, 8, 9]
+	elo_bk_trk: [0, 4, 5, 6, 7, 8, 9]
+	elo_space: [8, 2, 3, 4, 5, 6, 7, 9]
+	elo_graph: [2, 4, 5, 8, 9]
+	elo_geo: [8, 2, 3, 4, 5, 6, 7, 9]
+	Global: [2, 2, 1, 1, 0]
+User: 1002
+	elo_adhoc: []
+	elo_recorr: [4]
+	elo_search: []
+	elo_sorting: []
+	elo_dnmc: []
+	elo_bk_trk: [9]
+	Global: [2, 2, 2]
+User: 1134
+	elo_adhoc: []
+	elo_sorting: []
+	elo_dyv: []
+	elo_bk_trk: []
+	Global: []
+User: 1190
+	elo_adhoc: [0, 7, 3]
+	elo_recorr: [5, 6, 6]
+	elo_search: [4]
+	elo_sorting: [1, 8, 8, 8, 8, 2, 2]
+	elo_vrz: [6]
+	elo_dnmc: [4, 3, 3]
+	elo_dyv: [6, 6, 6]
+	elo_bk_trk: [0]
+	elo_geo: [3, 3, 3, 9, 8, 8, 7]
+	Global: [2, 2, 2, 1]
+User: 1225
+	elo_adhoc: []
+	elo_recorr: []
+	elo_search: []
+	elo_sorting: []
+	elo_vrz: []
+	elo_bk_trk: []
+	elo_geo: []
+	Global: []
+User: 1230
+	elo_sorting: []
+	elo_dnmc: []
+	elo_bk_trk: []
+	elo_graph: []
+	Global: []
+User: 1284
+	elo_sorting: []
+	elo_vrz: []
+	Global: []
+User: 1307
+	elo_adhoc: []
+	elo_recorr: []
+	elo_search: []
+	elo_sorting: []
+	elo_vrz: []
+	elo_dnmc: []
+	elo_bk_trk: []
+	Global: []
+User: 1317
+	elo_adhoc: []
+	elo_recorr: []
+	elo_search: []
+	elo_sorting: []
+	elo_vrz: []
+	elo_dnmc: []
+	Global: []
+User: 1331
+	elo_recorr: []
+	Global: []
+User: 1335
+	elo_adhoc: []
+	elo_recorr: []
+	elo_search: []
+	elo_sorting: []
+	elo_vrz: []
+	elo_dyv: [6]
+	elo_geo: []
+	Global: []
+User: 1352
+	elo_adhoc: []
+	elo_recorr: []
+	elo_search: []
+	elo_sorting: []
+	elo_geo: []
+	Global: []
+User: 1392
+	Global: []
+User: 1485
+	elo_adhoc: []
+	elo_recorr: [6]
+	elo_search: []
+	elo_sorting: []
+	elo_vrz: []
+	elo_dnmc: [9]
+	elo_dyv: []
+	elo_graph: []
+	elo_geo: []
+	Global: []
+User: 1551
+	elo_adhoc: [3, 3]
+	elo_search: []
+	elo_sorting: [3, 3]
+	Global: []
+User: 1569
+	elo_search: []
+	Global: []
+User: 1659
+	elo_adhoc: []
+	elo_recorr: []
+	elo_search: []
+	elo_sorting: []
+	elo_bk_trk: []
+	Global: []
+User: 1681
+	elo_adhoc: []
+	elo_recorr: []
+	elo_sorting: []
+	Global: []
+User: 1698
+	elo_sorting: []
+	Global: []
+User: 1711
+	elo_adhoc: []
+	elo_recorr: [8]
+	elo_search: [7]
+	elo_bin_srch: [2, 2, 3, 8, 9, 9]
+	elo_sorting: [0]
+	elo_vrz: [8, 8, 7]
+	elo_dnmc: [6]
+	elo_dyv: [4, 4, 5, 7, 8, 9, 9]
+	elo_bk_trk: [2, 3, 3, 3, 5, 7, 8, 8, 9]
+	elo_space: [3, 4, 4, 4, 6, 8, 9, 9]
+	elo_graph: [2]
+	elo_geo: [4, 4, 5, 7, 8, 9, 9]
+	Global: [2, 2, 2, 2]
+User: 1725
+	elo_search: []
+	elo_sorting: []
+	Global: []
+User: 1733
+	elo_recorr: []
+	elo_sorting: [6, 4]
+	Global: []
+User: 1736
+	elo_adhoc: []
+	elo_sorting: []
+	elo_dnmc: []
+	elo_bk_trk: []
+	Global: []
+User: 1752
+	elo_sorting: []
+	Global: []
+User: 1822
+	elo_vrz: []
+	Global: []
+User: 1826
+	elo_adhoc: []
+	elo_recorr: []
+	elo_search: []
+	elo_sorting: []
+	elo_vrz: []
+	elo_dnmc: []
+	elo_geo: []
+	Global: []
+User: 1913
+	elo_adhoc: []
+	elo_recorr: []
+	elo_sorting: []
+	elo_dyv: []
+	Global: []
+User: 1922
+	elo_adhoc: []
+	elo_recorr: []
+	elo_search: []
+	elo_sorting: []
+	elo_vrz: []
+	elo_dnmc: []
+	elo_dyv: []
+	elo_bk_trk: []
+	elo_graph: []
+	elo_geo: []
+	Global: []
+User: 1929
+	elo_recorr: []
+	Global: []
+User: 1931
+	elo_adhoc: []
+	elo_recorr: []
+	elo_search: []
+	elo_bin_srch: [9, 9, 9]
+	elo_sorting: []
+	elo_vrz: []
+	elo_dnmc: [8]
+	elo_graph: []
+	elo_geo: []
+	Global: []
+User: 1949
+	elo_adhoc: [7, 0, 6]
+	elo_recorr: [5]
+	elo_search: [9]
+	elo_bin_srch: [8, 8, 8]
+	elo_sorting: [2]
+	elo_vrz: [4, 6, 8, 3]
+	elo_dnmc: [7, 2, 6]
+	elo_dyv: [9, 2]
+	elo_graph: [8, 8, 8]
+	elo_geo: [2, 8, 5, 3]
+	Global: [1, 2, 2]
+User: 1953
+	elo_adhoc: [5, 9, 8, 1, 1, 0]
+	elo_recorr: [1, 6, 5, 5, 7]
+	elo_search: [0]
+	elo_bin_srch: []
+	elo_sorting: []
+	elo_vrz: [9, 0]
+	elo_dnmc: []
+	elo_space: []
+	elo_graph: []
+	elo_geo: []
+	Global: []
+User: 1954
+	elo_adhoc: []
+	elo_recorr: []
+	elo_search: []
+	elo_bin_srch: [2, 2, 2, 0, 0]
+	elo_sorting: []
+	elo_vrz: []
+	elo_dnmc: []
+	elo_dyv: [4, 4, 4, 7, 7, 9]
+	elo_graph: []
+	elo_geo: []
+	Global: []
+User: 1955
+	elo_adhoc: []
+	elo_recorr: []
+	elo_search: []
+	elo_bin_srch: []
+	elo_sorting: []
+	elo_graph: []
+	Global: []
+User: 1956
+	elo_adhoc: [6]
+	elo_recorr: []
+	elo_search: []
+	elo_geo: []
+	Global: []
+User: 1959
+	elo_adhoc: []
+	elo_recorr: [4, 3]
+	elo_search: [4]
+	elo_bin_srch: []
+	elo_sorting: [5, 7, 7, 9, 0, 4]
+	elo_graph: []
+	elo_geo: []
+	Global: []
+User: 1960
+	elo_adhoc: []
+	elo_recorr: []
+	elo_search: []
+	elo_bin_srch: []
+	elo_sorting: [1, 4]
+	Global: []
+User: 1961
+	elo_adhoc: [3, 3]
+	elo_search: []
+	elo_bin_srch: []
+	elo_sorting: [7, 7]
+	elo_vrz: [7, 7]
+	elo_geo: []
+	Global: []
+User: 1963
+	elo_recorr: []
+	elo_search: []
+	elo_geo: []
+	Global: []
+User: 1981
+	elo_adhoc: []
+	elo_search: []
+	elo_bin_srch: []
+	elo_sorting: []
+	elo_vrz: []
+	elo_dnmc: []
+	elo_graph: []
+	elo_geo: []
+	Global: []
+User: 1982
+	elo_adhoc: []
+	elo_recorr: []
+	elo_search: []
+	elo_bin_srch: []
+	elo_sorting: []
+	elo_vrz: []
+	elo_dnmc: []
+	elo_dyv: []
+	elo_graph: []
+	elo_geo: []
+	Global: []
+User: 1983
+	elo_adhoc: []
+	elo_recorr: [5, 5, 1, 1, 9, 9, 4, 4, 4, 4, 4]
+	elo_search: [8]
+	elo_bin_srch: [6, 0, 8, 8]
+	elo_sorting: [7, 0, 8, 8]
+	elo_vrz: []
+	elo_dnmc: []
+	elo_dyv: []
+	elo_space: [6, 0, 7, 7]
+	elo_graph: [7, 0, 8, 8]
+	elo_geo: [2]
+	Global: [2, 2]
+User: 1991
+	elo_adhoc: []
+	elo_bin_srch: []
+	elo_sorting: []
+	elo_vrz: []
+	elo_graph: []
+	Global: []
+User: 1995
+	elo_adhoc: []
+	elo_recorr: []
+	elo_geo: []
+	Global: []
+User: 1996
+	elo_adhoc: []
+	elo_geo: []
+	Global: []
+User: 2001
+	elo_adhoc: [1, 1]
+	elo_geo: []
+	Global: []
+User: 2004
+	elo_adhoc: []
+	elo_recorr: []
+	elo_geo: []
+	Global: []
+User: 2032
+	elo_adhoc: []
+	elo_search: []
+	elo_geo: []
+	Global: []
+User: 2040
+	elo_adhoc: []
+	elo_recorr: []
+	elo_geo: []
+	Global: []
+User: 2106
+	elo_adhoc: [3]
+	elo_recorr: [2, 2]
+	elo_search: [0]
+	elo_sorting: []
+	elo_bk_trk: [0, 0, 7, 9, 9]
+	elo_geo: [0, 0, 9]
+	Global: [1, 0]
+User: 2129
+	elo_adhoc: []
+	elo_geo: []
+	Global: []
+User: 2133
+	elo_adhoc: []
+	elo_recorr: []
+	elo_search: []
+	elo_sorting: []
+	Global: []
+User: 2145
+	elo_adhoc: []
+	elo_search: []
+	Global: []
+User: 2165
+	elo_recorr: []
+	elo_search: []
+	elo_sorting: []
+	Global: []
+User: 2178
+	elo_adhoc: []
+	Global: []
+User: 2187
+	elo_recorr: []
+	elo_sorting: []
+	elo_vrz: []
+	elo_dnmc: []
+	elo_graph: []
+	Global: []
+User: 2189
+	elo_recorr: []
+	elo_geo: []
+	Global: []
+User: 2193
+	elo_adhoc: []
+	elo_recorr: []
+	elo_dnmc: []
+	Global: []
+User: 2197
+	elo_adhoc: []
+	elo_recorr: [9]
+	elo_search: []
+	Global: []
+User: 2215
+	elo_recorr: []
+	Global: []
+User: 2216
+	elo_search: []
+	elo_sorting: []
+	elo_vrz: []
+	Global: []
+User: 2226
+	elo_adhoc: []
+	elo_recorr: []
+	elo_search: []
+	elo_bin_srch: [1, 1, 2, 8, 5, 4, 4, 4, 3, 3, 9]
+	elo_sorting: []
+	elo_vrz: []
+	elo_dnmc: [9]
+	elo_dyv: [8, 8, 9, 9, 9]
+	elo_bk_trk: [4, 4, 8, 7, 7, 7, 6, 6, 5]
+	elo_space: [1, 1, 2, 8, 5, 4, 4, 4, 3, 3, 9]
+	elo_graph: []
+	elo_geo: [2, 2, 5, 6, 4, 4, 4, 3, 3, 9]
+	Global: [2, 2]
+User: 2243
+	elo_adhoc: []
+	elo_recorr: []
+	elo_search: []
+	Global: []
+User: 2248
+	elo_recorr: []
+	elo_sorting: []
+	elo_graph: []
+	Global: []
+User: 2305
+	elo_adhoc: []
+	elo_recorr: []
+	elo_search: []
+	elo_sorting: []
+	elo_geo: []
+	Global: []
+User: 2317
+	elo_search: []
+	Global: []
+User: 2324
+	elo_adhoc: []
+	elo_recorr: [5, 5]
+	elo_sorting: []
+	elo_vrz: []
+	elo_geo: []
+	Global: [1, 1]
+User: 2338
+	elo_search: [9, 9]
+	Global: [2]
+User: 2354
+	elo_adhoc: [2]
+	elo_recorr: [4]
+	elo_vrz: [3, 3]
+	elo_dnmc: [9, 9, 7]
+	elo_geo: [0]
+	Global: []
+User: 2357
+	Global: []
+User: 2372
+	elo_adhoc: []
+	elo_recorr: []
+	elo_search: [9]
+	elo_sorting: []
+	elo_vrz: []
+	elo_dnmc: []
+	elo_dyv: []
+	elo_graph: [7, 9, 8, 8]
+	elo_geo: []
+	Global: []
+User: 2373
+	elo_adhoc: []
+	elo_recorr: []
+	elo_search: []
+	elo_sorting: []
+	elo_vrz: []
+	elo_dnmc: []
+	elo_graph: []
+	elo_geo: []
+	Global: []
+User: 2388
+	elo_adhoc: []
+	elo_recorr: []
+	elo_search: [7]
+	elo_sorting: []
+	elo_vrz: []
+	elo_dnmc: []
+	elo_geo: []
+	Global: []
+User: 2414
+	Global: []
+User: 2423
+	elo_adhoc: []
+	elo_recorr: [0, 0, 0, 6]
+	elo_search: [1, 1, 1, 6]
+	Global: []
+User: 2424
+	elo_geo: []
+	Global: []
+User: 2467
+	elo_adhoc: [5]
+	elo_recorr: []
+	elo_search: [4, 9]
+	elo_sorting: []
+	elo_vrz: []
+	elo_dnmc: []
+	elo_space: []
+	elo_graph: []
+	elo_geo: []
+	Global: [2]
+User: 2523
+	Global: []
+User: 2538
+	elo_adhoc: []
+	elo_sorting: []
+	Global: []
+User: 2573
+	elo_adhoc: []
+	elo_recorr: []
+	elo_search: []
+	elo_sorting: []
+	elo_geo: []
+	Global: []
+User: 2576
+	elo_adhoc: []
+	elo_recorr: []
+	elo_search: []
+	elo_sorting: []
+	elo_geo: []
+	Global: [1]
+User: 2608
+	elo_adhoc: []
+	elo_recorr: [5, 5]
+	elo_sorting: []
+	Global: [0, 0, 0, 0, 0]
+User: 2619
+	Global: []
+User: 2626
+	elo_adhoc: []
+	elo_recorr: []
+	elo_search: []
+	elo_geo: [8, 8]
+	Global: []
+User: 2639
+	elo_recorr: []
+	elo_search: []
+	Global: []
+User: 2640
+	elo_adhoc: []
+	elo_recorr: []
+	elo_sorting: []
+	elo_vrz: []
+	elo_dnmc: []
+	elo_graph: []
+	Global: []
+User: 2647
+	Global: []
+User: 2651
+	elo_adhoc: [8, 6]
+	elo_recorr: []
+	elo_search: [8]
+	elo_dyv: [9]
+	elo_bk_trk: []
+	Global: []
+User: 2674
+	elo_adhoc: [8]
+	elo_recorr: [8, 8]
+	elo_sorting: [2, 3, 3, 6, 4, 4]
+	elo_vrz: [2, 3, 3, 6, 4, 4]
+	elo_geo: [3, 3, 3]
+	Global: [1, 1, 2, 0, 0]
+User: 2720
+	elo_adhoc: []
+	elo_recorr: []
+	elo_search: []
+	elo_sorting: []
+	Global: []
+User: 2729
+	elo_adhoc: []
+	elo_recorr: []
+	elo_dnmc: []
+	elo_graph: [6, 6, 6, 6]
+	Global: []
+User: 2739
+	elo_adhoc: []
+	elo_recorr: []
+	elo_search: []
+	elo_vrz: []
+	elo_geo: []
+	Global: []
+User: 2742
+	elo_adhoc: []
+	elo_recorr: []
+	elo_search: []
+	elo_bin_srch: [0]
+	elo_sorting: []
+	elo_vrz: []
+	elo_dnmc: []
+	elo_dyv: []
+	elo_bk_trk: []
+	elo_space: []
+	elo_graph: []
+	elo_geo: []
+	Global: []
+User: 2765
+	elo_sorting: []
+	Global: []
+User: 2784
+	elo_adhoc: []
+	elo_search: [0, 0]
+	elo_sorting: [2, 2, 9, 9]
+	elo_vrz: [2, 2, 9, 7, 7, 8]
+	elo_geo: []
+	Global: []
+User: 2804
+	elo_adhoc: []
+	elo_recorr: []
+	elo_sorting: []
+	elo_vrz: []
+	elo_dnmc: []
+	Global: []
+User: 2805
+	elo_recorr: []
+	elo_search: []
+	elo_sorting: []
+	elo_dnmc: []
+	Global: []
+User: 2813
+	elo_adhoc: []
+	elo_recorr: []
+	elo_search: []
+	elo_sorting: []
+	elo_vrz: []
+	elo_dnmc: []
+	elo_graph: []
+	elo_geo: []
+	Global: []
+User: 2818
+	elo_recorr: [4, 4]
+	elo_search: [7]
+	elo_sorting: []
+	Global: []
+User: 2832
+	elo_recorr: []
+	elo_search: []
+	elo_sorting: []
+	Global: []
+User: 2834
+	elo_geo: []
+	Global: []
+User: 2851
+	elo_search: []
+	Global: [2]
+User: 2857
+	Global: []
+User: 2861
+	elo_recorr: []
+	elo_search: []
+	elo_sorting: []
+	elo_geo: []
+	Global: []
+User: 2883
+	Global: []
+User: 2888
+	elo_adhoc: []
+	elo_sorting: []
+	Global: []
+User: 2897
+	Global: []
+User: 2900
+	Global: []
+User: 2904
+	Global: []
+User: 2906
+	elo_adhoc: []
+	elo_recorr: []
+	elo_sorting: [3]
+	elo_dnmc: [7, 7]
+	elo_dyv: []
+	elo_bk_trk: []
+	Global: [0, 0]
+User: 2910
+	Global: []
+User: 2912
+	elo_recorr: [5, 5, 2]
+	Global: []
+User: 2916
+	Global: []
+User: 2921
+	elo_recorr: [4, 4]
+	Global: []
+User: 2922
+	Global: []
+User: 2957
+	elo_adhoc: []
+	elo_search: [3]
+	elo_sorting: [2]
+	elo_dnmc: [4]
+	Global: []
+User: 2959
+	elo_recorr: []
+	elo_dnmc: []
+	elo_graph: []
+	Global: []
+User: 2966
+	elo_adhoc: [0, 6, 7, 7]
+	elo_recorr: []
+	elo_search: []
+	elo_sorting: [9, 8, 8]
+	elo_vrz: [5]
+	elo_dnmc: []
+	elo_geo: []
+	Global: [0, 0]
+User: 2972
+	Global: []
+User: 3006
+	elo_sorting: []
+	Global: []
+User: 3007
+	elo_adhoc: []
+	elo_recorr: []
+	Global: []
+User: 3044
+	elo_adhoc: []
+	elo_recorr: [5, 5]
+	elo_search: []
+	elo_sorting: []
+	elo_graph: []
+	elo_geo: [7]
+	Global: []
+User: 3088
+	elo_adhoc: []
+	elo_recorr: []
+	elo_search: []
+	elo_sorting: []
+	elo_vrz: []
+	elo_geo: []
+	Global: [0]
+User: 3090
+	Global: []
+User: 3096
+	Global: []
+User: 3097
+	elo_adhoc: [3]
+	elo_recorr: []
+	elo_geo: []
+	Global: []
+User: 3099
+	Global: []
+User: 3118
+	elo_adhoc: [1]
+	elo_recorr: [6]
+	elo_search: []
+	elo_sorting: []
+	elo_vrz: []
+	elo_dnmc: []
+	elo_bk_trk: []
+	elo_graph: []
+	elo_geo: []
+	Global: []
+User: 3123
+	elo_adhoc: []
+	elo_recorr: []
+	Global: []
+User: 3134
+	elo_recorr: []
+	Global: []
+User: 3136
+	elo_adhoc: [5]
+	elo_recorr: []
+	elo_search: []
+	elo_sorting: []
+	elo_vrz: []
+	elo_dnmc: [0]
+	elo_dyv: []
+	elo_bk_trk: [0]
+	Global: []
+User: 3145
+	elo_adhoc: []
+	elo_recorr: []
+	elo_bin_srch: [2]
+	elo_dyv: []
+	Global: []
+User: 3162
+	elo_adhoc: []
+	Global: []
+User: 3164
+	elo_adhoc: []
+	elo_recorr: []
+	elo_search: []
+	elo_sorting: []
+	Global: []
+User: 3170
+	elo_adhoc: []
+	elo_recorr: []
+	elo_search: []
+	elo_sorting: []
+	elo_vrz: []
+	Global: []
+User: 3176
+	Global: []
+User: 3180
+	Global: []
+User: 3185
+	elo_adhoc: [8, 8, 7, 5, 4]
+	Global: []
+User: 3205
+	Global: []
+User: 3213
+	elo_adhoc: []
+	elo_dnmc: [9, 9, 9, 9]
+	elo_bk_trk: [9, 9, 9, 9]
+	Global: []
+User: 3227
+	elo_adhoc: [0, 0]
+	elo_recorr: [0]
+	elo_search: [8]
+	elo_sorting: []
+	elo_geo: [1]
+	Global: []
+User: 3263
+	Global: []
+User: 3280
+	elo_adhoc: []
+	elo_sorting: []
+	Global: []
+User: 3281
+	elo_adhoc: []
+	elo_dnmc: []
+	elo_graph: [7]
+	Global: []
+User: 3302
+	elo_sorting: []
+	elo_vrz: []
+	elo_dnmc: []
+	Global: []
+User: 3378
+	elo_adhoc: []
+	elo_recorr: []
+	elo_sorting: []
+	Global: []
+User: 3382
+	elo_adhoc: []
+	elo_sorting: []
+	elo_dnmc: []
+	elo_bk_trk: []
+	elo_geo: []
+	Global: []
+User: 3389
+	elo_adhoc: []
+	elo_recorr: [2, 2]
+	elo_search: []
+	elo_sorting: [7, 7]
+	elo_geo: []
+	Global: []
+User: 3392
+	elo_adhoc: []
+	elo_recorr: []
+	elo_search: []
+	elo_sorting: []
+	elo_vrz: []
+	elo_dnmc: []
+	elo_dyv: []
+	elo_geo: []
+	Global: []
+User: 3415
+	elo_recorr: []
+	Global: []
+User: 3427
+	elo_sorting: []
+	elo_dyv: []
+	elo_geo: []
+	Global: []
+User: 3428
+	elo_adhoc: [4, 4, 8, 3, 5, 1, 1, 9, 0, 0, 2]
+	elo_recorr: [0, 0, 4, 4, 5, 9, 2, 2, 6, 6, 6]
+	elo_search: [5, 3, 3, 8, 8, 8, 7, 7, 4, 4, 4]
+	elo_bin_srch: [2, 2, 4, 4, 1, 1, 1, 9, 9, 7, 5, 5]
+	elo_sorting: [1, 1, 6, 6, 8, 4, 4, 7, 7, 3, 3, 3]
+	elo_vrz: [8, 8, 3, 3, 1, 2, 9, 5, 5, 7, 7, 6, 6, 4]
+	elo_dnmc: [3, 3, 0, 0, 0, 4, 8, 6, 6]
+	elo_dyv: [5, 5, 4, 7, 7, 6, 6, 1, 9, 9]
+	elo_graph: [3, 3, 4, 4, 0, 0, 0, 5, 8, 6, 6]
+	elo_geo: [1, 1, 5, 7, 7, 4, 4, 4, 9]
+	Global: [0, 0, 2, 1, 1, 1, 1]
+User: 3433
+	elo_adhoc: []
+	elo_search: []
+	Global: []
+User: 3452
+	elo_adhoc: []
+	Global: []
+User: 3478
+	elo_recorr: []
+	elo_search: [0, 0, 0]
+	Global: []
+User: 3501
+	elo_recorr: []
+	elo_geo: []
+	Global: []
+User: 3520
+	elo_geo: []
+	Global: []
+User: 3603
+	elo_adhoc: []
+	elo_recorr: []
+	elo_search: []
+	elo_sorting: []
+	elo_vrz: [8]
+	elo_dnmc: []
+	elo_dyv: []
+	elo_graph: [9]
+	Global: []
+User: 3604
+	elo_adhoc: []
+	elo_recorr: []
+	elo_search: []
+	elo_sorting: [1]
+	Global: []
+User: 3609
+	elo_adhoc: []
+	elo_search: []
+	elo_vrz: []
+	elo_geo: []
+	Global: []
+User: 3610
+	elo_adhoc: [5]
+	elo_recorr: []
+	elo_search: []
+	elo_sorting: []
+	Global: []
+User: 3613
+	elo_recorr: []
+	elo_sorting: []
+	Global: []
+User: 3627
+	Global: []
+User: 3663
+	elo_adhoc: []
+	elo_recorr: []
+	Global: []
+User: 3710
+	elo_adhoc: [0]
+	elo_recorr: [1]
+	elo_search: [1]
+	elo_sorting: [2, 2, 2]
+	elo_vrz: [2, 2, 2]
+	Global: []
+User: 3717
+	elo_recorr: [0]
+	Global: []
+User: 3723
+	elo_adhoc: [2, 2]
+	elo_recorr: []
+	Global: []
+User: 3724
+	elo_adhoc: []
+	elo_recorr: []
+	elo_search: []
+	elo_sorting: [1, 1]
+	elo_vrz: [1, 1]
+	elo_dyv: []
+	elo_bk_trk: []
+	elo_geo: []
+	Global: []
+User: 3735
+	elo_adhoc: []
+	elo_recorr: [1, 1, 9]
+	elo_search: []
+	elo_sorting: []
+	elo_vrz: []
+	elo_dnmc: []
+	elo_dyv: [3]
+	elo_graph: []
+	Global: []
+User: 3736
+	elo_recorr: []
+	Global: []
+User: 3738
+	elo_recorr: []
+	elo_bk_trk: []
+	Global: []
+User: 3751
+	elo_recorr: []
+	Global: [0]
+User: 3752
+	elo_adhoc: []
+	elo_recorr: []
+	elo_search: []
+	elo_sorting: [1, 1, 1, 6, 6]
+	elo_vrz: [1, 1, 1, 6, 6]
+	Global: []
+User: 3754
+	elo_search: []
+	elo_geo: [4]
+	Global: []
+User: 3759
+	elo_adhoc: [2, 2, 2, 2, 2]
+	elo_recorr: []
+	elo_sorting: []
+	elo_dnmc: [2, 2, 2, 2, 2]
+	elo_dyv: [1, 1, 1, 1, 1]
+	elo_bk_trk: []
+	Global: [0, 0, 0]
+User: 3764
+	elo_recorr: []
+	Global: []
+User: 3767
+	elo_recorr: []
+	Global: []
+User: 3774
+	elo_recorr: [9, 9]
+	elo_bk_trk: []
+	Global: []
+User: 3778
+	elo_adhoc: []
+	elo_recorr: []
+	elo_sorting: []
+	elo_vrz: []
+	Global: [1, 1]
+User: 3779
+	elo_adhoc: []
+	elo_recorr: []
+	elo_search: []
+	elo_sorting: [8, 8, 8]
+	elo_vrz: []
+	elo_geo: []
+	Global: []
+User: 3784
+	elo_adhoc: [8, 7, 7, 7, 9, 9, 9]
+	elo_recorr: [3, 6]
+	elo_search: [7, 6, 6, 6, 0, 0, 0, 5]
+	elo_sorting: [4, 5, 5, 5, 3, 7]
+	elo_vrz: [3, 2, 2, 2, 9, 9, 9, 0]
+	elo_dyv: [4, 4, 4, 5, 5, 5]
+	Global: [1, 1]
+User: 3787
+	elo_recorr: []
+	elo_search: [6]
+	Global: []
+User: 3801
+	elo_recorr: []
+	Global: [2, 2]
+User: 3802
+	elo_adhoc: []
+	elo_recorr: [6]
+	elo_dnmc: []
+	elo_dyv: [0, 0, 0, 0]
+	elo_bk_trk: []
+	Global: [0]
+User: 3809
+	elo_recorr: []
+	elo_search: []
+	elo_sorting: []
+	Global: []
+User: 3820
+	elo_adhoc: []
+	elo_search: []
+	Global: []
+User: 3825
+	elo_adhoc: []
+	elo_recorr: []
+	elo_geo: []
+	Global: []
+User: 3830
+	elo_adhoc: []
+	elo_geo: []
+	Global: []
+User: 3832
+	Global: []
+User: 3833
+	elo_adhoc: []
+	elo_recorr: []
+	Global: []
+User: 3835
+	elo_recorr: []
+	Global: []
+User: 3837
+	Global: []
+User: 3839
+	elo_adhoc: [9, 9]
+	elo_sorting: []
+	Global: []
+User: 3842
+	elo_adhoc: []
+	elo_recorr: []
+	elo_geo: []
+	Global: []
+User: 3845
+	elo_adhoc: []
+	elo_geo: []
+	Global: []
+User: 3853
+	elo_adhoc: []
+	elo_search: []
+	elo_geo: []
+	Global: []
+User: 3857
+	elo_adhoc: []
+	elo_recorr: []
+	elo_search: []
+	elo_geo: []
+	Global: []
+User: 3858
+	elo_adhoc: []
+	elo_geo: []
+	Global: []
+User: 3860
+	elo_adhoc: []
+	elo_geo: []
+	Global: []
+User: 3870
+	elo_adhoc: []
+	elo_geo: []
+	Global: []
+User: 3881
+	elo_geo: []
+	Global: []
+User: 3888
+	Global: []
+User: 3889
+	elo_adhoc: []
+	elo_recorr: []
+	elo_dyv: []
+	Global: []
+User: 3890
+	elo_adhoc: [3]
+	elo_recorr: [1, 0, 4, 9]
+	elo_search: [4, 7, 7]
+	elo_sorting: [4, 3, 2, 2]
+	elo_vrz: [9, 9]
+	elo_dnmc: [8]
+	elo_dyv: []
+	Global: []
+User: 3893
+	elo_recorr: []
+	Global: []
+User: 3895
+	elo_geo: []
+	Global: []
+User: 3896
+	elo_adhoc: []
+	elo_recorr: [2, 2, 2]
+	elo_search: []
+	elo_sorting: [2, 2, 2, 5, 5, 5]
+	elo_vrz: [7, 7, 7, 7, 0, 0, 0]
+	elo_dnmc: []
+	elo_dyv: [4, 4, 4]
+	elo_graph: []
+	Global: []
+User: 3898
+	elo_adhoc: []
+	elo_recorr: []
+	elo_geo: []
+	Global: []
+User: 3911
+	elo_adhoc: []
+	elo_geo: []
+	Global: []
+User: 3924
+	elo_recorr: []
+	elo_search: []
+	elo_sorting: []
+	elo_vrz: []
+	Global: []
+User: 3928
+	elo_adhoc: []
+	elo_geo: [7, 4]
+	Global: []
+User: 3932
+	elo_adhoc: []
+	elo_geo: []
+	Global: []
+User: 3936
+	elo_adhoc: []
+	elo_geo: []
+	Global: []
+User: 3954
+	elo_geo: []
+	Global: []
+User: 3964
+	elo_adhoc: []
+	elo_geo: [1]
+	Global: [1]
+User: 3967
+	elo_adhoc: [4]
+	elo_search: []
+	elo_geo: []
+	Global: []
+User: 3974
+	elo_adhoc: [9, 9, 9]
+	Global: []
+User: 3994
+	elo_adhoc: []
+	elo_recorr: []
+	elo_search: []
+	elo_dyv: []
+	elo_geo: []
+	Global: []
+User: 4004
+	elo_recorr: [7, 7, 7, 7]
+	elo_search: []
+	elo_sorting: [7, 7, 7, 7]
+	Global: []
+User: 4006
+	elo_recorr: []
+	elo_search: []
+	Global: []
+User: 4011
+	elo_adhoc: []
+	elo_geo: []
+	Global: []
+User: 4017
+	elo_adhoc: []
+	elo_search: []
+	elo_geo: []
+	Global: []
+User: 4018
+	Global: []
+User: 4030
+	elo_adhoc: []
+	Global: []
+User: 4037
+	elo_recorr: []
+	elo_sorting: []
+	Global: []
+User: 4038
+	elo_vrz: []
+	Global: []
+User: 4044
+	elo_recorr: []
+	elo_search: []
+	elo_sorting: []
+	Global: []
+User: 4046
+	Global: []
+User: 4049
+	elo_recorr: []
+	elo_search: []
+	Global: []
+User: 4050
+	elo_recorr: []
+	Global: []
+User: 4053
+	elo_adhoc: []
+	elo_geo: []
+	Global: []
+User: 4055
+	elo_adhoc: [4, 4, 3, 9, 9, 9, 2, 2, 0, 1, 6, 6, 6]
+	elo_recorr: [0, 0, 0, 0, 2, 2, 1, 8, 7, 7, 3]
+	elo_sorting: [4, 4, 5, 2, 8, 3]
+	elo_vrz: [3, 8, 7, 7, 7, 6, 6, 1, 0, 9, 4, 5]
+	elo_geo: [6, 8, 8, 8, 8, 5, 4, 9, 9]
+	Global: [1, 1, 0]
+User: 4058
+	elo_adhoc: []
+	Global: []
+User: 4059
+	Global: []
+User: 4061
+	Global: []
+User: 4063
+	elo_recorr: []
+	Global: []
+User: 4070
+	elo_adhoc: []
+	elo_recorr: []
+	elo_sorting: []
+	elo_vrz: []
+	Global: []
+User: 4079
+	elo_search: []
+	Global: []
+User: 4094
+	elo_adhoc: []
+	elo_recorr: []
+	elo_sorting: []
+	Global: []
+User: 4101
+	elo_adhoc: []
+	elo_geo: []
+	Global: []
+User: 4102
+	elo_adhoc: [5, 5]
+	elo_recorr: [4, 4]
+	elo_dnmc: []
+	Global: []
+User: 4127
+	Global: []
+User: 4129
+	Global: []
+User: 4139
+	elo_adhoc: []
+	elo_search: []
+	Global: []
+User: 4141
+	elo_adhoc: []
+	elo_recorr: []
+	elo_search: []
+	elo_dnmc: []
+	Global: []
+User: 4143
+	elo_recorr: []
+	Global: []
+User: 4144
+	elo_recorr: []
+	elo_search: []
+	elo_space: []
+	Global: []
+User: 4147
+	elo_adhoc: []
+	elo_recorr: []
+	elo_search: []
+	elo_geo: []
+	Global: []
+User: 4149
+	elo_recorr: []
+	elo_sorting: []
+	Global: []
+User: 4153
+	elo_recorr: []
+	Global: []
+User: 4154
+	elo_recorr: []
+	Global: []
+User: 4156
+	elo_recorr: []
+	Global: []
+User: 4157
+	elo_adhoc: []
+	elo_recorr: []
+	elo_search: []
+	elo_space: []
+	Global: []
+User: 4159
+	elo_adhoc: []
+	elo_search: []
+	Global: []
+User: 4169
+	elo_adhoc: []
+	elo_recorr: []
+	elo_search: []
+	Global: []
+User: 4172
+	elo_adhoc: []
+	elo_recorr: []
+	elo_search: []
+	Global: []
+User: 4176
+	elo_adhoc: [3, 3, 3]
+	elo_recorr: []
+	elo_search: []
+	elo_sorting: []
+	elo_dnmc: []
+	elo_bk_trk: []
+	Global: []
+User: 4179
+	elo_adhoc: []
+	elo_recorr: []
+	elo_search: []
+	elo_sorting: []
+	elo_vrz: []
+	elo_geo: []
+	Global: []
+User: 4197
+	elo_adhoc: []
+	elo_recorr: []
+	elo_search: []
+	elo_sorting: []
+	elo_vrz: []
+	Global: []
+User: 4224
+	elo_geo: [4, 4, 4]
+	Global: [2, 2]
+User: 4244
+	elo_search: []
+	elo_sorting: [1]
+	elo_bk_trk: [1, 3]
+	elo_geo: []
+	Global: []
+User: 4246
+	elo_sorting: []
+	Global: []
+User: 4255
+	elo_graph: [6, 6, 6]
+	Global: []
+User: 4260
+	elo_adhoc: [4]
+	elo_search: [4]
+	Global: [0, 0, 0]
+User: 4271
+	elo_adhoc: []
+	elo_recorr: []
+	elo_search: []
+	elo_sorting: []
+	elo_geo: [6]
+	Global: []
+User: 4280
+	elo_adhoc: []
+	elo_search: []
+	Global: []
+User: 4281
+	elo_adhoc: []
+	elo_recorr: []
+	elo_search: [3]
+	elo_sorting: []
+	elo_bk_trk: [2]
+	Global: [0]
+User: 4283
+	elo_adhoc: [4, 4, 4]
+	elo_recorr: []
+	elo_search: []
+	elo_sorting: []
+	elo_bk_trk: []
+	Global: []
+User: 4295
+	elo_adhoc: []
+	elo_recorr: []
+	elo_sorting: []
+	Global: []
+User: 4298
+	elo_adhoc: [1, 0, 0, 5]
+	elo_recorr: [2, 9, 9, 8, 6, 6, 6, 6]
+	elo_search: [7]
+	elo_sorting: [1, 1, 1, 2, 2]
+	elo_vrz: [0, 0, 1, 1, 1, 1, 9]
+	elo_dnmc: [7, 7, 7, 7]
+	elo_graph: [4, 5, 5]
+	elo_geo: [4, 4, 4, 4]
+	Global: []
+User: 4299
+	elo_adhoc: []
+	Global: []
+User: 4303
+	elo_adhoc: [9, 8, 8, 8, 8, 0]
+	elo_recorr: [6, 6, 4]
+	elo_search: [6, 8, 7, 7, 7]
+	elo_sorting: [9, 9, 1, 1, 1]
+	elo_vrz: []
+	elo_dnmc: [8, 1, 1, 1]
+	elo_dyv: [6, 6, 5, 5, 5, 8]
+	elo_graph: [6, 6]
+	elo_geo: []
+	Global: [0, 0, 0, 1]
+User: 4323
+	elo_adhoc: []
+	elo_geo: []
+	Global: []
+User: 4324
+	Global: []
+User: 4327
+	elo_adhoc: []
+	elo_recorr: [6, 6, 9, 9]
+	elo_search: [3, 3, 0, 0, 1, 1]
+	elo_sorting: [6]
+	elo_dnmc: []
+	Global: []
+User: 4331
+	elo_adhoc: [1, 1, 1, 0]
+	elo_recorr: []
+	elo_search: []
+	elo_bin_srch: []
+	elo_sorting: [2, 2, 2, 4]
+	elo_vrz: [1]
+	elo_dnmc: []
+	elo_bk_trk: [1, 1]
+	Global: [2]
+User: 4334
+	Global: []
+User: 4338
+	elo_adhoc: []
+	elo_search: [9, 9, 9, 9]
+	Global: []
+User: 4352
+	elo_adhoc: []
+	Global: []
+User: 4363
+	Global: []
+User: 4372
+	Global: []
+User: 4374
+	elo_search: []
+	Global: []
+User: 4375
+	Global: []
+User: 4378
+	Global: []
+User: 4379
+	Global: []
+User: 4380
+	Global: []
+User: 4386
+	Global: []
+User: 4398
+	elo_adhoc: []
+	elo_recorr: []
+	Global: []
+User: 4400
+	elo_adhoc: []
+	Global: []
+User: 4415
+	elo_adhoc: []
+	Global: []
+User: 4434
+	Global: []
+User: 4436
+	elo_adhoc: []
+	Global: []
+User: 4451
+	Global: []
+User: 4458
+	elo_adhoc: []
+	elo_recorr: []
+	elo_search: []
+	elo_sorting: []
+	elo_vrz: []
+	elo_geo: []
+	Global: []
+User: 4463
+	elo_recorr: []
+	Global: []
+User: 4467
+	elo_recorr: []
+	Global: []
+User: 4469
+	Global: []
+User: 4472
+	Global: []
+User: 4475
+	Global: []
+User: 4478
+	elo_adhoc: []
+	Global: []
+User: 4483
+	elo_graph: []
+	Global: []
+User: 4490
+	elo_adhoc: []
+	elo_recorr: []
+	elo_search: []
+	elo_sorting: []
+	elo_geo: [7, 7]
+	Global: []
+User: 4497
+	elo_adhoc: []
+	elo_geo: []
+	Global: []
+User: 4510
+	elo_adhoc: []
+	Global: []
+User: 4512
+	elo_adhoc: []
+	Global: []
+User: 4520
+	elo_recorr: []
+	Global: []
+User: 4521
+	elo_recorr: []
+	Global: []
+User: 4524
+	Global: []
+User: 4552
+	Global: []
+User: 4568
+	elo_adhoc: [3, 3, 6, 9, 8, 7]
+	elo_sorting: [4, 4, 9, 7]
+	elo_vrz: [4, 4, 9, 7]
+	Global: []
+User: 4570
+	elo_adhoc: [6, 6, 6]
+	elo_recorr: [2, 1, 1]
+	elo_search: []
+	Global: []
+User: 4571
+	elo_adhoc: []
+	elo_recorr: []
+	Global: []
+User: 4575
+	elo_sorting: []
+	Global: []
+User: 4588
+	Global: []
+User: 4589
+	Global: []
+User: 4594
+	elo_recorr: []
+	Global: []
+User: 4598
+	elo_sorting: []
+	Global: []
+User: 4599
+	elo_recorr: []
+	elo_search: []
+	elo_sorting: []
+	Global: []
+User: 4604
+	elo_recorr: [8]
+	elo_search: [6]
+	elo_geo: [4]
+	Global: []
+User: 4605
+	Global: []
+User: 4606
+	elo_recorr: [1, 1, 1]
+	elo_search: []
+	elo_sorting: []
+	elo_vrz: []
+	elo_dnmc: [8]
+	elo_graph: [0, 2]
+	elo_geo: []
+	Global: [2, 2]
+User: 4607
+	elo_search: [3]
+	Global: []
+User: 4611
+	elo_adhoc: []
+	elo_search: []
+	Global: []
+User: 4627
+	Global: []
+User: 4629
+	elo_recorr: []
+	elo_sorting: []
+	Global: []
+User: 4640
+	Global: []
+User: 4646
+	elo_adhoc: [9, 5, 5, 0]
+	elo_recorr: [3, 3, 3, 3, 5, 5]
+	elo_search: [3, 6, 6]
+	elo_geo: [0, 6, 6]
+	Global: []
+User: 4658
+	elo_adhoc: []
+	Global: []
+User: 4659
+	Global: []
+User: 4668
+	elo_search: []
+	elo_sorting: []
+	Global: []
+User: 4671
+	Global: []
+User: 4681
+	elo_recorr: []
+	Global: []
+User: 4702
+	Global: []
+User: 4706
+	elo_adhoc: []
+	elo_recorr: [6]
+	elo_search: []
+	elo_sorting: []
+	elo_geo: []
+	Global: []
+User: 4711
+	elo_adhoc: []
+	elo_recorr: []
+	elo_search: []
+	elo_sorting: []
+	elo_dnmc: [9]
+	elo_geo: []
+	Global: []
+User: 4725
+	elo_adhoc: []
+	elo_sorting: []
+	Global: []
+User: 4739
+	elo_adhoc: []
+	elo_recorr: []
+	elo_search: []
+	elo_geo: []
+	Global: []
+User: 4747
+	elo_adhoc: [0, 8]
+	elo_recorr: []
+	elo_search: [2, 8]
+	elo_sorting: [3, 9]
+	elo_dnmc: []
+	elo_geo: [3, 9]
+	Global: [0, 0]
+User: 4757
+	elo_recorr: []
+	Global: []
+User: 4759
+	elo_adhoc: []
+	Global: []
+User: 4760
+	Global: []
+User: 4763
+	elo_adhoc: []
+	elo_recorr: []
+	elo_search: []
+	Global: []
+User: 4765
+	elo_adhoc: []
+	elo_recorr: []
+	elo_sorting: []
+	Global: []
+User: 4767
+	elo_adhoc: []
+	elo_recorr: []
+	Global: []
+User: 4769
+	elo_adhoc: []
+	Global: []
+User: 4770
+	elo_adhoc: []
+	elo_recorr: []
+	Global: []
+User: 4773
+	elo_adhoc: []
+	elo_search: []
+	Global: []
+User: 4776
+	elo_search: [9]
+	Global: []
+User: 4791
+	elo_recorr: [4]
+	Global: []
+User: 4794
+	Global: []
+User: 4795
+	elo_adhoc: [9, 6, 6]
+	Global: []
+User: 4798
+	Global: []
+User: 4799
+	elo_adhoc: []
+	elo_recorr: []
+	elo_search: []
+	elo_sorting: []
+	elo_dyv: []
+	Global: []
+User: 4811
+	Global: []
+User: 4818
+	elo_adhoc: []
+	elo_geo: []
+	Global: []
+User: 4828
+	Global: []
+User: 4833
+	Global: []
+User: 4883
+	elo_sorting: []
+	elo_geo: []
+	Global: []
+User: 4896
+	elo_geo: []
+	Global: []
+User: 4897
+	elo_recorr: []
+	elo_sorting: [7, 7, 7]
+	elo_vrz: [4, 4, 4]
+	Global: []
+User: 4905
+	Global: []
+User: 4918
+	Global: []
+User: 4920
+	elo_adhoc: [2, 2, 0, 9, 9, 9, 7, 7, 7, 6]
+	elo_recorr: [2, 2, 5, 6, 6, 9, 9]
+	elo_search: [2, 2, 2, 2, 2, 5, 1, 1, 3, 9, 9]
+	elo_sorting: [4, 8, 8, 8, 8, 8, 0, 7, 7, 7, 3, 3, 3, 3, 2, 2, 9]
+	elo_dnmc: [2, 2, 2, 2, 2, 3, 0, 0, 4, 9, 9]
+	elo_dyv: [8, 8, 3, 6, 6, 6, 5, 5, 5, 4]
+	elo_geo: [4, 4, 5, 8, 8]
+	Global: [0, 0, 2, 1, 1, 1]
+User: 4927
+	elo_sorting: []
+	Global: [0]
+User: 4931
+	elo_recorr: []
+	elo_sorting: [4, 4, 4]
+	Global: [2, 2]
+User: 4932
+	elo_adhoc: [0]
+	elo_recorr: []
+	elo_search: [2]
+	elo_sorting: []
+	elo_geo: []
+	Global: []
+User: 4933
+	Global: []
+User: 4944
+	elo_search: []
+	elo_geo: []
+	Global: []
+User: 4969
+	Global: []
+User: 4970
+	Global: []
+User: 4972
+	elo_recorr: []
+	elo_search: []
+	elo_sorting: []
+	Global: []
+User: 4973
+	elo_sorting: []
+	elo_vrz: []
+	elo_graph: []
+	Global: []
+User: 4979
+	Global: []
+User: 4985
+	elo_adhoc: []
+	elo_recorr: []
+	elo_search: []
+	elo_sorting: []
+	elo_geo: []
+	Global: []
+User: 4991
+	elo_geo: []
+	Global: []
+User: 4992
+	elo_recorr: []
+	elo_geo: []
+	Global: []
+User: 4999
+	Global: [1, 1]
+User: 5001
+	elo_adhoc: [8]
+	elo_recorr: []
+	elo_bin_srch: [8]
+	elo_sorting: []
+	elo_vrz: []
+	elo_dnmc: []
+	elo_dyv: []
+	elo_bk_trk: []
+	elo_space: [8]
+	elo_graph: []
+	elo_geo: [8]
+	Global: []
+User: 5008
+	elo_adhoc: []
+	elo_sorting: []
+	elo_geo: []
+	Global: []
+User: 5009
+	elo_recorr: []
+	Global: []
+User: 5013
+	Global: []
+User: 5014
+	Global: []
+User: 5015
+	elo_recorr: [0, 0]
+	elo_search: [1, 6, 6, 6, 6]
+	elo_sorting: [1, 9, 9, 9, 9]
+	Global: []
+User: 5017
+	elo_recorr: []
+	elo_search: []
+	Global: []
+User: 5023
+	elo_recorr: []
+	Global: []
+User: 5024
+	elo_search: []
+	elo_sorting: []
+	elo_geo: []
+	Global: []
+User: 5038
+	elo_adhoc: []
+	Global: []
+User: 5040
+	elo_sorting: []
+	Global: []
+User: 5056
+	elo_recorr: []
+	elo_sorting: []
+	Global: []
+User: 5060
+	elo_recorr: []
+	elo_sorting: []
+	elo_graph: []
+	Global: []
+User: 5062
+	elo_adhoc: []
+	elo_recorr: []
+	elo_search: []
+	Global: []
+User: 5070
+	elo_recorr: []
+	elo_search: []
+	elo_sorting: []
+	Global: []
+User: 5072
+	elo_adhoc: [2]
+	elo_recorr: []
+	elo_search: []
+	elo_sorting: []
+	elo_vrz: []
+	elo_dyv: []
+	elo_graph: []
+	elo_geo: []
+	Global: []
+User: 5084
+	elo_adhoc: []
+	elo_recorr: []
+	elo_search: []
+	elo_sorting: []
+	elo_vrz: []
+	elo_dyv: []
+	elo_geo: []
+	Global: []
+User: 5087
+	elo_adhoc: [1, 1, 6, 6, 6, 6]
+	elo_recorr: [2, 2]
+	elo_search: [2, 2]
+	elo_sorting: [3, 3, 3, 3, 0, 0, 8, 8, 8, 8]
+	elo_dnmc: [6, 6, 6, 6]
+	elo_graph: [6, 6, 1, 1, 1, 1, 3, 3]
+	Global: []
+User: 5095
+	elo_adhoc: [5, 5, 0]
+	elo_vrz: [6, 6, 1]
+	elo_dnmc: []
+	elo_dyv: [7, 7, 1]
+	elo_graph: [0, 0]
+	Global: []
+User: 5097
+	elo_vrz: [0, 0, 0]
+	elo_dyv: [8, 9, 9, 9]
+	elo_graph: []
+	Global: []
+User: 5099
+	elo_recorr: []
+	elo_search: []
+	elo_sorting: []
+	elo_dnmc: []
+	Global: []
+User: 5100
+	elo_recorr: []
+	elo_search: []
+	Global: []
+User: 5110
+	elo_recorr: []
+	elo_search: []
+	Global: []
+User: 5117
+	elo_adhoc: [3, 3]
+	elo_recorr: [8, 6]
+	elo_search: [0, 0, 0, 5, 1, 1]
+	elo_sorting: [0, 8, 7, 6, 9]
+	elo_dnmc: [1, 1, 8]
+	elo_dyv: [3, 9]
+	elo_bk_trk: [9, 8, 6, 4, 3, 2, 2]
+	Global: []
+User: 5118
+	Global: []
+User: 5121
+	Global: []
+User: 5134
+	elo_adhoc: [9, 9, 1, 1, 5]
+	elo_recorr: [7]
+	elo_search: [3, 9, 7, 7, 7]
+	elo_sorting: [3, 6, 8, 8, 8]
+	elo_graph: [9, 6, 6, 6]
+	elo_geo: [1, 5, 5, 5]
+	Global: [1, 1, 1]
+User: 5135
+	elo_search: []
+	Global: []
+User: 5139
+	elo_search: [6, 6]
+	Global: []
+User: 5144
+	elo_search: [8, 8]
+	Global: []
+User: 5154
+	elo_adhoc: []
+	elo_recorr: []
+	elo_search: []
+	elo_vrz: []
+	elo_dnmc: []
+	elo_bk_trk: []
+	elo_geo: []
+	Global: []
+User: 5165
+	Global: []
+User: 5168
+	elo_recorr: []
+	elo_search: []
+	Global: []
+User: 5170
+	Global: []
+User: 5171
+	elo_recorr: []
+	elo_geo: []
+	Global: []
+User: 5182
+	Global: []
+User: 5191
+	elo_adhoc: [5]
+	elo_recorr: [4]
+	elo_search: [4]
+	elo_dnmc: []
+	Global: []
+User: 5194
+	elo_search: []
+	Global: []
+User: 5210
+	elo_adhoc: []
+	elo_recorr: []
+	elo_search: [9, 8, 6]
+	elo_sorting: [7, 7, 8, 9]
+	Global: [2, 2]
+User: 5211
+	elo_recorr: []
+	Global: []
+User: 5221
+	elo_adhoc: []
+	elo_recorr: []
+	elo_bk_trk: []
+	Global: []
+User: 5222
+	elo_adhoc: []
+	elo_recorr: []
+	elo_search: []
+	Global: []
+User: 5232
+	elo_recorr: []
+	Global: []
+User: 5234
+	elo_recorr: []
+	elo_search: []
+	Global: []
+User: 5250
+	elo_adhoc: []
+	elo_recorr: []
+	elo_vrz: []
+	Global: []
+User: 5252
+	Global: []
+User: 5279
+	elo_adhoc: [8]
+	elo_recorr: []
+	elo_search: [0]
+	elo_sorting: [4]
+	elo_vrz: [5]
+	elo_dnmc: [2]
+	elo_graph: [5, 6, 6, 0]
+	Global: []
+User: 5280
+	elo_adhoc: []
+	elo_recorr: []
+	Global: []
+User: 5288
+	Global: []
+User: 5289
+	elo_adhoc: [2, 9, 9, 8]
+	elo_recorr: [0, 8]
+	elo_sorting: [2, 9]
+	elo_geo: [6]
+	Global: []
+User: 5293
+	elo_recorr: []
+	elo_geo: []
+	Global: []
+User: 5296
+	elo_recorr: []
+	elo_geo: []
+	Global: []
+User: 5306
+	elo_adhoc: []
+	elo_recorr: []
+	elo_search: [6, 1]
+	elo_sorting: []
+	elo_geo: []
+	Global: []
+User: 5310
+	elo_recorr: []
+	elo_dnmc: []
+	elo_geo: []
+	Global: []
+User: 5331
+	elo_recorr: []
+	elo_dnmc: []
+	elo_geo: []
+	Global: []
+User: 5346
+	elo_recorr: []
+	elo_geo: []
+	Global: []
+User: 5349
+	elo_adhoc: []
+	Global: []
+User: 5363
+	elo_recorr: []
+	elo_bin_srch: []
+	elo_vrz: []
+	elo_dnmc: []
+	elo_graph: []
+	Global: []
+User: 5364
+	elo_adhoc: []
+	elo_search: []
+	Global: []
+User: 5377
+	elo_adhoc: []
+	elo_recorr: []
+	elo_geo: []
+	Global: []
+User: 5379
+	elo_adhoc: []
+	elo_recorr: []
+	elo_dnmc: []
+	elo_dyv: []
+	elo_bk_trk: []
+	Global: []
+User: 5400
+	Global: []
+User: 5406
+	elo_adhoc: []
+	elo_recorr: []
+	elo_sorting: []
+	elo_vrz: []
+	Global: []
+User: 5409
+	elo_recorr: []
+	elo_sorting: []
+	elo_vrz: []
+	elo_graph: []
+	Global: []
+User: 5413
+	elo_recorr: []
+	Global: []
+User: 5415
+	Global: []
+User: 5434
+	Global: []
+User: 5444
+	elo_adhoc: []
+	elo_recorr: []
+	elo_sorting: []
+	Global: []
+User: 5447
+	elo_search: [9, 9]
+	Global: []
+User: 5457
+	elo_search: []
+	Global: []
+User: 5474
+	elo_adhoc: []
+	Global: []
+User: 5476
+	elo_adhoc: []
+	elo_recorr: []
+	elo_sorting: []
+	elo_vrz: []
+	elo_dnmc: []
+	elo_geo: []
+	Global: []
+User: 5486
+	elo_adhoc: []
+	elo_recorr: [3, 3, 9, 4]
+	elo_search: []
+	Global: []
+User: 5492
+	elo_vrz: []
+	elo_graph: []
+	Global: []
+User: 5500
+	elo_bin_srch: []
+	elo_sorting: []
+	elo_vrz: []
+	elo_graph: []
+	Global: []
+User: 5506
+	elo_adhoc: [7, 7, 6, 6, 5, 5, 1, 1]
+	elo_recorr: []
+	elo_search: []
+	elo_sorting: [8, 8, 7, 7, 6, 6]
+	elo_dnmc: []
+	elo_graph: [8, 8]
+	Global: []
+User: 5508
+	Global: []
+User: 5509
+	Global: []
+User: 5510
+	elo_search: []
+	Global: []
+User: 5511
+	elo_adhoc: []
+	elo_recorr: []
+	elo_search: []
+	elo_sorting: [9]
+	elo_geo: []
+	Global: []
+User: 5518
+	elo_recorr: [5, 2, 6]
+	elo_search: [1, 9, 2]
+	Global: []
+User: 5519
+	elo_adhoc: []
+	elo_search: []
+	Global: []
+User: 5520
+	elo_recorr: []
+	elo_vrz: []
+	elo_dnmc: []
+	elo_space: []
+	elo_graph: []
+	Global: []
+User: 5521
+	elo_vrz: []
+	elo_dnmc: []
+	elo_graph: []
+	Global: []
+User: 5524
+	Global: []
+User: 5525
+	elo_recorr: []
+	Global: []
+User: 5534
+	elo_adhoc: [2, 8, 7, 6]
+	elo_recorr: [2, 8, 7, 6]
+	elo_sorting: [9, 9]
+	Global: []
+User: 5535
+	elo_recorr: []
+	Global: [0]
+User: 5537
+	elo_adhoc: []
+	elo_recorr: []
+	elo_search: []
+	Global: []
+User: 5547
+	elo_adhoc: [7]
+	elo_recorr: []
+	Global: []
+User: 5549
+	elo_adhoc: [2]
+	Global: []
+User: 5553
+	Global: []
+User: 5555
+	Global: []
+User: 5556
+	elo_adhoc: [8, 8]
+	Global: []
+User: 5561
+	Global: []
+User: 5564
+	elo_recorr: []
+	Global: []
+User: 5565
+	Global: []
+User: 5588
+	elo_search: [6, 9, 9, 9]
+	elo_geo: []
+	Global: []
+User: 5594
+	Global: []
+User: 5597
+	Global: []
+User: 5600
+	Global: []
+User: 5601
+	elo_recorr: []
+	Global: []
+User: 5603
+	Global: []
+User: 5604
+	Global: []
+User: 5614
+	elo_adhoc: []
+	elo_recorr: []
+	elo_search: []
+	Global: []
+User: 5629
+	elo_adhoc: []
+	Global: []
+User: 5631
+	elo_adhoc: []
+	Global: []
+User: 5633
+	elo_recorr: []
+	Global: []
+User: 5634
+	elo_recorr: []
+	Global: []
+User: 5642
+	elo_recorr: []
+	Global: []
+User: 5643
+	Global: []
+User: 5645
+	elo_recorr: []
+	Global: []
+User: 5646
+	Global: []
+User: 5647
+	Global: []
+User: 5650
+	Global: []
+User: 5651
+	elo_recorr: []
+	elo_sorting: []
+	Global: [1]
+User: 5652
+	elo_adhoc: []
+	elo_recorr: []
+	elo_space: []
+	Global: []
+User: 5653
+	elo_recorr: []
+	Global: []
+User: 5655
+	elo_recorr: []
+	Global: []
+User: 5660
+	Global: []
+User: 5670
+	elo_recorr: []
+	Global: []
+User: 5686
+	elo_recorr: []
+	elo_search: []
+	elo_geo: [9, 8, 7]
+	Global: []
+User: 5689
+	elo_adhoc: [4, 4]
+	elo_recorr: [3]
+	Global: []
+User: 5697
+	elo_recorr: []
+	Global: []
+User: 5706
+	elo_adhoc: []
+	Global: []
+User: 5709
+	Global: []
+User: 5717
+	Global: []
+User: 5718
+	Global: []
+User: 5724
+	elo_adhoc: [1]
+	Global: [1]
+User: 5727
+	elo_adhoc: []
+	Global: []
+User: 5728
+	elo_search: []
+	Global: []
+User: 5730
+	elo_adhoc: []
+	Global: []
+User: 5731
+	elo_adhoc: []
+	Global: []
+User: 5737
+	elo_adhoc: []
+	Global: []
+User: 5738
+	elo_adhoc: []
+	Global: []
+User: 5740
+	Global: []
+User: 5741
+	Global: []
+User: 5744
+	elo_adhoc: []
+	elo_geo: []
+	Global: []
+User: 5751
+	Global: []
+User: 5760
+	elo_adhoc: []
+	Global: []
+User: 5761
+	Global: []
+User: 5762
+	Global: []
+User: 5767
+	Global: []
+User: 5771
+	elo_recorr: [4, 2]
+	elo_sorting: [4, 2]
+	elo_geo: []
+	Global: []
+User: 5773
+	elo_search: []
+	elo_sorting: []
+	Global: []
+User: 5774
+	Global: []
+User: 5777
+	Global: []
+User: 5782
+	Global: []
+User: 5786
+	elo_recorr: []
+	Global: []
+User: 5791
+	Global: []
+User: 5794
+	elo_adhoc: [6]
+	elo_recorr: [5]
+	elo_search: []
+	elo_sorting: [7]
+	elo_geo: []
+	Global: []
+User: 5796
+	elo_adhoc: []
+	Global: []
+User: 5841
+	elo_adhoc: []
+	elo_geo: []
+	Global: []
+User: 5842
+	Global: []
+User: 5863
+	elo_recorr: [5]
+	Global: []
+User: 5889
+	elo_geo: []
+	Global: []
+User: 5891
+	Global: []
+User: 5893
+	elo_recorr: []
+	Global: []
+User: 5898
+	Global: []
+User: 5903
+	Global: []
+User: 5905
+	elo_adhoc: []
+	Global: []
+ ONE_HIT: 0.29
