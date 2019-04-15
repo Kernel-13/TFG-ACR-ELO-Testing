@@ -27,7 +27,7 @@ users_from_second_half = """SELECT user_id FROM submission
 									END) >= {}
 						ORDER BY id""".format(ACR_Globals.__DB_SPLITTER, users_from_first_half, __NUM_SOL_2nd)
 
-def ONE_HIT_GLOBAL():
+def ONE_HIT_GLOBAL(r_type):
 	user_elos = {}
 	user_rcmd = {}
 	u_p_pos = {}
@@ -40,15 +40,7 @@ def ONE_HIT_GLOBAL():
 		u_p_pos[r[0]] = []
 
 	for k,v in user_elos.items():
-		ACR_Globals.__CURSOR.execute("""SELECT problem_id, elo_global, ABS({} - elo_global) as diff FROM problem_scores
-			WHERE problem_id NOT IN (
-				SELECT DISTINCT(problem_id) FROM submission
-				WHERE id < {}
-				AND user_id = {}
-				AND (status = 'AC' or status = 'PE')
-				GROUP BY problem_id
-			)
-			ORDER BY diff ASC LIMIT {}""".format(v, ACR_Globals.__DB_SPLITTER, k, __NUM_RECOMD))
+		GLOBAL_RECOMMENDATION(r_type, user_id=k, user_elo=v)
 
 		for p in ACR_Globals.__CURSOR.fetchall():
 			user_rcmd[k].append(p[0])
@@ -83,7 +75,7 @@ def ONE_HIT_GLOBAL():
 
 	print('ONE_HIT: {}	-	GLOBAL (@ {} - {}x{} AC [{}])'.format(len(hits)/len(u_p_pos), __NUM_RECOMD, __NUM_SOL_1st, __NUM_SOL_2nd, "SOLVED" if __ONLY_SOLVED else "TRIED"))
 
-def ONE_HIT_CATEGORIES():
+def ONE_HIT_CATEGORIES(r_type):
 	user_elos = {}
 	user_rcmd = {}
 	u_p_pos = {}
@@ -125,27 +117,9 @@ def ONE_HIT_CATEGORIES():
 
 		for cat,elo in elos.items():
 			if cat != 'Global':
-				code = categs_codes[categs_title.index(cat)]
-				ACR_Globals.__CURSOR.execute("""SELECT problem_id, ABS(elo_global - {}) as diff FROM problem_scores 
-					WHERE problem_id IN (
-						SELECT problem_id FROM problemcategories
-						WHERE categoryId = {})
-					AND problem_id NOT IN (
-						SELECT DISTINCT(problem_id) FROM submission
-						WHERE id < {}
-						AND user_id = {}
-						AND (status = 'AC' or status = 'PE')
-						GROUP BY problem_id	)
-					ORDER BY diff ASC LIMIT {}""".format(elo, code, ACR_Globals.__DB_SPLITTER, usr, __NUM_RECOMD))
+				CATEGORIES_RECOMMENDATION(r_type, user_id=usr, user_elo=elo, code=categs_codes[categs_title.index(cat)])
 			else:
-				ACR_Globals.__CURSOR.execute("""SELECT problem_id, ABS(elo_global - {}) as diff FROM problem_scores 
-					WHERE problem_id NOT IN (
-						SELECT DISTINCT(problem_id) FROM submission
-						WHERE id < {}
-						AND user_id = {}
-						AND (status = 'AC' or status = 'PE')
-						GROUP BY problem_id	)
-					ORDER BY diff ASC LIMIT 3""".format(elo, ACR_Globals.__DB_SPLITTER, usr))
+				GLOBAL_RECOMMENDATION(r_type, user_id=usr, user_elo=elo)
 
 			for p in ACR_Globals.__CURSOR.fetchall():
 				user_rcmd[usr][cat].append(p[0])
@@ -183,7 +157,63 @@ def ONE_HIT_CATEGORIES():
 
 	print('ONE_HIT: {}	-	CATEGORIES (@ {} - {}x{} AC [{}])'.format(len(hits)/len(u_p_pos), __NUM_RECOMD, __NUM_SOL_1st, __NUM_SOL_2nd, "SOLVED" if __ONLY_SOLVED else "TRIED"))
 
-for i in [3,5,10,20]:
+def GLOBAL_RECOMMENDATION(r_type, user_id, user_elo):
+
+	if r_type == 1:
+		query = """SELECT problem_id, ABS({} - elo_global) as diff FROM problem_scores
+			WHERE problem_id NOT IN (
+				SELECT DISTINCT(problem_id) FROM submission
+				WHERE id < {}
+				AND user_id = {}
+				AND (status = 'AC' or status = 'PE')
+				GROUP BY problem_id
+			)
+			ORDER BY diff ASC LIMIT {}""".format(user_elo, ACR_Globals.__DB_SPLITTER, user_id, __NUM_RECOMD)
+	elif r_type == 2:
+		query = """SELECT problem_id, ABS({} - elo_global) as diff FROM problem_scores
+			WHERE elo_global >= {}
+			AND problem_id NOT IN (
+				SELECT DISTINCT(problem_id) FROM submission
+				WHERE id < {}
+				AND user_id = {}
+				AND (status = 'AC' or status = 'PE')
+				GROUP BY problem_id
+			)
+			ORDER BY diff ASC LIMIT {}""".format(user_elo, user_elo, ACR_Globals.__DB_SPLITTER, user_id, __NUM_RECOMD)
+	
+	ACR_Globals.__CURSOR.execute(query)
+
+def CATEGORIES_RECOMMENDATION(r_type, user_id, user_elo, code):
+	
+	if r_type == 1:
+		query = """SELECT problem_id, ABS({} - elo_global) as diff FROM problem_scores 
+			WHERE problem_id IN (
+				SELECT problem_id FROM problemcategories
+				WHERE categoryId = {})
+			AND problem_id NOT IN (
+				SELECT DISTINCT(problem_id) FROM submission
+				WHERE id < {}
+				AND user_id = {}
+				AND (status = 'AC' or status = 'PE')
+				GROUP BY problem_id	)
+			ORDER BY diff ASC LIMIT {}""".format(user_elo, code, ACR_Globals.__DB_SPLITTER, user_id, __NUM_RECOMD)
+	elif r_type == 2:
+		query = """SELECT problem_id, ABS({} - elo_global) as diff FROM problem_scores 
+			WHERE elo_global >= {} 
+			AND problem_id IN (
+				SELECT problem_id FROM problemcategories
+				WHERE categoryId = {})
+			AND problem_id NOT IN (
+				SELECT DISTINCT(problem_id) FROM submission
+				WHERE id < {}
+				AND user_id = {}
+				AND (status = 'AC' or status = 'PE')
+				GROUP BY problem_id	)
+			ORDER BY diff ASC LIMIT {}""".format(user_elo, user_elo, code, ACR_Globals.__DB_SPLITTER, user_id, __NUM_RECOMD)
+	
+	ACR_Globals.__CURSOR.execute(query)
+
+for i in [3,5,10]:
 	for j in [1,3,5,8,10]:
 		for k in [1,3,5,8,10]:
 			for b in [False, True]:
@@ -213,5 +243,5 @@ for i in [3,5,10,20]:
 													END) >= {}
 										ORDER BY id""".format(ACR_Globals.__DB_SPLITTER, users_from_first_half, __NUM_SOL_2nd)
 
-				ONE_HIT_GLOBAL()
-				ONE_HIT_CATEGORIES()
+				ONE_HIT_GLOBAL(2)
+				ONE_HIT_CATEGORIES(2)
