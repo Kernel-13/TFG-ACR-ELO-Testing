@@ -158,8 +158,9 @@ def ONE_HIT_CATEGORIES(r_type):
 	print('ONE_HIT: {}	-	CATEGORIES (@ {} - {}x{} AC [{}])'.format(len(hits)/len(u_p_pos), __NUM_RECOMD, __NUM_SOL_1st, __NUM_SOL_2nd, "SOLVED" if __ONLY_SOLVED else "TRIED"))
 
 def GLOBAL_RECOMMENDATION(r_type, user_id, user_elo):
+
 	if r_type == 1:
-		ACR_Globals.__CURSOR.execute("""SELECT problem_id, elo_global, ABS({} - elo_global) as diff FROM problem_scores
+		query = """SELECT problem_id, ABS({} - elo_global) as diff FROM problem_scores
 			WHERE problem_id NOT IN (
 				SELECT DISTINCT(problem_id) FROM submission
 				WHERE id < {}
@@ -167,9 +168,9 @@ def GLOBAL_RECOMMENDATION(r_type, user_id, user_elo):
 				AND (status = 'AC' or status = 'PE')
 				GROUP BY problem_id
 			)
-			ORDER BY elo_global ASC LIMIT {}""".format(user_elo, ACR_Globals.__DB_SPLITTER, user_id, __NUM_RECOMD))
+			ORDER BY diff ASC LIMIT {}""".format(user_elo, ACR_Globals.__DB_SPLITTER, user_id, __NUM_RECOMD)
 	elif r_type == 2:
-		ACR_Globals.__CURSOR.execute("""SELECT problem_id, elo_global, ABS({} - elo_global) as diff FROM problem_scores
+		query = """SELECT problem_id, ABS({} - elo_global) as diff FROM problem_scores
 			WHERE elo_global >= {}
 			AND problem_id NOT IN (
 				SELECT DISTINCT(problem_id) FROM submission
@@ -178,11 +179,14 @@ def GLOBAL_RECOMMENDATION(r_type, user_id, user_elo):
 				AND (status = 'AC' or status = 'PE')
 				GROUP BY problem_id
 			)
-			ORDER BY elo_global ASC LIMIT {}""".format(user_elo, user_elo, ACR_Globals.__DB_SPLITTER, user_id, __NUM_RECOMD))
+			ORDER BY diff ASC LIMIT {}""".format(user_elo, user_elo, ACR_Globals.__DB_SPLITTER, user_id, __NUM_RECOMD)
+	
+	ACR_Globals.__CURSOR.execute(query)
 
 def CATEGORIES_RECOMMENDATION(r_type, user_id, user_elo, code):
+	
 	if r_type == 1:
-		ACR_Globals.__CURSOR.execute("""SELECT problem_id, ABS({} - elo_global) as diff FROM problem_scores 
+		query = """SELECT problem_id, ABS({} - elo_global) as diff FROM problem_scores 
 			WHERE problem_id IN (
 				SELECT problem_id FROM problemcategories
 				WHERE categoryId = {})
@@ -192,9 +196,9 @@ def CATEGORIES_RECOMMENDATION(r_type, user_id, user_elo, code):
 				AND user_id = {}
 				AND (status = 'AC' or status = 'PE')
 				GROUP BY problem_id	)
-			ORDER BY elo_global ASC LIMIT {}""".format(user_elo, code, ACR_Globals.__DB_SPLITTER, user_id, __NUM_RECOMD))
+			ORDER BY diff ASC LIMIT {}""".format(user_elo, code, ACR_Globals.__DB_SPLITTER, user_id, __NUM_RECOMD)
 	elif r_type == 2:
-		ACR_Globals.__CURSOR.execute("""SELECT problem_id, ABS({} - elo_global) as diff FROM problem_scores 
+		query = """SELECT problem_id, ABS({} - elo_global) as diff FROM problem_scores 
 			WHERE elo_global >= {} 
 			AND problem_id IN (
 				SELECT problem_id FROM problemcategories
@@ -205,7 +209,9 @@ def CATEGORIES_RECOMMENDATION(r_type, user_id, user_elo, code):
 				AND user_id = {}
 				AND (status = 'AC' or status = 'PE')
 				GROUP BY problem_id	)
-			ORDER BY elo_global ASC LIMIT {}""".format(user_elo, user_elo, code, ACR_Globals.__DB_SPLITTER, user_id, __NUM_RECOMD))
+			ORDER BY diff ASC LIMIT {}""".format(user_elo, user_elo, code, ACR_Globals.__DB_SPLITTER, user_id, __NUM_RECOMD)
+	
+	ACR_Globals.__CURSOR.execute(query)
 
 for i in [3,5,10]:
 	for j in [1,3,5,8,10]:
