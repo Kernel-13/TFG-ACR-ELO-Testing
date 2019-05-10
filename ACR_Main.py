@@ -115,12 +115,12 @@ def CHANGE_ELOS(subm_id, u_id, p_id, status):
 	ACR_Globals.__CURSOR.execute("UPDATE submission SET problem_elo = {}, user_elo = {} WHERE id = {} and user_id = {} and problem_id = {}".format(new_problem_elo, new_user_elo, subm_id, u_id, p_id))
 	ACR_Globals.__CURSOR.execute("UPDATE User_Scores SET elo_global = {} WHERE user_id = {}".format(new_user_elo, u_id))
 	ACR_Globals.__CURSOR.execute("UPDATE Problem_Scores SET elo_global = {} WHERE problem_id = {}".format(new_problem_elo, p_id))
-	ACR_Globals.__CONNECTION.commit()
 
 def main():
 	
 	CREATE_AND_ALTER_NEEDED_TABLES()
 	TRAIN_SUBJECTS()
+	ACR_Globals.__CONNECTION.commit()
 	
 	ACR_Stats.GRAPH_USERS_EVOLUTION()
 	ACR_Stats.GRAPH_PROBLEMS_EVOLUTION()
