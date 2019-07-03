@@ -11,7 +11,8 @@ def GRAPH_ELO_DISTRIBUTION(items):
 	elo_scores = {}
 	[elo_scores.update({k:0}) for k in range(16)]
 
-	ACR_Globals.__CURSOR.execute("""SELECT elo_global FROM {} WHERE elo_global != 8.0""".format('user_scores' if items=='Users' else 'problem_scores'))
+	ACR_Globals.__CURSOR.execute("""SELECT elo_global FROM {} 
+		WHERE elo_global != 8.0""".format('user_scores' if items=='Users' else 'problem_scores'))
 
 	for row in ACR_Globals.__CURSOR.fetchall():
 		if row[0] != 16: 
@@ -180,7 +181,7 @@ def GRAPH_USERS_EVOLUTION():
 		y = [x[7] for x in ACR_Globals.__CURSOR.fetchall()]
 		y.insert(0,8)
 
-		GRAPH_LINE_PLOT(range(len(y)), y,f"Users' ELO History\\User({str(usr)})Evolution.png")
+		GRAPH_LINE_PLOT(range(len(y)), y,f"Users' ELO History\\User({str(usr)})Evolution.svg")
 
 def GRAPH_PROBLEMS_EVOLUTION():
 	if not os.path.exists("Problems' ELO History"):
@@ -204,7 +205,7 @@ def GRAPH_PROBLEMS_EVOLUTION():
 		y = [x[8] for x in ACR_Globals.__CURSOR.fetchall()]
 		y.insert(0,8)
 
-		GRAPH_LINE_PLOT(range(len(y)), y,f"Problems' ELO History\\Problem({str(prob)})Evolution.png")
+		GRAPH_LINE_PLOT(range(len(y)), y,f"Problems' ELO History\\Problem({str(prob)})Evolution.svg")
 
 def GRAPH_USER_CATEGORIES():
 	if not os.path.exists("Categories' ELO"):
@@ -227,7 +228,7 @@ def GRAPH_USER_CATEGORIES():
 			'Grafos': row[12],
 			'Geometría': row[13]
 		}
-		GRAPH_SPIDER_CHART(chart_data=categories_data,filename=f"Categories' ELO\\User {str(row[0])} Categories.png")
+		GRAPH_SPIDER_CHART(chart_data=categories_data,filename=f"Categories' ELO\\User {str(row[0])} Categories.svg")
 
 def GRAPH_BAR_CHART(x,y,x_label="", y_label="", title=""):
 	x_idx = [i for i, _ in enumerate(x)]
@@ -276,7 +277,7 @@ def GRAPH_SPIDER_CHART(chart_data, filename, title=""):
 
 	fig = plt.gcf()
 	fig.set_size_inches(9,9)
-	plt.savefig(filename)
+	plt.savefig(filename, format="svg")
 	plt.close()
 
 def GRAPH_LINE_PLOT(x,y,filename, x_label="", y_label="", title="", ylim_down=0, ylim_up=16, plot_type=0):
@@ -304,7 +305,7 @@ def GRAPH_LINE_PLOT(x,y,filename, x_label="", y_label="", title="", ylim_down=0,
 		plt.text(v, y[idx], str(round(y[idx],2)), color="black", size=12 ,ha='center', va='center', alpha=0.5, position=position)
 	"""
 	fig.set_size_inches(12, 8)
-	fig.savefig(filename)
+	fig.savefig(filename, format="svg")
 	plt.close()
 
 def GRAPH_SCATTER(x,y,label, x_label="", y_label="", title=""):
@@ -323,7 +324,7 @@ def GRAPH_SCATTER(x,y,label, x_label="", y_label="", title=""):
 
 	fig.set_size_inches(18, 15)
 	ax1.legend(loc="best")
-	fig.savefig(f"SCATTER_{label}.png")
+	fig.savefig(f"SCATTER_{label}.png", format="svg")
 	plt.close()
 
 def GRAPH_ELO_GAIN(x,y1,y2,x_label="", y_label="", title="", filename="GAIN.png"):
@@ -350,7 +351,7 @@ def GRAPH_ELO_GAIN(x,y1,y2,x_label="", y_label="", title="", filename="GAIN.png"
 	plt.ylabel(y_label)
 	plt.suptitle(title)
 
-	fig.savefig(filename)
+	fig.savefig(filename, format="svg")
 	plt.close()
 
 def GRAPH_BAR_AND_CUMULATIVE(x,y1,y2,x_label="", y_label="", title="", filename="GRAPH_BAR_AND_CUMULATIVE.png"):
