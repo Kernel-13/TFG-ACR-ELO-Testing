@@ -212,7 +212,7 @@ def GRAPH_PROBLEMS_EVOLUTION():
 		y.insert(0,8)
 
 		LINE_PLOT(range(len(y)), y,f"Problems' ELO History\\Problem({str(prob)})Evolution.svg",
-			x_label="Nº de Enfrentamientos", y_label="Puntuación ELO", title=f"Evolución Problema # {str(usr)}")
+			x_label="Nº de Enfrentamientos", y_label="Puntuación ELO", title=f"Evolución Problema # {str(prob)}")
 
 def GRAPH_USER_CATEGORIES():
 	if not os.path.exists("Categories' ELO"):
