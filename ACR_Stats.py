@@ -282,7 +282,7 @@ def BAR_PLOT(x,y,x_label="", y_label="", title=""):
 		ax.text(bar.get_x() + bar.get_width()/2., 1.0*height,str(round(height, 2))+'%', size=14,ha='center', va='bottom')
 
 	fig.set_size_inches(15, 8)
-	plt.subplots_adjust(left=0.045, right=0.97, top=0.96, bottom=0.055)
+	plt.subplots_adjust(left=0.045, right=0.97, top=0.96, bottom=0.06)
 	plt.show()
 	plt.close()
 
