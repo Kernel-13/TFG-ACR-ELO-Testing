@@ -93,17 +93,18 @@ def TRAIN_SUBJECTS():
 
 			# If he switches
 			if current_fights[u_id] != p_id:
-				CHANGE_ELOS(subm_id, u_id, current_fights[u_id], status, tries_per_couple[(u_id,current_fights[u_id])])
+				CHANGE_ELOS(subm_id, u_id, current_fights[u_id], 'WA', tries_per_couple[(u_id,current_fights[u_id])])
 				current_fights[u_id] = p_id
+
+			# If reaches __MAX_TRIES tries
+			if tries_per_couple[(u_id,p_id)] == ACR_Globals.__MAX_TRIES and status not in ('AC', 'PE'):
+				CHANGE_ELOS(subm_id, u_id, p_id, status, tries_per_couple[(u_id,p_id)])
 
 			# If he wins
 			if status in ('AC', 'PE'):			
 				del current_fights[u_id]
 				CHANGE_ELOS(subm_id, u_id, p_id, status, tries_per_couple[(u_id,p_id)])
 
-			# If reaches __MAX_TRIES tries
-			elif tries_per_couple[(u_id,p_id)] == ACR_Globals.__MAX_TRIES:
-				CHANGE_ELOS(subm_id, u_id, p_id, status, tries_per_couple[(u_id,p_id)])
 
 def CHANGE_ELOS(subm_id, u_id, p_id, status, tries):
 	ACR_Globals.__CURSOR.execute("SELECT elo_global FROM User_Scores WHERE user_id = {}".format(u_id))
