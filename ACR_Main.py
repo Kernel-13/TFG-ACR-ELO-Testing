@@ -83,7 +83,7 @@ def TRAIN_SUBJECTS():
 
 			# If he switches
 			if current_fights[u_id] != p_id:
-				CHANGE_ELOS(subm_id, u_id, current_fights[u_id], status)
+				CHANGE_ELOS(subm_id, u_id, current_fights[u_id], 'WA')
 				current_fights[u_id] = p_id
 
 			# If he wins
